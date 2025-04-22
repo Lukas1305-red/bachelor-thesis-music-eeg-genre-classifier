@@ -1,4 +1,4 @@
-FILE := main
+FILE := thesis
 OUT  := build
 
 .PHONY: pdf
