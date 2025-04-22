@@ -1,0 +1,5 @@
+# Ignore everything in the build directory
+/build/*
+
+# But keep the final PDF
+!build/thesis.pdf
