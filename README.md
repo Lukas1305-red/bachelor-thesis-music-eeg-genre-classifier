@@ -12,7 +12,7 @@ To compile the thesis, ensure you have the following installed:
 
 1. Clone this repository:
   ```bash
-  git clone <repository-url>
+  git clone https://github.com/Lukas1305-red/Bachelor-Thesis.git
   cd BachelorThesis
   ```
 
@@ -20,5 +20,6 @@ To compile the thesis, ensure you have the following installed:
   ```bash
   make
   ```
+  All helper files generated in the compilation step can be found in the `build` directory
 
 3. The compiled PDF will be available in `build/thesis.pdf`.
