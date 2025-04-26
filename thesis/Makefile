@@ -16,3 +16,5 @@ clean:
 .PHONY: purge
 purge:
 	rm -rf $(OUT)
+
+.PHONY: view
