@@ -5,3 +5,6 @@ thesis/build/*
 !thesis/build/thesis.pdf
 
 data/*
+
+.venv
+.vscode
