@@ -1,5 +1,7 @@
 # Ignore everything in the build directory
-/build/*
+thesis/build/*
 
 # But keep the final PDF
-!build/thesis.pdf
+!thesis/build/thesis.pdf
+
+data/*
