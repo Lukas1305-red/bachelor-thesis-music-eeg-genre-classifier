@@ -1,0 +1,49 @@
+\RequirePackage[l2tabu,orthodox]{nag}
+
+% TODO: decide if one-sided/two-sided
+%\documentclass[headsepline,footsepline,footinclude=false,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,BCOR=12mm,DIV=12]{scrbook} % two-sided % original source stated: BCOR=12mm,DIV=12
+\documentclass[headsepline,footsepline,footinclude=false,oneside,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,DIV=12]{scrbook} % one-sided
+
+% TODO: change citation style in settings
+\input{settings}
+
+% TODO: change thesis information
+\newcommand*{\getUniversity}{Rechts der Isar Hospital Technical University of Munich}
+\newcommand*{\getFaculty}{Chair of Health Informatics}
+\newcommand*{\getTitle}{Decoding Music Perception: EEG-Based Genre Classification}
+\newcommand*{\getTitleGer}{Entschlüsselung der Musikwahrnehmung: EEG-basierte Genre-Klassifizierung}
+\newcommand*{\getAuthor}{Lukas Alex Jochim}
+\newcommand*{\getDoctype}{Bachelor Thesis}
+\newcommand*{\getSupervisor}{Prof. Dr. Björn Schuller}
+\newcommand*{\getAdvisor}{MSc. Simon Pistrosch}
+
+\begin{document}
+
+% TODO: decide on used language
+%\selectlanguage{ngerman}
+\selectlanguage{english}
+
+% Set page numbering to avoid "destination with the same identifier has been already used" warning for cover page.
+% (see https://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Problems_with_Links_and_Pages).
+\pagenumbering{alph}
+
+\frontmatter{}
+
+\input{pages/title}
+\input{pages/abstract}
+\microtypesetup{protrusion=false}
+\tableofcontents{}
+\microtypesetup{protrusion=true}
+
+\mainmatter{}
+
+\input{chapters/01_introduction}
+% TODO: add more chapters here
+
+\microtypesetup{protrusion=false}
+\listoffigures{}
+\listoftables{}
+\microtypesetup{protrusion=true}
+\printbibliography{}
+
+\end{document}
