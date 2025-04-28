@@ -2,14 +2,18 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chapter:introduction}
-Use with pdfLaTeX and Biber.
 
 \section{Section}
-Citation test (with Biber)~\parencite{latex}.
+Citation test~\parencite{latex}.
 
+Acronyms must be added in \texttt{main.tex} and are referenced using macros. The first occurrence is automatically replaced with the long version of the acronym, while all subsequent usages use the abbreviation.
+
+E.g. \texttt{\textbackslash ac\{TUM\}, \textbackslash ac\{TUM\}} $\Rightarrow$ \ac{TUM}, \ac{TUM}
+
+For more details, see the documentation of the \texttt{acronym} package\footnote{\url{https://ctan.org/pkg/acronym}}.
 \subsection{Subsection}
 
-See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot}, \autoref{fig:sample-listing}, \autoref{fig:tum}, \autoref{fig:tumslide}.
+See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot}, \autoref{fig:sample-listing}.
 
 \begin{table}[htpb]
   \caption[Example table]{An example for a simple table.}\label{tab:sample}
@@ -72,9 +76,9 @@ See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot
         xlabel=X
       ]
       \addplot table[x=a, y=b]{\exampleA};
-      \addlegendentry{Example A};
+      \addlegendentry{Example A}
       \addplot table[x=a, y=b]{\exampleB};
-      \addlegendentry{Example B};
+      \addlegendentry{Example B}
     \end{axis}
   \end{tikzpicture}
   \caption[Example plot]{An example for a simple plot.}\label{fig:sample-plot}
@@ -89,30 +93,3 @@ See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot
   \end{tabular}
   \caption[Example listing]{An example for a source code listing.}\label{fig:sample-listing}
 \end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\textwidth]{tum}
-  \caption[Something else can be written here for listing this, otherwise the caption will be written!]{Includegraphics searches for the filename without extension first in logos, then in figures.} \label{fig:tum}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figures/tum}
-  \caption{For pictures with the same name, the direct folder needs to be chosen.} \label{fig:tumslide}
-\end{figure}
-
-\begin{figure}[!tbp]
-  \centering
-  \subfloat[TUM Logo][The logo.]{\includegraphics[height=0.2\textheight]{tum}\label{fig:tum1}}
-  \hfill
-  \subfloat[TUM Slide][The famous slide.]{\includegraphics[height=0.2\textheight]{figures/tum}\label{fig:tum2}}
-  \caption{Two TUM pictures side by side.}
-  \label{fig:sidebyside}
-\end{figure}
-
-\todo{Now it is your turn to write your thesis.
-
-This will be a few tough weeks.}
-
-\done{Nevertheless, celebrate it when it is done!}
