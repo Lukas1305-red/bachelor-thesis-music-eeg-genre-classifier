@@ -17,8 +17,6 @@ class MusicExperiment:
     def __init__(self, session_number):
         # Paths configuration
 
-        # TODO Adapt the path for my dataset
-
         self.path_to_session = f"../../data/music_sessions/session{session_number}"
         
         # Initialize Tkinter
@@ -160,16 +158,13 @@ def main():
     """Main function to start the experiment"""
     # Set up argument parser
     parser = argparse.ArgumentParser(description='Run a music experiment with specified songs and genres')
-    parser.add_argument('--n_songs', type=int, default=100, help='Number of songs for the experiment')
-    parser.add_argument('--genres', nargs='+', default=['Instrumental', 'Rock'], 
-                       help='List of genres for the experiment (space-separated)')
     parser.add_argument('--session', type=int, default=1, help='Number of the session')
     
     # Parse arguments
     args = parser.parse_args()
     
     try:
-        experiment = MusicExperiment(n_songs=args.n_songs, genres=args.genres, session_number=args.session)
+        experiment = MusicExperiment(session_number=args.session)
         experiment.run()
     except Exception as e:
         print(f"Failed to start experiment: {e}")
