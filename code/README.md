@@ -1,31 +1,14 @@
-## Getting Started
+# Code for the thesis
 
-This guide will help you set up the environment and get started with the code for the code of the Bachelor's thesis.
+As mentioned before, this directory consists of all the code snippets responsible for various different tasks along the EEG pipeline (Acquisition, Denoising, Feature-extraction and Classification). Each of these steps has a designated directory with their own README. Below, you will find an overview of all directories:
 
-### Prerequisites
+1. Acquisition: This folder contains all the code necessary for acquring the EEG data, so supporting the main experiment. Refer to this [README](acquisition/README.md)
 
-Ensure you have the following installed:
-- Python 3.8 or higher
-- `pip` (Python package manager)
+2. Denoising: TBA
 
-### Setting Up the Virtual Environment
+3. Feature-Extraction: TBA
 
-1. Create a virtual environment:
-  ```bash
-  python3 -m venv .venv
-  ```
+4. Classification: TBA
 
-2. Activate the virtual environment:
-  - On macOS/Linux:
-    ```bash
-    source .venv/bin/activate
-    ```
-  - On Windows:
-    ```bash
-    .venv\Scripts\activate.bat
-    ```
-
-4. Install the required dependencies:
-  ```bash
-  pip install -r requirements.txt
-  ```
+## Important Note
+Please make sure that you have followed the steps of setting up the virtual environment as it is needed throughout all pieces of code, no matter their purpose.
