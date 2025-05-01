@@ -8,21 +8,18 @@ import tkinter as tk
 from tkinter import messagebox
 from pylsl import StreamInfo, StreamOutlet, local_clock
 
-from utils import load, get_audio_path
+from pathlib import Path
+import os
+import random
 
 
 class MusicExperiment:
-    def __init__(self, n_songs, genres, session_number):
+    def __init__(self, session_number):
         # Paths configuration
 
         # TODO Adapt the path for my dataset
 
-        if platform.system() == 'Windows':
-            self.path_to_fma_small = "C:/Users/Mitarbeiter/Music/data/fma_small"
-            self.path_to_fma_metadata = "C:/Users/Mitarbeiter/Music/data/fma_metadata"
-        else:
-            self.path_to_fma_small = "/home/pistrosch/Musik/fma_small"
-            self.path_to_fma_metadata = "/home/pistrosch/Musik/fma_metadata"
+        self.path_to_session = f"../../data/music_sessions/session{session_number}"
         
         # Initialize Tkinter
         self.root = tk.Tk()
@@ -39,7 +36,7 @@ class MusicExperiment:
         self._init_lsl_streams()
         
         # Load songs
-        self.song_sequence, self.labels = self._load_songs(n_songs, genres, session_number)
+        self.song_sequence = self._load_songs(path_to_session=self.path_to_session)
 
     def _init_lsl_streams(self):
         """Initialize LSL streams for markers and song info"""
@@ -73,48 +70,18 @@ class MusicExperiment:
             print(f"Error initializing LSL streams: {e}")
             raise
 
-    # TODO Adapt this function for my purposes
-    def _load_songs(self, n_songs, genres, session_number):
+    def _load_songs(self, path_to_session):
         """Load and prepare song sequence"""
         try:
-            tracks = load(self.path_to_fma_metadata + '/tracks.csv')
-            small = tracks[tracks['set', 'subset'] <= 'small']
+            # get the names of the song files
+            audio_files = []
+            for song in os.listdir(path_to_session):
+                audio_files.extend(song)
+            
+            random.shuffle(audio_files)
 
-            small = small[small['track']['genre_top'].isin(genres)]
-
-            small = small['track'][['genre_top']]
-
-            # Search for music files
-            # TODO Adapt or remove this part since i already do the session generatoin in a different notebook
-            # TODO maybe just shuffle the data after loading --> Probably just load the names in and take a random and play that
-            songs_per_genre = n_songs // len(genres)
-            hop = 1000 // songs_per_genre
-
-            if session_number >= hop:
-                raise ValueError('Session-ID is too high! You likely record music that you already recorded!')
-
-            ids = [i + (session_number - 1) for i in range(0, 1000, hop)]
-            print(f'Songs per Genre: {len(ids)}')
-
-            all_songs = []
-            for genre in genres:
-                df_genre = small[small['genre_top'] == genre]
-                df_genre = df_genre.iloc[ids]
-                df_genre = df_genre['genre_top']
-
-                all_songs.append(df_genre)
-
-            # Create alternating sequence
-            song_sequence = []
-            labels = []
-            for i in range(0, len(ids) // 5):
-                for genre_songs in all_songs:
-                    songs = genre_songs.iloc[i * 5: (i + 1) * 5]
-                    song_sequence.extend(list(songs.index))
-                    labels.extend(list(songs.values))
-
-            print(f"Loaded {len(song_sequence)} songs")
-            return song_sequence, labels
+            return audio_files
+        
         except Exception as e:
             print(f"Error loading songs: {e}")
             return []
@@ -135,6 +102,9 @@ class MusicExperiment:
         if event.keysym == "space":
             self.space_pressed.set(True)
 
+    def split_song(self, song: str):
+        return song.split(".")
+
     def run(self):
         """Run the experiment"""
         try:
@@ -144,24 +114,26 @@ class MusicExperiment:
 
             # Silence period
             # TODO change to 5s
-            self.show_text("10 seconds silence", duration=10)
+            self.show_text("5 seconds silence", duration=5)
 
             # Main song loop
-            # TODO Adapt loop condition
+    
             song = 0
-            for song_number, label in zip(self.song_sequence, self.labels):
+            for song in self.song_sequence:
                 print(f"Song {song} out of {len(self.song_sequence)}")
                 print("Pushing marker:", 'Start Recording')
                 self.marker_outlet.push_sample(['Start Recording'], local_clock())
 
+                [genre, song_id, extension] = song.split(".")
+
                 # Change information that is pushed to the stream
-                print(f"Pushing song: {song_number}")
-                self.song_outlet.push_sample([f'{song_number}', f'{label}'], local_clock())
+                print(f"Pushing song: {genre + song_id}")
+                self.song_outlet.push_sample([f'{song_id}', f'{genre}'], local_clock())
                 
                 self.show_text("Listen to the song")
                 
                 # Play song
-                data, samplerate = sf.read(get_audio_path(self.path_to_fma_small, song_number))
+                data, samplerate = sf.read(song) # TODO Adapt to actually have the path to the audio path.
                 sd.play(data, samplerate)
                 sd.wait()
                 
@@ -169,7 +141,7 @@ class MusicExperiment:
                 self.marker_outlet.push_sample(['End Recording'], local_clock())
                 
                 # TODO lower the duration
-                self.show_text("Wait for next song!", duration=10)
+                self.show_text("Wait for next song!", duration=5)
 
                 song += 1
 
