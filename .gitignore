@@ -1,5 +1,12 @@
 # Ignore everything in the build directory
-/build/*
+thesis/build/*
+thesis/.github
+thesis/.gitlab-ci.yml
 
 # But keep the final PDF
-!build/thesis.pdf
+!thesis/build/thesis.pdf
+
+data/*
+
+.venv
+.vscode
