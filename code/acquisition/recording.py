@@ -138,7 +138,7 @@ class MusicExperiment:
                 
                 self.show_text("Wait for next song!", duration=5)
 
-                i += 5
+                i += 1
 
             # End screen
             self.show_text("Thank you for participating!", duration=5)
