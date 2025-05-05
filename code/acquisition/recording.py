@@ -12,7 +12,7 @@ from pathlib import Path
 import os
 import random
 
-
+# TODO - Maybe change some occurences on the go while trying it out in the lab.
 class MusicExperiment:
     def __init__(self, session_number):
         # Paths configuration
