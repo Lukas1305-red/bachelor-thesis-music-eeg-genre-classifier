@@ -12,3 +12,6 @@ This directory contains the jupyter notebooks responsible for the acquisition of
 
 ### [Session generation](session-generator.ipynb)
 This notebook is responsible for generating the distinct sessions for the acquisition. The whole dataset is split in 20 distinct sessions each containing 50 songs. Each session is balanced according to their respective genre, so that each genre is represented by 5 songs. The distinct sessions are stored in an auto-generated folder in `data` called `music_sessions`. Each session directory contains the `.wav` files for each song.
+
+### [Experiment Manager](recording.py)
+This python script is responsible for managing the experiment setup and the communication with the LSL streams which handles the recording of EEG data. Depending on the provided session number, the script takes a pre-generated session by [Session generation](session-generator.ipynb) and plays the corresponding songs in a random order. While doing that, markers are pushed to the LSL stream to signalize where a "listening experience" started and where it ended, as well as which genre it was.
