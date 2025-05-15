@@ -74,6 +74,7 @@ class MusicExperiment:
         try:
             # get the names of the song files
             audio_files = [song for song in os.listdir(path=path_to_session)]
+            random.seed(2025)
             random.shuffle(audio_files)
             return [os.path.join(path_to_session, song) for song in audio_files]
             
