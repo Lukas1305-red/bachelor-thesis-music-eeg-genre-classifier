@@ -10,3 +10,5 @@ data/*
 
 .venv
 .vscode
+
+code/acquisition/example-xdf-files

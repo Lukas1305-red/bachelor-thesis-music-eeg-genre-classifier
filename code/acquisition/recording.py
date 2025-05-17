@@ -16,7 +16,7 @@ import random
 class MusicExperiment:
     def __init__(self, session_number):
         # Paths configuration
-
+        print(session_number)
         self.path_to_session = f"../../data/music_sessions/session{session_number}"
         
         # Initialize Tkinter
@@ -68,17 +68,16 @@ class MusicExperiment:
             print(f"Error initializing LSL streams: {e}")
             raise
 
+    # TODO set a seed for the randomization of the order of the songs
     def _load_songs(self, path_to_session):
         """Load and prepare song sequence"""
         try:
             # get the names of the song files
-            audio_files = []
-            for song in os.listdir(path_to_session):
-                audio_files.extend(song)
-            
+            audio_files = [song for song in os.listdir(path=path_to_session)]
+            random.seed(2025)
             random.shuffle(audio_files)
-
-            return audio_files
+            return [os.path.join(path_to_session, song) for song in audio_files]
+            
         
         except Exception as e:
             print(f"Error loading songs: {e}")
@@ -112,25 +111,30 @@ class MusicExperiment:
 
             # Silence period
             self.show_text("5 seconds silence", duration=5)
-
+            # TODO baseline recording about 30s
+            # TODO push markers before and after for additional information
             # Main song loop
             i = 0
             for song in self.song_sequence:
                 print(f"Song {i} out of {len(self.song_sequence)}")
                 print("Pushing marker:", 'Start Recording')
                 self.marker_outlet.push_sample(['Start Recording'], local_clock()) # Start of the recording
-
-                [genre, song_id, _] = song.split(".")
-
+                print("I am here")
+                print(f"{song}")
+                filename = os.path.basename(song)
+                [genre, song_id, _] = filename.split(".")
+                print("I am here")
                 # Change information that is pushed to the stream
                 print(f"Pushing song: {genre + song_id}")
                 self.song_outlet.push_sample([f'{song_id}', f'{genre}'], local_clock())
-                
+                print("I am here")
                 self.show_text("Listen to the song")
                 
                 # Play song
                 data, samplerate = sf.read(song)
+                print("I am here")
                 sd.play(data, samplerate)
+                print("I am here")
                 sd.wait()
                 
                 print("Pushing marker:", 'End Recording')
@@ -162,7 +166,7 @@ def main():
     args = parser.parse_args()
     
     try:
-        experiment = MusicExperiment(session_number=args.session)
+        experiment = MusicExperiment(session_number=args.s)
         experiment.run()
     except Exception as e:
         print(f"Failed to start experiment: {e}")
