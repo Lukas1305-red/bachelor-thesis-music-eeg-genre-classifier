@@ -26,9 +26,8 @@ function plotXDF(channel_number, eeg_stream, song_stream, music_markers_stream, 
         for i = 1:length(recording_timestamps)
             xline(recording_timestamps(i), 'c-', recording_markers{i}, 'LabelVerticalAlignment','top', 'LabelHorizontalAlignment','left');
         end
+        legend('EEG', 'Song Markers', 'Recording Markers')
     end
-
-    legend('EEG', 'Song Markers', 'Recording Markers')
     hold off;
        
 
