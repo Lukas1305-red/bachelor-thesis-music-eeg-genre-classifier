@@ -42,3 +42,15 @@ Ensure you have the following installed:
   ```bash
   pip install -r requirements.txt
   ```
+
+
+### Setting up MATLAB
+For the MATLAB functions, not much of setup has to be done. You just have to make sure that you have one of the newest versions/licences of MATLAB installed on your machine. For a tutorial setup, please visit the official [MATLAB Homepage](https://matlab.mathworks.com/)
+
+In order to run the MATLAB functions in this repo, you have to download the [load_xdf function](https://github.com/xdf-modules/xdf-Matlab) via Github. You then have to add the function on the top level to MATLAB's path. There are 2 possibilities for that: 
+
+1. In the GUI, go to `File / Set Path / Add Folder` and add the path to the package.
+2. In the command line, type in the following command:  
+  ```bash
+  addpath('C:\\path\\to\\xdf_repo\\Matlab\\xdf-Matlab')
+  ```
