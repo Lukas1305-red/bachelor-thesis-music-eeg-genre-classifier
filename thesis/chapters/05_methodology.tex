@@ -1,10 +1,13 @@
 \chapter{Methodology}\label{chapter:methodology}
 
   \section{Acquisition}
+    \subsection{General setup, environment and stimuli}
+      The experiment has been conducted in a laboratory setting. As already mentioned in \autoref{chapter:music_datasets}, the GTZAN Music dataset is chosen as a basis for the music stimuli. However, for the sake of the quality of the data, it would not be beneficial to hear all 1000 songs in one single session. To not only avoid quick attention loss during a session but also to gather as many different data under different circumstances, the whole set of audio files is partioned into 20 distinct session each lasting around 30 min. This means that per session, 50 songs are played for each of which EEG signals are gathered.\footnote{Because of a corrupt audio file, one session only consists of 49 songs.} However, these 50 songs are not chosen randomly. To ensure that each of the ten genres from dataset is represented in each session, five songs from each genre are being played during the session. This also makes sure that there is no genre bias in the data, thus resulting in a balanced out signal across genres. During listening, the order of the songs is randomized to avoke a brain reaction that is as natural as possible as the brain cannot predict the genre that is listened to. Additonaly, to not overstimulate the brain, a five second break is implemented in between songs.\par
+      All 20 sessions have been recorded over the course of two weeks, with an average of two sessions per day. Between each session there was a short break between ten and 30 minutes. This verifies a sufficient pause of the brain to fully prepare for the next session. The test person is the author himself, a 21 year-old, right-handed college student without any common (brain) diseases. To further guarantee a high quality in the acquired signal data, the environment and setting of the experiment has to be adapted. First and foremost, the test person is instructed to sit comfortably in a chair with his eyes closed to minimize artificats coming from blinking and eye-movement. Furthermore and most importantly, any movements, especially in the head region, have to be limited and as minimal as possible since the EEG device reacts very sensitive for head movements. Apart from that, the room was quiet and isolated with dimmed natural lighting combined with the brigthness from a Dektop monitor. The songs were played over the EEG headset (cf. \autoref{section:headset}) with an average and constant volume.
 
-    \subsection{General setup and environment}
+    \subsection{EEG acquisition device}\label{section:headset}
 
-    \subsection{Music session generation}
+    \subsection{Technical setup}
 
   % TODO - subsections could be used here but depends on techniques used and stuff
   \section{Denoising}
