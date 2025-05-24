@@ -34,7 +34,8 @@ class MusicExperiment:
         self._init_lsl_streams()
         
         # Load songs
-        self.song_sequence = self._load_songs(path_to_session=self.path_to_session)
+        self.song_sequence = self._load_songs(path_to_session=self.path_to_session,
+                                              session_number=int(session_number))
 
     def _init_lsl_streams(self):
         """Initialize LSL streams for markers and song info"""
@@ -68,13 +69,12 @@ class MusicExperiment:
             print(f"Error initializing LSL streams: {e}")
             raise
 
-    # TODO set a seed for the randomization of the order of the songs
-    def _load_songs(self, path_to_session):
+    def _load_songs(self, path_to_session, session_number):
         """Load and prepare song sequence"""
         try:
             # get the names of the song files
             audio_files = [song for song in os.listdir(path=path_to_session)]
-            random.seed(2025)
+            random.seed(2025 + session_number)
             random.shuffle(audio_files)
             return [os.path.join(path_to_session, song) for song in audio_files]
             
@@ -111,30 +111,23 @@ class MusicExperiment:
 
             # Silence period
             self.show_text("5 seconds silence", duration=5)
-            # TODO baseline recording about 30s
-            # TODO push markers before and after for additional information
             # Main song loop
-            i = 0
+            i = 1
             for song in self.song_sequence:
                 print(f"Song {i} out of {len(self.song_sequence)}")
                 print("Pushing marker:", 'Start Recording')
                 self.marker_outlet.push_sample(['Start Recording'], local_clock()) # Start of the recording
-                print("I am here")
                 print(f"{song}")
                 filename = os.path.basename(song)
                 [genre, song_id, _] = filename.split(".")
-                print("I am here")
                 # Change information that is pushed to the stream
                 print(f"Pushing song: {genre + song_id}")
                 self.song_outlet.push_sample([f'{song_id}', f'{genre}'], local_clock())
-                print("I am here")
                 self.show_text("Listen to the song")
                 
                 # Play song
                 data, samplerate = sf.read(song)
-                print("I am here")
                 sd.play(data, samplerate)
-                print("I am here")
                 sd.wait()
                 
                 print("Pushing marker:", 'End Recording')

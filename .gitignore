@@ -12,3 +12,5 @@ data/*
 .vscode
 
 code/acquisition/example-xdf-files
+
+*.asv
