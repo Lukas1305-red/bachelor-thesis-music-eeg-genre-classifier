@@ -27,6 +27,7 @@ mne==1.9.0
 nest-asyncio==1.6.0
 numpy==2.2.5
 packaging==25.0
+pandas==2.2.3
 parso==0.8.4
 pexpect==4.9.0
 pillow==11.2.1
@@ -41,6 +42,7 @@ Pygments==2.19.1
 pylsl==1.17.6
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
+pytz==2025.2
 pyxdf==1.17.0
 pyzmq==26.4.0
 requests==2.32.3
@@ -53,6 +55,7 @@ tk==0.1.0
 tornado==6.4.2
 tqdm==4.67.1
 traitlets==5.14.3
+tzdata==2025.2
 urllib3==2.4.0
 utils==1.0.2
 wcwidth==0.2.13
