@@ -6,11 +6,11 @@ function createEEGPlots(filename, draw_segments)
     for i = 1:length(streams)
         fprintf('Stream %d: %s\n', i, streams{i}.info.name);
         switch streams{i}.info.name
-            case Headset_EEG_DR250
+            case 'Headset_EEG_DR250'
                 eeg_stream = streams{i};
-            case MusicMarkers
+            case 'MusicMarkers'
                 music_markers_stream = streams{i};
-            case Song
+            case 'Song'
                 song_stream = streams{i};
         end
     end
