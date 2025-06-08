@@ -4,102 +4,12 @@
 \chapter{Introduction}\label{chapter:introduction}
 
   \section{Motivation}
+  \textcolor{orange}{Maybe also mention here the gap between MGR and neurosciences more well, since it will be brought up in the Research goals section}
   The human brain is one of the most complex and important systems within the human body. The brain manages various functionalities like emotion, memory, attention and sensory processing, to name a few. Apart from that, the brain plays a significant role in how we process musical pieces. Independent of culture and age, music is a universal tool to influence one's emotions, concentration and cognition. Furthermore, the brain gives us the unique ability to retrieve many different features out of music, like melody extraction or the identification of an artist or a specific genre. Depending on the style of music, the brain reacts differently. However, although the brain is central to cognitive processes such as listening to music, the core mechanisms remain unknown and are currently black boxes.\par
-  To enlighten these black boxes, medical advancements like functional magnetic resonance imaging (fMRI) or electroencephalogram (EEG) arrived, which can measure brain activity. Especially EEG has aroused high interest since they directly measure the neural activity and can be done non-invasive with a little overhead in setup. This is why combining EEG and music has the ability to help better understand how our brain functions. By further adding means of Machine Learning (ML), a whole new interdisciplinary field opens up, bridging the gap between neurosciences and Computer science.\par
-  There is a growing research interest in the affective influence of music on the brain. However, classifying different music genres based on EEG signals remains underrepresented. This is exactly where this thesis aims to close the gap, by investigating whether it is possible to classify various musical genres depending on the EEG signals acquired using state-of-the-art ML techniques.\par
-  The research results have high potential in the domain of medical computer science. Especially with the growing investigations on Brain Machine interfaces (BMIs), adaptive music therapy, personalised music recommendations or neurofeedback systems may become possible. Additionally, entertainment technologies can become more user-centred, facilitating unique experiences that impact many sectors like education and mental health \par
-
-
+  To enlighten these black boxes, medical advancements like \ac{fMRI} or \ac{EEG} arrived, which can measure brain activity. Especially EEG has aroused high interest since they directly measure the neural activity and can be done non-invasive with a little overhead in setup. This is why combining EEG and music has the ability to help better understand how our brain functions. By further adding means of \ac{ML}, a whole new interdisciplinary field opens up, bridging the gap between neurosciences and Computer science.\par
+  There is a growing research interest in the affective influence of music on the brain. However, classifying different music genres based on \ac{EEG} signals remains underrepresented. This is exactly where this thesis aims to close the gap, by investigating whether it is possible to classify various musical genres depending on the EEG signals acquired using state-of-the-art ML techniques.\par
+  The research results have high potential in the domain of medical computer science. Especially with the growing investigations on \acp{BMI}, adaptive music therapy, personalised music recommendations or neurofeedback systems may become possible. Additionally, entertainment technologies can become more user-centred, facilitating unique experiences that impact many sectors like education and mental health.
 
   \section{Research goals}
 
   \section{Methodology}
-% Citation test~\parencite{latex}.
-
-% Acronyms must be added in \texttt{main.tex} and are referenced using macros. The first occurrence is automatically replaced with the long version of the acronym, while all subsequent usages use the abbreviation.
-
-% E.g. \texttt{\textbackslash ac\{TUM\}, \textbackslash ac\{TUM\}} $\Rightarrow$ \ac{TUM}, \ac{TUM}
-
-% For more details, see the documentation of the \texttt{acronym} package\footnote{\url{https://ctan.org/pkg/acronym}}.
-% \subsection{Subsection}
-
-% See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot}, \autoref{fig:sample-listing}.
-
-% \begin{table}[htpb]
-%   \caption[Example table]{An example for a simple table.}\label{tab:sample}
-%   \centering
-%   \begin{tabular}{l l l l}
-%     \toprule
-%       A & B & C & D \\
-%     \midrule
-%       1 & 2 & 1 & 2 \\
-%       2 & 3 & 2 & 3 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-% \begin{figure}[htpb]
-%   \centering
-%   % This should probably go into a file in figures/
-%   \begin{tikzpicture}[node distance=3cm]
-%     \node (R0) {$R_1$};
-%     \node (R1) [right of=R0] {$R_2$};
-%     \node (R2) [below of=R1] {$R_4$};
-%     \node (R3) [below of=R0] {$R_3$};
-%     \node (R4) [right of=R1] {$R_5$};
-
-%     \path[every node]
-%       (R0) edge (R1)
-%       (R0) edge (R3)
-%       (R3) edge (R2)
-%       (R2) edge (R1)
-%       (R1) edge (R4);
-%   \end{tikzpicture}
-%   \caption[Example drawing]{An example for a simple drawing.}\label{fig:sample-drawing}
-% \end{figure}
-
-% \begin{figure}[htpb]
-%   \centering
-
-%   \pgfplotstableset{col sep=&, row sep=\\}
-%   % This should probably go into a file in data/
-%   \pgfplotstableread{
-%     a & b    \\
-%     1 & 1000 \\
-%     2 & 1500 \\
-%     3 & 1600 \\
-%   }\exampleA
-%   \pgfplotstableread{
-%     a & b    \\
-%     1 & 1200 \\
-%     2 & 800 \\
-%     3 & 1400 \\
-%   }\exampleB
-%   % This should probably go into a file in figures/
-%   \begin{tikzpicture}
-%     \begin{axis}[
-%         ymin=0,
-%         legend style={legend pos=south east},
-%         grid,
-%         thick,
-%         ylabel=Y,
-%         xlabel=X
-%       ]
-%       \addplot table[x=a, y=b]{\exampleA};
-%       \addlegendentry{Example A}
-%       \addplot table[x=a, y=b]{\exampleB};
-%       \addlegendentry{Example B}
-%     \end{axis}
-%   \end{tikzpicture}
-%   \caption[Example plot]{An example for a simple plot.}\label{fig:sample-plot}
-% \end{figure}
-
-% \begin{figure}[htpb]
-%   \centering
-%   \begin{tabular}{c}
-%   \begin{lstlisting}[language=SQL]
-%     SELECT * FROM tbl WHERE tbl.str = "str"
-%   \end{lstlisting}
-%   \end{tabular}
-%   \caption[Example listing]{An example for a source code listing.}\label{fig:sample-listing}
-% \end{figure}
