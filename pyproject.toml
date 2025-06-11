@@ -1,4 +1,4 @@
-[tool.poetry]
+[project]
 name = "bachelor-thesis-music-eeg-genre-classifier"
 version = "0.1.0"
 description = ""
