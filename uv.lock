@@ -98,12 +98,18 @@ build = [
     { name = "setuptools" },
     { name = "wheel" },
 ]
+compile = [
+    { name = "build" },
+    { name = "setuptools" },
+    { name = "wheel" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "appnope", specifier = "==0.1.4" },
     { name = "asttokens", specifier = "==3.0.0" },
     { name = "build", marker = "extra == 'build'" },
+    { name = "build", marker = "extra == 'compile'" },
     { name = "certifi", specifier = "==2025.4.26" },
     { name = "cffi", specifier = "==1.17.1" },
     { name = "charset-normalizer", specifier = "==3.4.2" },
@@ -152,6 +158,7 @@ requires-dist = [
     { name = "requests", specifier = "==2.32.3" },
     { name = "scipy", specifier = "==1.15.3" },
     { name = "setuptools", marker = "extra == 'build'" },
+    { name = "setuptools", marker = "extra == 'compile'" },
     { name = "six", specifier = "==1.17.0" },
     { name = "sounddevice", specifier = "==0.5.1" },
     { name = "soundfile", specifier = "==0.13.1" },
@@ -165,8 +172,9 @@ requires-dist = [
     { name = "utils", specifier = "==1.0.2" },
     { name = "wcwidth", specifier = "==0.2.13" },
     { name = "wheel", marker = "extra == 'build'" },
+    { name = "wheel", marker = "extra == 'compile'" },
 ]
-provides-extras = ["build"]
+provides-extras = ["build", "compile"]
 
 [[package]]
 name = "build"
