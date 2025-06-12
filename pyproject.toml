@@ -21,7 +21,7 @@ dependencies = [
     "executing (==2.2.0)",
     "fonttools (==4.57.0)",
     "idna (==3.10)",
-    "ipykernel (==6.29.5)",
+    "ipykernel==6.29.5",
     "ipython (==9.2.0)",
     "ipython-pygments-lexers (==1.1.1)",
     "jedi (==0.19.2)",
@@ -68,7 +68,7 @@ dependencies = [
     "tzdata (==2025.2)",
     "urllib3 (==2.4.0)",
     "utils (==1.0.2)",
-    "wcwidth (==0.2.13)"
+    "wcwidth (==0.2.13)",
 ]
 
 
