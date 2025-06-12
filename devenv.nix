@@ -32,6 +32,7 @@ in {
   packages = with pkgs; [
     cudaPackages.cuda_nvcc
     git
+    pre-commit
   ];
 
   # https://devenv.sh/languages/
