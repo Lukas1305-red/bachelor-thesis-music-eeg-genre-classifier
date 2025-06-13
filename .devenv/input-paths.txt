@@ -1,7 +1,0 @@
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/.devenv/flake.json
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/.devenv.flake.nix
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/.env
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/devenv.local.nix
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/devenv.lock
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/devenv.nix
-/home/ge83mav/bachelor-thesis-music-eeg-genre-classifier/devenv.yaml
