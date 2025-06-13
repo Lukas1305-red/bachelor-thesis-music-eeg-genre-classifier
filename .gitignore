@@ -10,7 +10,18 @@ data/*
 
 .venv
 .vscode
+.idea
 
 code/acquisition/example-xdf-files
 
 *.asv
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-comit-config.yaml
