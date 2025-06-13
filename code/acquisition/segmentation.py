@@ -8,6 +8,7 @@ from scipy.io import savemat
 PATH_TO_DATA = "../../data/eeg-data"
 PATH_TO_DATA_ROOT = "../../data"
 
+
 # Helper functions
 def get_channel_names(biosignal_stream):
     ret = []
@@ -31,7 +32,9 @@ def get_start_from_segment(start, timestamps, prev_pointer):
     return start_pointer
 
 
-def segment_signal_data(timestamp_list, signal_list, channel_count, music_timestamps, song_count):
+def segment_signal_data(
+    timestamp_list, signal_list, channel_count, music_timestamps, song_count
+):
     # Read out EEG channel data
     data_acc = []  # stores data over the course of all channels and each song i guess idk
     pointer = 0  # pointer that iterates over all the timestamps/data
@@ -86,9 +89,9 @@ def store_in_table(columns, segmented_signal_data, table, song_count):
 # Main logic
 
 
-def create_segment(session_id, song_count_param):
+def create_segment(session_id, song_count_param, only_eeg_segments):
     table = {}
-    sessions_without_ppg = ['000','001','002','003','004']
+    sessions_without_ppg = ["000", "001", "002", "003", "004"]
     filename = f"sub-P001_ses-S{session_id}_task-Default_run-001_eeg.xdf"
     data, _ = pyxdf.load_xdf(f"{PATH_TO_DATA}/{filename}")
 
@@ -100,26 +103,11 @@ def create_segment(session_id, song_count_param):
     imu_stream = find_stream("Headset_IMU_DR30", data=data)
 
     # Read out channel names of each stream
-    print("EEG Channels:")
     eeg_channels = get_channel_names(eeg_stream)
-    for elem in eeg_channels:
-        print(elem)
-    print("===========")
-    print("IMU Channels:")
     imu_channels = get_channel_names(imu_stream)
-    for elem in imu_channels:
-        print(elem)
-    print("===========")
-    print("Temperature Channels:")
     temperature_channels = get_channel_names(temperature_stream)
-    for elem in temperature_channels:
-        print(elem)
-    print("===========")
-    print("PPG Channels:")
-    if not (session_id in sessions_without_ppg):
+    if session_id not in sessions_without_ppg:
         ppg_channels = get_channel_names(ppg_algo_stream)
-        for elem in ppg_channels:
-            print(elem)
 
     # Get timestamps and data
     # Annotation: data holds the real values; timestamps the corresponding time the specific value was measured at
@@ -129,7 +117,7 @@ def create_segment(session_id, song_count_param):
     temperature_data = temperature_stream["time_series"]
     temperature_timestamps = temperature_stream["time_stamps"]
 
-    if not (session_id in sessions_without_ppg):
+    if session_id not in sessions_without_ppg:
         ppg_algo_data = ppg_algo_stream["time_series"]
         ppg_algo_timestamps = ppg_algo_stream["time_stamps"]
 
@@ -142,7 +130,6 @@ def create_segment(session_id, song_count_param):
     song_data = song_stream["time_series"]
 
     table["genre"] = []
-    print(len(song_data))
     # song_count = song_data
     for i in range(song_count_param):
         table["genre"].append(song_data[i][1])
@@ -153,49 +140,66 @@ def create_segment(session_id, song_count_param):
         signal_list=eeg_data_processed,
         channel_count=8,
         music_timestamps=music_markers_timestamps,
-        song_count=song_count_param
+        song_count=song_count_param,
     )
     eeg_channels_col = [f"EEG_{eeg_channels[i]}" for i in range(8)]
-    store_in_table(columns=eeg_channels_col, segmented_signal_data=channel_data_acc, table=table, song_count=song_count_param)
-
-    temperature_data_buffer = segment_signal_data(
-        timestamp_list=temperature_timestamps,
-        signal_list=temperature_data,
-        channel_count=3,
-        music_timestamps=music_markers_timestamps,
-        song_count=song_count_param
+    store_in_table(
+        columns=eeg_channels_col,
+        segmented_signal_data=channel_data_acc,
+        table=table,
+        song_count=song_count_param,
     )
-    temp_columns = [f"TEMP_{temperature_channels[i]}" for i in range(3)]
-    store_in_table(columns=temp_columns, segmented_signal_data=temperature_data_buffer, table=table, song_count=song_count_param)
-
-    imu_data_buffer = segment_signal_data(
-        timestamp_list=imu_timestamps,
-        signal_list=imu_data,
-        channel_count=6,
-        music_timestamps=music_markers_timestamps,
-        song_count=song_count_param
-    )
-    imu_columns = [f"IMU_Ch{imu_channels[i]}" for i in range(6)]
-    store_in_table(imu_columns, imu_data_buffer, table=table, song_count=song_count_param)
-
-    if not (session_id in sessions_without_ppg):
-        ppg_data_buffer = segment_signal_data(
-            timestamp_list=ppg_algo_timestamps,
-            signal_list=ppg_algo_data,
-            channel_count=23,
+    if not only_eeg_segments:
+        temperature_data_buffer = segment_signal_data(
+            timestamp_list=temperature_timestamps,
+            signal_list=temperature_data,
+            channel_count=3,
             music_timestamps=music_markers_timestamps,
-            song_count=song_count_param
+            song_count=song_count_param,
         )
-        ppg_columns = [f"PPG_{ppg_channels[i]}" for i in range(23)]
-        store_in_table(ppg_columns, ppg_data_buffer, table=table, song_count=song_count_param)
+        temp_columns = [f"TEMP_{temperature_channels[i]}" for i in range(3)]
+        store_in_table(
+            columns=temp_columns,
+            segmented_signal_data=temperature_data_buffer,
+            table=table,
+            song_count=song_count_param,
+        )
+
+        imu_data_buffer = segment_signal_data(
+            timestamp_list=imu_timestamps,
+            signal_list=imu_data,
+            channel_count=6,
+            music_timestamps=music_markers_timestamps,
+            song_count=song_count_param,
+        )
+        imu_columns = [f"IMU_Ch{imu_channels[i]}" for i in range(6)]
+        store_in_table(
+            imu_columns, imu_data_buffer, table=table, song_count=song_count_param
+        )
+
+        if session_id not in sessions_without_ppg:
+            ppg_data_buffer = segment_signal_data(
+                timestamp_list=ppg_algo_timestamps,
+                signal_list=ppg_algo_data,
+                channel_count=23,
+                music_timestamps=music_markers_timestamps,
+                song_count=song_count_param,
+            )
+            ppg_columns = [f"PPG_{ppg_channels[i]}" for i in range(23)]
+            store_in_table(
+                ppg_columns, ppg_data_buffer, table=table, song_count=song_count_param
+            )
 
     return table
 
 
-def main():
+def main(only_eeg_segments):
     SONG_COUNT = 50
-    os.makedirs(f"{PATH_TO_DATA_ROOT}/signal_data", exist_ok=True)
-    for i in range(10, 20, 1):
+    DIR_NAME = "signal_data"
+    if only_eeg_segments:
+        DIR_NAME = "eeg_data"
+    os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
+    for i in range(20):
         count = SONG_COUNT
         if i == 10:
             count -= 1
@@ -203,27 +207,26 @@ def main():
         for j in range(count):
             rows.append(f"Song{j}")
         session_number = str(i).zfill(3)
-        table = create_segment(session_number, song_count_param=count)
-        print("Created segments")
-        for key, value in table.items():
-            print(f"{key}: {len(value) if hasattr(value, '__len__') else 'scalar'}")
+        table = create_segment(
+            session_number, song_count_param=count, only_eeg_segments=only_eeg_segments
+        )
         df = pd.DataFrame(table)
         df.index = rows
 
-        # Save the table
-
         # create a folder for numpy data
-        os.makedirs(f"{PATH_TO_DATA_ROOT}/signal_data/numpy", exist_ok=True)
-        np.save(f"{PATH_TO_DATA_ROOT}/signal_data/numpy/{session_number}.npy", df.to_numpy())
+        os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/numpy", exist_ok=True)
+        np.save(
+            f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/numpy/{session_number}.npy", df.to_numpy()
+        )
         # create a folder for matlab data
-        os.makedirs(f"{PATH_TO_DATA_ROOT}/signal_data/matlab", exist_ok=True)
-        savemat(f"{PATH_TO_DATA_ROOT}/signal_data/matlab/{session_number}.mat", table)
-
-        os.makedirs(f"{PATH_TO_DATA_ROOT}/signal_data/csv", exist_ok=True)
-        df.to_csv(f"{PATH_TO_DATA_ROOT}/signal_data/csv/{session_number}.csv")
+        os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/matlab", exist_ok=True)
+        savemat(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/matlab/{session_number}.mat", table)
+        # create a folder for csv data
+        os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/csv", exist_ok=True)
+        df.to_csv(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/csv/{session_number}.csv")
 
         print(f"SUCCESSFULLY SAVED SESSION {session_number}")
 
+
 if __name__ == "__main__":
-    print("Current working directory:", os.getcwd())
-    main()
+    main(only_eeg_segments=True)
