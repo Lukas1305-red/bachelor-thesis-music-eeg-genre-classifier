@@ -24,9 +24,7 @@ def get_channel_names(biosignal_stream):
 def get_start_from_segment(start, timestamps, prev_pointer):
     start_pointer = prev_pointer
     while True:
-        if (
-            timestamps[start_pointer] >= start
-        ):  # found the start timestamp or rather got the closest one
+        if timestamps[start_pointer] >= start:
             break
         start_pointer += 1
     return start_pointer
@@ -69,6 +67,13 @@ def find_stream(stream_name, data):
             print(f"Found the stream {stream_name}!")
             return stream
     print("Couldn't find the stream.")
+
+
+def debug_print_shapes(segmented_signal_data, song_count):
+    for i in range(song_count):
+        print(
+            f"This is the shape of song {i + 1}: {np.shape(segmented_signal_data[i])}"
+        )
 
 
 def store_in_table(columns, segmented_signal_data, table, song_count):
@@ -197,9 +202,10 @@ def main(only_eeg_segments):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data"
+        DIR_NAME = "eeg_data_v2"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
+        print(f"SEGMENTING SESSION {i}...")
         count = SONG_COUNT
         if i == 10:
             count -= 1
@@ -221,9 +227,9 @@ def main(only_eeg_segments):
         # create a folder for matlab data
         os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/matlab", exist_ok=True)
         savemat(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/matlab/{session_number}.mat", table)
-        # create a folder for csv data
-        os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/csv", exist_ok=True)
-        df.to_csv(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/csv/{session_number}.csv")
+        # create a folder for pickle data
+        os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/pickle", exist_ok=True)
+        df.to_pickle(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/pickle/{session_number}.pkl")
 
         print(f"SUCCESSFULLY SAVED SESSION {session_number}")
 
