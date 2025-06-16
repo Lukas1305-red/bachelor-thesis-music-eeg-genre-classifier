@@ -3,14 +3,18 @@
   \section{Music Genre classification with audio features}
 
   \section{EEG datasets with music stimulus}
-    
-    \subsection{DEAP dataset}
+    As music is a popular stimulus used in \ac{EEG} studies to collect the signal data, many research projects have been conducted in this area. This section intends to serve as an overview of work that has been done in the context of constructing an EEG dataset where music served as a stimulus. For each dataset, not only the experiment setup and acquisition methods are described but also certain preprocessing and denoising steps made are emphasized on.
+    \subsection{DEAP}
+    The \ac{DEAP} is an \ac{EEG} dataset made public in 2012 by Koelstra et al. It is a multimodal dataset providing data for the analysis of human affective states. For 32 participants, \ac{EEG} and peripheral physiological signals have been recorded while they were watching 40 one-minute sections of music videos. Importantly, the video was also shown alongside the music serving as an additional stimulus. After each of those snippets, test subjects were asked to rate each music video in regards of valence (positiveley or negatively connoted), arousal, liking, dominance and familiarity. \cite{koelstra2012deap}\par
+    The music comes from a website called Last.fm and was selected with a sophisticated procedured. 120 music videos were initially selected and labeled with keywords out of a list with emotional keywords provided by the Last.fm website. Based on each of these emotional keywords, ten songs that have been labeled most with one of them has been selected in the next step of the procedure. The selected songs were further filtered according to valence and arousal attributes. After this filtering step, one-minute highlight section were chosen with an affective highlighting algorithm from each music video. Last but not least, a web-based assessement experiment was conducted to decide the 40 final music video clips for the \ac{DEAP} study. \cite{koelstra2012deap} \par
+    The experiment was conducted in a laboratory environment with controlled illumination. The EEG signals have been recorded with a sampling rate of 512Hz by 32 active AgCl electrodes placed in the international ten-20 system. Apart from that, not only physiological signals have been measured but also frontal face videos for 22 of the 32 participants have been recorded. The basic procedure of each session includes a five-second baseline recording before displaying the one-minute music video. When the video ended, the participant assessed the clip on the basis of arousal, valence, liking, familiarity and dominance. \cite{koelstra2012deap}\par
+    For further investigation of the recorded signal data the researches provide a preprocessed variant of the \ac{EEG} data. First and foremost, the data were common average referenced and then downsampled to 256Hz. The downsampled signal then went through a high-pass filter with a 2Hz cutoff frequency employing the EEGlab toolbox. Eye artifacts were removed by using a \ac{BSS} technique. For further analysis, the baseline recording of five seconds was removed. \cite{koelstra2012deap}\par
 
     \subsection{OpenMIIR initiative}
 
     \subsection{MUSIN-G}
   
-  \section{Emotion classification with EEG signals} % TODO - up for discussion, but 90% in
+  \section{Emotion classification with EEG signals}
 
   \section{Music Genre classification with EEG signals}
   
