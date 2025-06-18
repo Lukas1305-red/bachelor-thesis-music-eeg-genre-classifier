@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 from scipy.io import savemat
+import scipy.signal
 
 # Constants
 PATH_TO_DATA = "../../data/eeg-data"
@@ -91,10 +92,34 @@ def store_in_table(columns, segmented_signal_data, table, song_count):
             table[column_name].append(channel_data)
 
 
+# Source: https://swharden.com/blog/2020-09-23-signal-filtering-in-python/
+
+
+def bandpass(data, edges, sample_rate, poles=5):
+    sos = scipy.signal.butter(poles, edges, "bandpass", fs=sample_rate, output="sos")
+    filtered_data = scipy.signal.sosfiltfilt(sos, data)
+    return filtered_data
+
+
+def notch_filter(data, f0, sample_rate, Q=30):
+    b, a = scipy.signal.iirnotch(f0, Q, fs=sample_rate)
+    return scipy.signal.filtfilt(b, a, data)
+
+
+def filter_eeg(eeg_data, sample_rate):
+    filtered = []
+    for i in range(8):
+        channel = eeg_data[:, i]
+        filtered_channel = bandpass(channel, [0.5, 30], sample_rate)
+        filtered_channel = notch_filter(filtered_channel, 50, sample_rate)
+        filtered.append(filtered_channel)
+    return np.transpose(filtered)
+
+
 # Main logic
 
 
-def create_segment(session_id, song_count_param, only_eeg_segments):
+def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
     table = {}
     sessions_without_ppg = ["000", "001", "002", "003", "004"]
     filename = f"sub-P001_ses-S{session_id}_task-Default_run-001_eeg.xdf"
@@ -140,9 +165,11 @@ def create_segment(session_id, song_count_param, only_eeg_segments):
         table["genre"].append(song_data[i][1])
 
     eeg_data_processed = eeg_data[:, :8]
+    if filter_on:
+        eeg_data_denoised = filter_eeg(eeg_data_processed, sample_rate=250)
     channel_data_acc = segment_signal_data(
         timestamp_list=eeg_timestamps,
-        signal_list=eeg_data_processed,
+        signal_list=eeg_data_denoised if filter_on else eeg_data_processed,
         channel_count=8,
         music_timestamps=music_markers_timestamps,
         song_count=song_count_param,
@@ -198,11 +225,11 @@ def create_segment(session_id, song_count_param, only_eeg_segments):
     return table
 
 
-def main(only_eeg_segments):
+def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data_v2"
+        DIR_NAME = "eeg_data_v2_denoised"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
@@ -214,7 +241,10 @@ def main(only_eeg_segments):
             rows.append(f"Song{j}")
         session_number = str(i).zfill(3)
         table = create_segment(
-            session_number, song_count_param=count, only_eeg_segments=only_eeg_segments
+            session_number,
+            song_count_param=count,
+            only_eeg_segments=only_eeg_segments,
+            filter_on=filter_on,
         )
         df = pd.DataFrame(table)
         df.index = rows
@@ -235,4 +265,4 @@ def main(only_eeg_segments):
 
 
 if __name__ == "__main__":
-    main(only_eeg_segments=True)
+    main(only_eeg_segments=True, filter_on=True)
