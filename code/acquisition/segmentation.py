@@ -3,11 +3,12 @@ import numpy as np
 import pandas as pd
 import os
 from scipy.io import savemat
-import scipy.signal
+
+from code.denoising.denoising import bandpass, notch_filter
 
 # Constants
-PATH_TO_DATA = "../../data/eeg-data"
-PATH_TO_DATA_ROOT = "../../data"
+PATH_TO_DATA = "data/eeg-data"
+PATH_TO_DATA_ROOT = "data"
 
 
 # Helper functions
@@ -90,20 +91,6 @@ def store_in_table(columns, segmented_signal_data, table, song_count):
             column_name = columns[counter]
             counter += 1
             table[column_name].append(channel_data)
-
-
-# Source: https://swharden.com/blog/2020-09-23-signal-filtering-in-python/
-
-
-def bandpass(data, edges, sample_rate, poles=5):
-    sos = scipy.signal.butter(poles, edges, "bandpass", fs=sample_rate, output="sos")
-    filtered_data = scipy.signal.sosfiltfilt(sos, data)
-    return filtered_data
-
-
-def notch_filter(data, f0, sample_rate, Q=30):
-    b, a = scipy.signal.iirnotch(f0, Q, fs=sample_rate)
-    return scipy.signal.filtfilt(b, a, data)
 
 
 def filter_eeg(eeg_data, sample_rate):
@@ -229,7 +216,7 @@ def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data_v2_denoised"
+        DIR_NAME = "TEST"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
