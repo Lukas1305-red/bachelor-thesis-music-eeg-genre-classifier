@@ -57,6 +57,7 @@ dependencies = [
     "pyxdf (==1.17.0)",
     "pyzmq (==26.4.0)",
     "requests (==2.32.3)",
+    "scikit-learn>=1.7.0",
     "scipy==1.15.3",
     "six (==1.17.0)",
     "sounddevice (==0.5.1)",
