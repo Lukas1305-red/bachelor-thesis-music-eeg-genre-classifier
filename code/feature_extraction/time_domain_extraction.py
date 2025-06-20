@@ -2,7 +2,6 @@ import numpy as np
 import scipy.stats
 from statsmodels.tsa.ar_model import AutoReg
 import antropy as ant
-# import entropy as ent
 
 
 def statistical_values(song_data):
@@ -27,10 +26,10 @@ def statistical_values(song_data):
     statistical_features["zcr"] = np.array([zcr(signal) for signal in song_data])
 
     statistical_features["h_mobility"] = np.array(
-        [hjorth_mobility(signal) for signal in song_data]
+        [ant.hjorth_params(signal)[0] for signal in song_data]
     )
     statistical_features["h_complexity"] = np.array(
-        [hjorth_complexity(signal) for signal in song_data]
+        [ant.hjorth_params(signal)[1] for signal in song_data]
     )
 
     statistical_features["ar_model"] = [
@@ -46,18 +45,6 @@ def statistical_values(song_data):
 
 def zcr(signal):
     return np.sum(np.diff(np.sign(signal)) != 0) / len(signal)
-
-
-def hjorth_mobility(signal):
-    # first_derivative = np.diff(signal)
-    # return np.sqrt(np.var(first_derivative)/np.var(signal))
-    return ant.hjorth_params(signal)[0]
-
-
-def hjorth_complexity(signal):
-    # first_derivative = np.diff(signal)
-    # return hjorth_mobility(first_derivative) / hjorth_mobility(signal)
-    return ant.hjorth_params(signal)[1]
 
 
 def autoregressive_modeling(signal):
