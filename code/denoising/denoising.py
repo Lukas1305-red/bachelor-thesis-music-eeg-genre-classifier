@@ -5,14 +5,9 @@ from sklearn.decomposition import FastICA
 
 # *****THRESHOLD CONSTANTS*****
 
-KURTOSIS_MAX = 5
-KURTOSIS_MIN = -2
-
-SKEW_MAX = 2
-VAR_PERCENTAGE_MAX = 0.3
-
-GROUP_MAX = 0.8
-FOCAL_MAX = 0.6
+KURTOSIS_PERCENTILE = 95
+VAR_PERCENTILE = 95
+SKEW_PERCENTILE = 95
 
 
 # Source: https://swharden.com/blog/2020-09-23-signal-filtering-in-python/
@@ -34,18 +29,28 @@ def check_rejection(
     focal_concentration,
     group_A_percentage,
     group_B_percentage,
+    component_variances,
+    sources,
 ):
-    # kurtosis
-    if kurt < KURTOSIS_MIN or kurt > KURTOSIS_MAX:
+    # calculate thresholds
+    kurtosis_vals = scipy.stats.kurtosis(sources, axis=0, fisher=True)
+    skew_vals = np.abs(scipy.stats.skew(sources, axis=0))
+    var_percentages = component_variances / np.sum(component_variances)
+
+    kurtosis_threshold = np.percentile(kurtosis_vals, KURTOSIS_PERCENTILE)
+    skew_threshold = np.percentile(skew_vals, SKEW_PERCENTILE)
+    var_threshold = np.percentile(var_percentages, VAR_PERCENTILE)
+
+    if kurt > kurtosis_threshold:
         return True
-    if skew_val > SKEW_MAX:
+    if skew_val > skew_threshold:
         return True
-    if var_percentage > VAR_PERCENTAGE_MAX:
+    if var_percentage > var_threshold:
         return True
-    if focal_concentration > FOCAL_MAX:
-        return True
-    if group_A_percentage > GROUP_MAX or group_B_percentage > GROUP_MAX:
-        return True
+    # if focal_concentration > FOCAL_MAX:
+    #     return True
+    # if group_A_percentage > GROUP_MAX or group_B_percentage > GROUP_MAX:
+    #     return True
     return False
 
 
