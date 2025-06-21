@@ -15,6 +15,7 @@ data/*
 code/acquisition/example-xdf-files
 
 *.asv
+__pycache__
 
 # Devenv
 .devenv*
