@@ -97,7 +97,7 @@ def filter_eeg(eeg_data, sample_rate):
     filtered = []
     for i in range(8):
         channel = eeg_data[:, i]
-        filtered_channel = bandpass(channel, [0.5, 30], sample_rate)
+        filtered_channel = bandpass(channel, [1, 30], sample_rate)
         filtered_channel = notch_filter(filtered_channel, 50, sample_rate)
         filtered.append(filtered_channel)
     return np.transpose(filtered)
@@ -216,7 +216,7 @@ def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "TEST"
+        DIR_NAME = "eeg_data_v3_denoised"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
