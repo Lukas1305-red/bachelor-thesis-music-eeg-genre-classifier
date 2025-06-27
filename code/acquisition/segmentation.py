@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from scipy.io import savemat
 
-from code.denoising.denoising import bandpass, notch_filter
+from code.denoising.denoising import bandpass, notch_filter, artifact_removal_ica
 
 # Constants
 PATH_TO_DATA = "data/eeg-data"
@@ -103,6 +103,11 @@ def filter_eeg(eeg_data, sample_rate):
     return np.transpose(filtered)
 
 
+def remove_artefacts(eeg_data):
+    cleaned_data = artifact_removal_ica(np.transpose(eeg_data))
+    return np.transpose(cleaned_data)
+
+
 # Main logic
 
 
@@ -154,6 +159,7 @@ def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
     eeg_data_processed = eeg_data[:, :8]
     if filter_on:
         eeg_data_denoised = filter_eeg(eeg_data_processed, sample_rate=250)
+        eeg_data_denoised = remove_artefacts(eeg_data_denoised)
     channel_data_acc = segment_signal_data(
         timestamp_list=eeg_timestamps,
         signal_list=eeg_data_denoised if filter_on else eeg_data_processed,
@@ -216,7 +222,7 @@ def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data_v3_denoised"
+        DIR_NAME = "eeg_data_v5_denoised"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
