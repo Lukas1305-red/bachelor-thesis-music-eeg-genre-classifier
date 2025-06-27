@@ -9,23 +9,26 @@
   \section{Denoising and preprocessing of EEG signals}
     After acquiring the EEG signals, one has to follow further steps before performing a classifaction task on it. Since \ac{EEG} is a non-invasive technique, other signals, so called artefacts, are measured as well. Before discussing possible techniques to remove those data, different types of artefacts are presented with examples included. 
     \subsection{Types of artifacts in EEG signals}
-      \begin{table}[h]
-        \label{tab:artefacts}
+        \begin{table}[h]\label{tab:artefacts}
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
           \hline
           \textbf{Physiological artefacts} & \textbf{Non-Physiological artefacts} \\
           \hline
-          & \\
+          Ocular-related artefacts: eye movements and blinking & Power line interference \\
           \hline
-          & \\
+          \ac{EMG} artefacts in head movements & Poor placement of electrode on scalp \\
           \hline
-          & \\
+          \ac{ECG} artefacts in heart beat & Malfunction of a part in the EEG recording system \\
           \hline
-          & \\
+          Scalp perspiration and movements & Digital artefacts due to loose wiring/circuit board connections\\
           \hline
         \end{tabular}
         \centering
-        \caption{Types of artefacts in EEG}
+        \caption{Types of artefacts in EEG \cite{hu2019eeg}}
       \end{table}
+      Before illustrating what types of artefacts exist, it is important to mention that artefacts themselves do not destroy \ac{EEG} signals. They just add up on top of the neural activity. Therefore, before removing any of this data to the types and characteristics have to be explained thoroughly. In \autoref{tab:artefacts}, an overview of forms of artefacts can be found. In general, artefacts can be put into two different groups, the \textit{Non-Physiological artefacts} and the \textit{Physiological artefacts}. As the naming already suggests, while Non-physiological artefacts are distortions coming from the outside world, Physiological artefacts are intereferences by the human body. \cite{hu2019eeg} Both of these groups will be further described in the following two sections.
+      \subsubsection{Physiological artefacts}
+        As already metioned, Physiological artefacts have the characteristic of coming from the human body, including ocular movements, head movements, heartbeats and muscle noises.
+      \subsubsection{Non-Physiological artefacts}
     \subsection{Artifact Removal techniques}
   \section{Feature extraction and signal decomposition of EEG signals}
