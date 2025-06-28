@@ -4,7 +4,7 @@ from statsmodels.tsa.ar_model import AutoReg
 import antropy as ant
 
 
-def statistical_values(song_data):
+def time_domain_feature_extraction(song_data):
     # song_data in shape (8, 7000ish)
     time_domain_features = {}
 
