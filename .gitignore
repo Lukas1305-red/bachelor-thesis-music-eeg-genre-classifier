@@ -8,6 +8,8 @@ thesis/.gitlab-ci.yml
 
 data/*
 
+__pycache__
+
 .venv
 .vscode
 .idea
