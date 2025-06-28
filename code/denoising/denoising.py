@@ -23,10 +23,10 @@ def notch_filter(data, f0, sample_rate, Q=30):
     return scipy.signal.filtfilt(b, a, data)
 
 
-def apply_z_normalization(song_data):
+def apply_z_normalization(song_data, epsilon=1e-8):
     mean = np.mean(song_data, axis=1, keepdims=True)
     std = np.std(song_data, axis=1, keepdims=True)
-    return (song_data - mean) / std
+    return (song_data - mean) / (std + epsilon)
 
 
 def bandpower(frequencies, psd, band):
