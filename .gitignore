@@ -8,6 +8,8 @@ thesis/.gitlab-ci.yml
 
 data/*
 
+__pycache__
+
 .venv
 .vscode
 .idea
@@ -15,6 +17,7 @@ data/*
 code/acquisition/example-xdf-files
 
 *.asv
+__pycache__
 
 # Devenv
 .devenv*
