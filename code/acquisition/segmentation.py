@@ -4,7 +4,12 @@ import pandas as pd
 import os
 from scipy.io import savemat
 
-from code.denoising.denoising import bandpass, notch_filter, artifact_removal_ica
+from code.denoising.denoising import (
+    bandpass,
+    notch_filter,
+    artifact_removal_ica,
+    apply_z_normalization,
+)
 
 # MARK: Constants
 PATH_TO_DATA = "data/eeg-data"
@@ -167,6 +172,12 @@ def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
         music_timestamps=music_markers_timestamps,
         song_count=song_count_param,
     )
+    if filter_on:
+        buf = []
+        for song in channel_data_acc:
+            acc = apply_z_normalization(song_data=song)
+            buf.append(acc)
+        channel_data_acc = buf
     eeg_channels_col = [f"EEG_{eeg_channels[i]}" for i in range(8)]
     store_in_table(
         columns=eeg_channels_col,
@@ -225,7 +236,7 @@ def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data_v6_denoised"
+        DIR_NAME = "eeg_data_v7_denoised"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
