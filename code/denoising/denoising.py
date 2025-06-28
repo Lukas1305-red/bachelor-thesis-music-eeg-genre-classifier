@@ -5,11 +5,9 @@ from sklearn.decomposition import FastICA
 
 # *****THRESHOLD CONSTANTS*****
 
-# TODO: Remove them and do percentiles
-PTP_MAX = 100
-KURTOSIS_MAX = 5
 DELTA_MAX = 0.5
-GAMMA_MAX = 0.2
+SLOW_MAX = 0.65
+BETA_MAX = 0.35
 SPARSITY_MIN = 3
 
 
@@ -53,7 +51,7 @@ def component_rejected(
     f, psd = scipy.signal.welch(component, fs=sample_rate, nperseg=512)
     total_power = np.trapezoid(f, psd)
     power_delta = bandpower(f, psd, (0.5, 4))
-    power_gamma = bandpower(f, psd, (30, 45))
+    power_beta = bandpower(f, psd, (12, 30))
 
     if ptp > ptp_threshold:
         return True
@@ -66,7 +64,7 @@ def component_rejected(
 
     if (power_delta / total_power) > DELTA_MAX:
         return True
-    if (power_gamma / total_power) > GAMMA_MAX:
+    if (power_beta / total_power) > BETA_MAX:
         return True
     return False
 
@@ -106,9 +104,7 @@ def artifact_removal_ica(data):
     sources = ica.fit_transform(song_data_transposed)
     mixing_matrix = ica.mixing_
 
-    sparsity = calculate_sparsity(
-        mixing_matrix=mixing_matrix
-    )  # TODO: Integrate sparsity in rejection logic
+    sparsity = calculate_sparsity(mixing_matrix=mixing_matrix)
 
     ptp_threshold, kurt_threshold, skew_threshold, autocorr_threshold = get_thresholds(
         sources

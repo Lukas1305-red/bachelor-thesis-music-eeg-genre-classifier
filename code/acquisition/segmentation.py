@@ -6,12 +6,12 @@ from scipy.io import savemat
 
 from code.denoising.denoising import bandpass, notch_filter, artifact_removal_ica
 
-# Constants
+# MARK: Constants
 PATH_TO_DATA = "data/eeg-data"
 PATH_TO_DATA_ROOT = "data"
 
 
-# Helper functions
+# MARK: Helper functions
 def get_channel_names(biosignal_stream):
     ret = []
     acc = map(
@@ -108,7 +108,7 @@ def remove_artefacts(eeg_data):
     return np.transpose(cleaned_data)
 
 
-# Main logic
+# MARK: Main logic
 
 
 def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
@@ -218,11 +218,14 @@ def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
     return table
 
 
+# MARK: Main method
+
+
 def main(only_eeg_segments, filter_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
-        DIR_NAME = "eeg_data_v5_denoised"
+        DIR_NAME = "eeg_data_v6_denoised"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
