@@ -16,6 +16,7 @@ def frequency_domain_feature_extraction(eeg_data):
     frequency_features = {}
     power_spectral_density_welch(eeg_data, 2, frequency_features)
     power_spectral_density_fft(eeg_data, 2, frequency_features)
+    periodogram(eeg_data, frequency_features)
 
 
 def extract_brain_rythm(f, psd, rythm: BrainRythm):
