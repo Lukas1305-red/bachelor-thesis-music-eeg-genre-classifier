@@ -1,0 +1,15 @@
+from frequency_domain_extraction import frequency_domain_feature_extraction
+from time_domain_extraction import time_domain_feature_extraction
+from time_frequency_extraction import time_frequency_domain_feature_extraction
+
+
+def feature_extraction(song_data):
+    """
+    song_data: song_data should have the shape (n_channels, n_samples)
+    """
+    ret = {}
+    ret["time_domain"] = time_domain_feature_extraction(song_data)
+    ret["frequency_domain"] = frequency_domain_feature_extraction(song_data)
+    ret["time_frequency_domain"] = time_frequency_domain_feature_extraction(song_data)
+
+    return ret
