@@ -1,6 +1,6 @@
 # Feature extraction
 
-This directory is responsible for extracting features from denoised and segmented EEG data. Features are extracted in three domains: Time-domain, Frequency-domain and Time-Frequency domain. Each of these domains has its own file with the corresponding functions implemented. Each file has a function called `<DOMAIN>_feature_extraction`, which takes in the denoised EEG data from one song and returns a dictionary containing all relevant features. Below, you find an overview of all computed features.
+This directory is responsible for extracting features from denoised and segmented EEG data. Features are extracted in three domains: Time-domain, Frequency-domain and Time-Frequency domain. Each of these domains has its own file with the corresponding functions implemented. Each file has a function called `<DOMAIN>_feature_extraction`, which takes in the denoised EEG data from one song and returns a dictionary containing all relevant features. Below, you find an overview of all computed features. In [feature_extraction.py](feature_extraction.py), there is an interface function that returns a dictionary where each feature from each domain are calculated.
 
 | **Domain**         | **Feature Name**                  | **Description**                                                                               |
 | ------------------ | --------------------------------- | --------------------------------------------------------------------------------------------- |
