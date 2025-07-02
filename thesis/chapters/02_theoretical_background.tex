@@ -4,10 +4,50 @@
 
   \section{Brain rythms}
 
-  \section{Correlation between music and brain activity}
-
   \section{Recording and measurement of EEG signals}
     % Mention common placements
   \section{Denoising and preprocessing of EEG signals}
+    After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artefacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data, and examples are included. 
+    \subsection{Types of artifacts in EEG signals}
+        \begin{table}[h]
+        \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+          \hline
+          \textbf{Physiological artifacts} & \textbf{Non-Physiological artifacts} \\
+          \hline
+          Ocular-related artifacts: eye movements and blinking & Power line interference \\
+          \hline
+          \ac{EMG} artifacts in head movements & Poor placement of electrode on scalp \\
+          \hline
+          \ac{ECG} artifacts in heart beat & Malfunction of a part in the EEG recording system \\
+          \hline
+          Scalp perspiration and movements & Digital artifacts due to loose wiring/circuit board connections\\
+          \hline
+        \end{tabular}
+        \centering
+        \caption{Types of artifacts in EEG \cite{hu2019eeg}}
+        \label{tab:artifacts}
+      \end{table}
+      Before illustrating what types of artifacts exist, it is essential to mention that artifacts themselves do not destroy \ac{EEG} signals. They add to the neural activity. Therefore, the types and characteristics must be explained thoroughly before removing any of this data. In \autoref{tab:artifacts}, an overview of forms of artifacts can be found. In general, artifacts can be put into two groups: the \textit{Non-Physiological artifacts} and the \textit{Physiological artifacts}. As the name already suggests, while non-physiological artifacts are distortions from the outside world, physiological artifacts are interferences by the human body. \cite{hu2019eeg} These groups will be further described in the following two sections.
+      \subsubsection{Physiological artifacts}
+        As mentioned, Physiological artifacts are characteristic of the human body, including ocular movements, head movements, heartbeats, and muscle noises. For most of these artifacts, it is beneficial to record their corresponding Biosignals. That way, retracing those artifacts in the measured signal is possible. \cite{Uriguen_2015}\par
+        Ocular artifacts can be measured by \ac{EOG} and are mainly produced by eye movements and blinking. The latter generally produces a much larger amplitude than the \ac{EEG} activity. Because of the anatomy of a human, \ac{EOG} contaminations mostly occur in the frontal electrodes. \cite{Uriguen_2015} \par
+        An even more common artifact comes in muscular activity, which can be measured in an \ac{EMG} signal. Appearing in studies where the person is awake, the main actors for these kinds of contaminations are swallowing, talking, and walking, depending on the experimental environment. Most cranial \ac{EMG} signals are in charge of disadvantageous effects in the recorded signal. However, it is difficult to detect and correct them as \ac{EMG} not only represents a wide range on the spectral distribution, but also does not repeat, making it even more difficult to characterise. \cite{Uriguen_2015}\par
+        Last but not least, the activity of the heart (\ac{ECG}) plays a significant role in contamination of measured \ac{EEG} signals. Their amplitude is usually low but also depends on electrode placement. In contrast to \ac{EMG} data, a regular pattern can be visible, which can be further classified by comparing it to \ac{ECG} measurements. \cite{Uriguen_2015}\par
+      \subsubsection{Non-Physiological artifacts}
+        On the other hand, the so-called non-physiological artifacts are coming from outside-world interference. The most common source is electrical interference from power lines (50 Hz in Europe). This generally can be reduced by shielding the cable or moving the subject far away from the power source. \cite{hu2019eeg} \par
+        Another very common non-physiological artifact is the poor placement of electrodes on the scalp as the created DC potential is disturbed. Therefore, electrodes should be checked regularly to ensure high quality recordings. \cite{hu2019eeg} \par
+    \subsection{Artifact Removal techniques}
+      Before presenting state-of-the-art techniques for removing artifacts, it is essential to mention that most of these algorithms and techniques concern physiological artifacts. Controlling the recording environment can correct or altogether avoid most non-physiological artifacts. By checking the placement of the patient and the electrodes on the scalp, non-physiological artifacts remain a small problem in artifact removal compared to handling physiological artifacts. \cite{hu2019eeg,Uriguen_2015} \par
+      The first technique is the so-called (Frequency) filtering. It not only removes the power line interference but also removes high- and low-frequency noises. Depending on the goal of the filtering, different filtering techniques are available, mainly a low-pass filter, a high-pass filter, a band-pass filter, and a band-stop filter. While a low-pass filter removes all frequencies above a chosen threshold, a high-pass filter eliminates frequencies below a boundary. The implementation of band-pass filters requires the definition of a lower and upper frequency boundary. When applying, it removes all frequencies below the lower frequency and above the higher frequency (so keeping all frequencies within the given constraints). Last but not least, a band-stop filter does the complete opposite. It removes all frequencies within the chosen interval, thus keeping the frequencies below the lower and above the upper bounds. Frequency filtering should be the first step of preprocessing \ac{EEG} signals (even before segmentation) to remove low- and high-frequency noise outside the spectrum of brain rhythms. \cite{hu2019eeg} \par
+      When discussing algorithms and techniques dedicated to removing artifacts, assumptions about the recorded signal must be met. The most important assumption is that the recorded signal is the sum of the brain activity and noise. A more generalized version describes the measured \ac{EEG} signals as linear mixtures of waveforms descending from multiple brain sources and artifacts, ultimately propagating to the scalp. Mathematically, this can be described by the following mathematical equation: 
+      \begin{equation}
+        \mathbf{X} = \mathbf{A}\mathbf{S} + \mathbf{V},
+        \label{eq:mixing}
+      \end{equation}
+      where $\mathbf{X} \in \mathbb{R}^{n \times N}$, $\mathbf{A} \in \mathbb{R}^{n \times m}$, $\mathbf{S} \in \mathbb{R}^{m \times N}$,$\mathbf{V} \in \mathbb{R}^{n \times N}$. While $N$ represents the total count of samples measured, $n$ stands for the number of \ac{EEG} channels, and $m$ for the number of total sources the signal originates from. In \autoref{eq:mixing}, $\mathbf{X}$ describes the \ac{EEG} signals resulting from the measurement. While $\mathbf{V}$ stands for added noise \footnote{In the following, it is assumed that $\mathbf{V} = 0$}, $\mathbf{A}$ is an unknown mixing matrix and $\mathbf{S}$ is a matrix of unknown Sources representing brain sources and artifacts. \cite{Uriguen_2015} \par
+      With this model, the goal is now to solve the \ac{BSS} problem, so in this case, separating neural activity from activity. For this problem, component-based methods are used because they find principal or independent components equal to the input \ac{EEG} channels. After processing in the transformed domain, an inverse transformation is applied with the corrected components, resulting in processed \ac{EEG} data. \cite{Uriguen_2015} \par
+      In general, \ac{BSS} aims to estimate $\mathbf{S}$ based on $\mathbf{X}$ in \autoref{eq:mixing}. It must be mentioned that those methods' effectiveness lies in different assumptions that have to be met to a certain extent, e.g., independence or non-Gaussianity. The more fulfilled these assumptions are, the more effective the \ac{BSS} method is. Apart from that, the success of such methods also depends on correctly identifying the sources as either brain activity or artifacts, which can serve as a challenge depending on the extent of artifacts. \cite{Uriguen_2015} \par
+      One of those methods is \ac{PCA}, which uses an orthogonal transformation to turn the observed data ot linearly uncorrelated variables (Principal components). The resulting components have the property of having the most significant possible variances while being orthogonal to each other. However, current research suggests that artifacts and cerebral activity can be modeled better as independent instead of orthogonal. To use this method, \ac{ICA} has emerged as the leading method for \ac{BSS}. \cite{Uriguen_2015} \par
+      \ac{ICA} consists of multiple related methods, separating linearly mixed signals by taking advantage of the statistical independence of the sources. The algorithm usually works based on \ac{HOS}. After prewhitening the covariance matrix of the data, \ac{ICA} tries to find a linear transformation $\mathbf{W}$ for estimated sources $\hat{\mathbf{S}} = \mathbf{W} \mathbf{X}$. $\hat{\mathbf{S}}$ is then supposed to be as independent as possible. How effective the \ac{ICA} depends on the independence of sources and the full column rank of the mixing matrix $\mathbf{A}$. Since this algorithm relies on statistical features, the number of samples must be sufficiently large. In most cases, it is recommended to use all available data because cerebral activity and artifacts are spatially stationary through time. \cite{Uriguen_2015} \par
 
   \section{Feature extraction and signal decomposition of EEG signals}
