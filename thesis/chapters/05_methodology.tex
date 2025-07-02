@@ -26,7 +26,7 @@
       For future steps like Denoising or Feature Extraction, it is essential to look at each segment individually, i.e., each song. Therefore, a further custom Python program is used for the segmentation process of one session. Since the start and the end of one song are pushed to the \ac{LSL} stream, one can read out the time these markers have been pushed and fetch all the biosignals data points measured in this interval. The resulting structure is a table with each song occupying one row. As columns, there is the genre on the one hand and the biosignals on the other hand. Each column related to biosignal contains one channel from the respective Biosignal named after their defined name in the original .xdf file. The value of each column is then an array holding the collected data over the course of the song.\par
       This table is then converted into three different file formats, .npy (numpy), .mat (MATLAB) and .pkl (Pickle).\par 
       
-  \section{Denoising}
+  \section{Denoising and Preprocessing}
 
   \section{Feature extraction}
 
