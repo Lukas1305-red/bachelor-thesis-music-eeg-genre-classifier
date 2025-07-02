@@ -11,6 +11,7 @@ SAMPLE_RATE = 250
 def time_frequency_domain_feature_extraction(eeg_data):
     features = {}
     continous_wavelet_transform(eeg_data, features)
+    discrete_wavelet_transform(eeg_data, features)
     return features
 
 
@@ -22,10 +23,8 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=1
 
     for i, channel in enumerate(data, 1):
         ch_key = f"EEG_Ch{i}"
-        f = extract_dwt_features(channel, wavelet=wavelet, level=level)
-        # REMOVE prints
-        print(ch_key)
-        print(f)
+        feature_dict = extract_dwt_features(channel, wavelet=wavelet, level=level)
+        dictionary["discrete_wavelet"][ch_key] = feature_dict
 
 
 def continous_wavelet_transform(data, dictionary, epoch_duration=5):
@@ -82,38 +81,18 @@ def hz_to_scale(freq):
 
 
 def extract_dwt_features(channel_data, dictionary, wavelet="db4", level=4):
-    coeffs = pywt.wavedec(channel_data, wavelet, level=level)
-    features = []
-    for c in coeffs:
-        features.append(np.mean(c))
-        features.append(np.std(c))
-        features.append(scipy.stats.skew(c))
-        features.append(scipy.stats.kurtosis(c))
+    (cA, cD) = pywt.wavedec(channel_data, wavelet, level=level)
+    ret = {}
+    ret["approx"]["mean"] = np.mean(cA)
+    ret["approx"]["std"] = np.std(cA)
+    ret["approx"]["skew"] = scipy.stats.skew(cA)
+    ret["approx"]["kurtosis"] = scipy.stats.kurtosis(cA)
+    ret["approx"]["entropy"] = scipy.stats.entropy(cA)
 
-    return np.array(features)
+    ret["detailed"]["mean"] = np.mean(cD)
+    ret["detailed"]["std"] = np.std(cD)
+    ret["detailed"]["skew"] = scipy.stats.skew(cD)
+    ret["detailed"]["kurtosis"] = scipy.stats.kurtosis(cD)
+    ret["detailed"]["kurtosis"] = scipy.stats.entropy(cD)
 
-
-def fisher_score(features, labels):
-    classes = np.unique(labels)
-    if len(classes) != 2:
-        raise ValueError("Fisher score is only implemented for binary classification")
-
-    c0_idx = labels == classes[0]
-    c1_idx = labels == classes[1]
-
-    mean0 = np.mean(features[c0_idx], axis=0)
-    mean1 = np.mean(features[c1_idx], axis=0)
-
-    var0 = np.var(features[c0_idx], axis=0)
-    var1 = np.var(features[c1_idx], axis=0)
-
-    # Between-class and within-class variance
-    numerator = (mean0 - mean1) ** 2
-    denominator = var0 + var1 + 1e-8  # avoid division by zero
-
-    return numerator / denominator  # Fisher Score
-
-
-def select_top_features(features, fisher_scores, top_k=10):
-    sorted_indices = np.argsort(fisher_scores)[::-1]
-    return features[:, sorted_indices[:top_k]]
+    return ret
