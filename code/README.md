@@ -2,11 +2,11 @@
 
 As mentioned before, this directory consists of all the code snippets responsible for various different tasks along the EEG pipeline (Acquisition, Denoising, Feature-extraction and Classification). Each of these steps has a designated directory with their own README. Below, you will find an overview of all directories:
 
-1. Acquisition: This folder contains all the code necessary for acquring the EEG data, so supporting the main experiment. Refer to this [README](acquisition/README.md)
+1. Acquisition: This folder contains all the code necessary for acquring and segmenting the EEG data, so supporting the main experiment. Refer to this [README](acquisition/README.md)
 
-2. Denoising: TBA
+2. Denoising: This folder contains functions responsible for cleaning the measured EEG signal up. Refer to this [README](denoising/README.md)
 
-3. Feature-Extraction: TBA
+3. Feature-Extraction: This folder handles feature extraction of cleaned EEG channel data in each domain. Refer to the respective [README](feature_extraction/README.md) for more information.
 
 4. Classification: TBA
 

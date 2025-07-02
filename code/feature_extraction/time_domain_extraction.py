@@ -50,7 +50,7 @@ def zcr(signal):
 
 
 def mad(signal):
-    return np.mean(np.abs(signal - np.mean(signal, axis=1, keepdims=True)), axis=1)
+    return np.mean(np.abs(signal - np.mean(signal)))
 
 
 def autoregressive_modeling(signal):
