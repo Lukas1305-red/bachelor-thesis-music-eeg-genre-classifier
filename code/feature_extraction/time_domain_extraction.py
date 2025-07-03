@@ -4,7 +4,7 @@ from statsmodels.tsa.ar_model import AutoReg
 import antropy as ant
 
 
-def statistical_values(song_data):
+def time_domain_feature_extraction(song_data):
     # song_data in shape (8, 7000ish)
     time_domain_features = {}
 
@@ -50,7 +50,7 @@ def zcr(signal):
 
 
 def mad(signal):
-    return np.mean(np.abs(signal - np.mean(signal, axis=1, keepdims=True)), axis=1)
+    return np.mean(np.abs(signal - np.mean(signal)))
 
 
 def autoregressive_modeling(signal):
