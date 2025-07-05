@@ -1,9 +1,11 @@
 # Main source: https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2022.1072801/full
 import numpy as np
-import scipy.signal
 import scipy.stats
-from code.feature_extraction.frequency_domain_extraction import BrainRythm
 import pywt
+
+from code.feature_extraction.frequency_domain_extraction import BrainRythm
+from code.feature_extraction.feature_extraction_utils import flatten_dict
+
 
 SAMPLE_RATE = 250
 
@@ -12,7 +14,7 @@ def time_frequency_domain_feature_extraction(eeg_data):
     features = {}
     continous_wavelet_transform(eeg_data, features)
     discrete_wavelet_transform(eeg_data, features)
-    return features
+    return flatten_dict(features)
 
 
 # MARK: Main computations
