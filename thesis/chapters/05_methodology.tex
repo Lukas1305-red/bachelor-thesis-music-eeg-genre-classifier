@@ -22,16 +22,50 @@
         \label{fig:technicalSetup}
       \end{figure}
       At the core, there are two main programs responsible for the data. On the one hand, there is the Headset platform called \textit{BioGNee}. This program is responsible for the sensor setup and starting and stopping the signal acquisition. Communicating with the headset's low-energy Bluetooth Channel reliably sets up the biosensors of the hybrid headphones, making the device ready for acquisition. After a successful setup, the data is pushed on the corresponding \ac{LSL} Stream. On the other hand, the study uses a custom Python script. This Python script has two main tasks. Firstly, it loads all the songs from one of the 20 pre-generated sessions and randomly shuffles them. After that, the program plays each song one by one. Simultaneously, the script also pushes timestamps during recording to assign each segment to each song later.\par
-      The \ac{LSL} Recorder combines both of these components. The \ac{LSL} recorder collects all open streams on which the device/programs push their data. These are collected and stored in an XML-like file called .xdf. The resulting document, therefore, provides a unified way to not only store the signal data but also the respective time markers. These can be visualised by a custom MATLAB script to inspect the data quality. Important to note is that each distinct session occupies one .xdf file.\par
-      \textcolor{orange}{Remove segmentation and move to 5.2}
-      For future steps like Denoising or Feature Extraction, it is essential to look at each segment individually, i.e., each song. Therefore, a further custom Python program is used for the segmentation process of one session. Since the start and the end of one song are pushed to the \ac{LSL} stream, one can read out the time these markers have been pushed and fetch all the biosignals data points measured in this interval. The resulting structure is a table with each song occupying one row. As columns, there is the genre on the one hand and the biosignals on the other hand. Each column related to biosignal contains one channel from the respective Biosignal named after their defined name in the original .xdf file. The value of each column is then an array holding the collected data over the course of the song.\par
-      This table is then converted into three different file formats, .npy (numpy), .mat (MATLAB) and .pkl (Pickle).\par 
+      The \ac{LSL} Recorder combines both of these components. The \ac{LSL} recorder collects all open streams on which the device/programs push their data. These are collected and stored in an XML-like file called .xdf. The resulting document, therefore, provides a unified way to not only store the signal data but also the respective time markers. These can be visualised by a custom MATLAB script to inspect the data quality. Important to note is that each distinct session occupies one .xdf file.\par 
       
   \section{Denoising and Preprocessing}
-    % Subsections up for discussion  
-    \subsection{Denoising}
-
-      \subsection{Segmentation}
+    % TODO: Add following images:
+    % - raw EEG signals without any preprocessing
+    % - EEG signals after denoising but without normalization
+    After the measurement and recording of the \ac{EEG} activity, the next step is the preprocessing of the acquired signal. Apart from segmenting the data into their respective song listened to, the signal has to be denoised which is the most important step. As already mentioned in \autoref{section:theoretical_background_denoising}, many different artifacts besides the neural activity appear during recording. Therefore, it is crucial to recognize and omit most of these contaminations to have valuable data for feature extraction and classification. The complete preprocessing pipeline is visualized in \autoref{fig:preprocessingWorkflow}, where each step is further explained in the following. \par
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\textwidth]{figures/chapter05/PreprocessingWorkflow.png}
+      \caption{Preprocessing of the raw \ac{EEG} signal}
+      \label{fig:preprocessingWorkflow}
+    \end{figure}
+    Before starting to explain how the data has been denoised, it is important to investigate in what state the raw measured data is. \textcolor{orange}{Insert picture in here with annotation on what session number it is.} Most notably, there are significant amplitude shifts over the 30-minute recording sessions. Depending on the channel, the there either is an increasing or a decreasing trend in amplitude. This can be reasoned with the fact that the electrodes are DC-coupled in the system. The drift then happens due to temperature changes or skin impedance. \par
+    To overcome this signal drift, the first step of the denoising pipeline is to apply a bandpass filter on the whole session. As boundaries, 1 Hz and 30 Hz are chosen as a lower and upper border respectively. This not only handles the metnioned drift, but also filters out all high and low frequency noise that is not matched to a certain brain rythm. \par
+          \begin{table}[h!]
+        \centering
+        \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Rejection Criterion} & \textbf{Threshold} \\
+        \hline
+        \ac{PTP} & 85th percentile of all components \\
+        \hline
+        Kurtosis & 85th percentile of all components \\
+        \hline
+        Skewness & 85th percentile of all components \\
+        \hline
+        Autocorrelation (lag 1) & 85th percentile of all components \\
+        \hline
+        Relative Delta Band Power & $> 0.5$ of total power \\
+        \hline
+        Relative Beta Band Power & $> 0.35$ of total power \\
+        \hline
+        Mixing Matrix Sparsity & $< 3$ active channels (relative threshold = 0.2) \\
+        \hline
+        \end{tabular}
+        \caption{ICA Component Rejection Criteria}
+        \label{tab:ica_components}
+      \end{table}
+    After removing most of the frequency related noise, the artifacts present in the \ac{EEG} data have to be detected and removed. For that, an \ac{ICA} algorithm is applied on the session data. After prewhitening the data, an \ac{ICA} is applied, splitting the \ac{EEG} matrix to a mixing matrix accompanied by the sources. Since eight \ac{EEG} channels are present, the \ac{ICA} algorithm was performed with eight components. As a next step, it has to be decided whether a component is an artifact or an actual source coming from cerebral activity. As this project deals with an unconventional way of measuring the \ac{EEG} data, custom criteria have to be determined for this task. In \autoref{tab:ica_components}, the rejection criteria for each component can be seen. \ac{PTP}, skewness, kurtosis and autocorrelation are used to detect unusual signal characteristics deviating from brain activity. The spectral power thresholds including the Delta and Beta Power ratio find artifacts by finding components dominated by specific frequency bands. Lastly, by investigating the sparsity of the mixing matrix, it is evaluated how widely a component affects the \ac{EEG} channels. If a component is recognized as an artifact, this component is set to zero before converting the mixing matrix with the now cleaned sources to the artifact removed version of the original \ac{EEG} data. \par
+    \textcolor{orange}{Insert a paragraph with a paragraph talking about the differences between the raw signal and the cleaned signal. Include two pictures side by side with the whole session and then a one second segment of the cleaned data. Reference the raw signal from above.} \par
+    With the cleaned \ac{EEG} signal at hand, one can now segment the signal in its 50 individual songs\footnote{The custom python script also supports the segmentation of biosignals other than \ac{EEG}. However, these will be ignored in the following as the focus of this thesis lies in \ac{EEG} signals}. Since the start and the end of one song are pushed to the \ac{LSL} stream, the timestamp of those markers be read out to only keep the signal data appearing in this interval. This is done over each individual channel thus resulting into a table with each song occupying a row and the channels as columns.\par
+    To further improve the data quality for supporting good results in a classification task, each segment is z-normalized with the formula $Z = \frac{X - \mu}{\sigma + \varepsilon}$ so that the data at hand has zero mean and a unit variance.\par
+    After all these steps, the denoised, segmented and normalized data is stored in three different formats, being .mat, .npy and .pkl, where each session is held in one file across all file formats.\par
 
   \section{Feature extraction}
 
