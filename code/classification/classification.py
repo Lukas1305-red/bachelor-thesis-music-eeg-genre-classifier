@@ -1,8 +1,20 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import mlflow
+import mlflow.sklearn
+import seaborn as sns
+
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import GridSearchCV, KFold
-from sklearn.metrics import make_scorer, f1_score, recall_score, balanced_accuracy_score
+from sklearn.model_selection import GridSearchCV, KFold, cross_val_predict
+from sklearn.metrics import (
+    make_scorer,
+    f1_score,
+    recall_score,
+    balanced_accuracy_score,
+    confusion_matrix,
+)
+from sklearn.base import clone
 
 DATA_PATH = "../../data/eeg_data_v3_features/features"
 LABEL_PATH = "../../data/eeg_data_v7_denoised/pickle"
@@ -57,3 +69,37 @@ def create_grid_search(estimator, param_grid):
         refit="balanced_accuracy",
         cv=cv,
     )
+
+
+def perform_grid_search(estimator, param_grid, estimator_name):
+    # Experiment tracking
+    mlflow.sklearn.autolog(max_tuning_runs=10)
+
+    X, y = load_data()
+
+    with mlflow.start_run(run_name=f"{estimator_name} Hyperparameter Tuning"):
+        grid_search = create_grid_search(estimator=estimator, param_grid=param_grid)
+
+        grid_search.fit(X, y)
+
+        # get the best model
+        best_estimator = grid_search.best_estimator_
+
+        cm = draw_confusion_matrix(best_estimator)
+
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+        plt.title("Confusion Matrix")
+        plt.ylabel("Actual")
+        plt.xlabel("Predicted")
+
+        mlflow.log_figure(plt.gcf(), "confusion_matrix.png")
+
+
+def draw_confusion_matrix(estimator, X, y):
+    estimator_clone = clone(estimator)
+    y_pred = cross_val_predict(
+        estimator_clone, X, y, cv=KFold(n_splits=20, shuffle=False, random_state=1997)
+    )
+    cm = confusion_matrix(y, y_pred)
+    return cm
