@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import GridSearchCV, KFold
+from sklearn.metrics import make_scorer, f1_score, recall_score, balanced_accuracy_score
 
 DATA_PATH = "../../data/eeg_data_v3_features/features"
 LABEL_PATH = "../../data/eeg_data_v7_denoised/pickle"
@@ -38,4 +40,20 @@ def get_problematic_column_names(df: pd.DataFrame):
 
 
 def create_grid_search(estimator, param_grid):
-    print("TODO")
+    # define cross validation
+    cv = KFold(n_splits=20, shuffle=False, random_state=1997)
+
+    # define scoring
+    scoring = {
+        "f1_macro": make_scorer(f1_score, average="macro"),
+        "balanced_accuracy": make_scorer(balanced_accuracy_score),
+        "recall_macro": make_scorer(recall_score, average="macro"),
+    }
+
+    return GridSearchCV(
+        estimator=estimator,
+        param_grid=param_grid,
+        scoring=scoring,
+        refit="balanced_accuracy",
+        cv=cv,
+    )
