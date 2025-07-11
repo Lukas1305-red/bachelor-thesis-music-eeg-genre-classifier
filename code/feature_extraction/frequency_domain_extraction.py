@@ -2,6 +2,8 @@ import scipy.signal
 from enum import Enum
 import numpy as np
 
+from code.feature_extraction.feature_extraction_utils import flatten_dict
+
 SAMPLING_RATE = 250
 
 
@@ -17,6 +19,7 @@ def frequency_domain_feature_extraction(eeg_data):
     power_spectral_density_welch(eeg_data, 2, frequency_features)
     power_spectral_density_fft(eeg_data, 2, frequency_features)
     periodogram(eeg_data, frequency_features)
+    return flatten_dict(frequency_features)
 
 
 def extract_brain_rythm(f, psd, rythm: BrainRythm):
