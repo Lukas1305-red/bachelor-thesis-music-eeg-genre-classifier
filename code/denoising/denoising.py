@@ -126,6 +126,6 @@ def artifact_removal_ica(data):
     for i in rejected_components:
         cleaned_sources[:, i] = 0
 
-    print(f"Rejcted components: {len(rejected_components)}")
+    print(f"Rejected components: {len(rejected_components)}")
     cleaned_data = np.transpose(np.dot(cleaned_sources, np.transpose(mixing_matrix)))
     return cleaned_data

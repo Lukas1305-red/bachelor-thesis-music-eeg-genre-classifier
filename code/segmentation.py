@@ -11,6 +11,8 @@ from code.denoising.denoising import (
     apply_z_normalization,
 )
 
+from code.feature_extraction.feature_extraction import feature_extraction
+
 # MARK: Constants
 PATH_TO_DATA = "data/eeg-data"
 PATH_TO_DATA_ROOT = "data"
@@ -111,6 +113,18 @@ def filter_eeg(eeg_data, sample_rate):
 def remove_artefacts(eeg_data):
     cleaned_data = artifact_removal_ica(np.transpose(eeg_data))
     return np.transpose(cleaned_data)
+
+
+def extract_features_from_table(eeg_df: pd.DataFrame, column_names):
+    feature_rows = []
+    for _, row in eeg_df.iterrows():
+        buf = []
+        for column in column_names:
+            buf.append(row[column])
+        features_song = feature_extraction(song_data=buf)
+        feature_rows.append(features_song)
+    feature_df = pd.DataFrame(feature_rows)
+    return feature_df
 
 
 # MARK: Main logic
@@ -232,11 +246,13 @@ def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
 # MARK: Main method
 
 
-def main(only_eeg_segments, filter_on):
+def main(only_eeg_segments, filter_on, feature_extraction_on):
     SONG_COUNT = 50
     DIR_NAME = "signal_data"
     if only_eeg_segments:
         DIR_NAME = "eeg_data_v7_denoised"
+    if only_eeg_segments and feature_extraction_on:
+        DIR_NAME = "eeg_data_v3_features"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
@@ -256,6 +272,19 @@ def main(only_eeg_segments, filter_on):
         df = pd.DataFrame(table)
         df.index = rows
 
+        if feature_extraction_on:
+            column_names = [f"EEG_Ch{i + 1}" for i in range(8)]
+            print(f"START FEATURE EXTRACTION FOR {session_number}...")
+            df_features = extract_features_from_table(
+                eeg_df=df, column_names=column_names
+            )
+            df_features.index = rows
+            os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/features", exist_ok=True)
+            df_features.to_pickle(
+                f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/features/{session_number}.pkl"
+            )
+            print(f"SUCCESSFULLY EXTRACTED FEATURES FOR {session_number}...")
+
         # create a folder for numpy data
         os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}/numpy", exist_ok=True)
         np.save(
@@ -272,4 +301,4 @@ def main(only_eeg_segments, filter_on):
 
 
 if __name__ == "__main__":
-    main(only_eeg_segments=True, filter_on=True)
+    main(only_eeg_segments=True, filter_on=True, feature_extraction_on=True)

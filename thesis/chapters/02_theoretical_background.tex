@@ -3,11 +3,23 @@
   \section{Medical foundations of EEG signals}
 
   \section{Brain rythms}
+    Visual inspection is traditionally the way to do that when analysing \ac{EEG} signals for brain disorders or other malfunctions. Specific amplitudes and frequencies of these signals change in a healthy human depending on their state. For instance, the \ac{EEG} signal differs between wakefulness and sleep. To distinguish the different appearances of the signal, the frequency range is taken into account to form five brain rhythms (cf. \autoref{fig:brainRhythms}), each of which defines a particular state of the brain \cite{sanei2021eeg}. \par
+    Delta waves occupy the range of 0.5-4 Hz and represent the brain's grey matter \cite{kumar2012analysis}. They mainly occur in deep sleep and may be present in the waking state. These signals are very easy to confuse with large muscle artifacts from the jaw or neck, since they are very near the skin's surface. On the other hand, the Delta signals coming from the brain are highly attenuated in passing through the skull \cite{sanei2021eeg}. \par
+    Theta waves lie between 4-7.5 Hz and are primarily present in the thalamic origin. They appear when a human's mental state transitions from consciousness towards drowsiness, which is why they dominate during meditation therapy. \cite{sanei2021eeg,kumar2012analysis} Combined with that, it also stands for human growth and serotonin hormones \cite{kumar2012analysis}. \par
+    Within the range of 8-13Hz, Alpha signals are present and are shown as a round-shaped signal. Being the most dominant rhythm in the whole brain and standing for the brain's white matter, it indicates relaxed awareness without any attention and concentration \cite{sanei2021eeg,kumar2012analysis}. Studies also show that Alpha waves are a waiting pattern by the visual region of the brain as they are reduced or even eliminated by opening the eyes \cite{sanei2021eeg}. \par
+    Signals with frequencies between 14-26 Hz \cite{sanei2021eeg} or 13-30 Hz \cite{kumar2012analysis} are classified as Beta waves, which stand for the usual waking state of the brain. Therefore, it is associated with active thinking or problem solving \cite{sanei2021eeg}. By inducing the production of Cortisol, it is responsible for learning and memory \cite{kumar2012analysis}. \par
+    Everything above 30 Hz (up to 45 Hz) is considered Gamma waves. They are very rare in occurrence and are primarily used for detecting and confirming brain diseases \cite{sanei2021eeg}. However, they also appear during hyper alertness and the integration of sensory inputs, which is why they combine senses and memory \cite{kumar2012analysis}.
 
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\textwidth]{figures/chapter02/brainRhytms.png}
+        \caption{The five brain rhythms in \ac{EEG}}
+        \label{fig:brainRhythms}
+      \end{figure}
   \section{Recording and measurement of EEG signals}
     % Mention common placements
-  \section{Denoising and preprocessing of EEG signals}
-    After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artefacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data, and examples are included. 
+  \section{Denoising and preprocessing of EEG signals}\label{section:theoretical_background_denoising}
+    After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artefacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data. 
     \subsection{Types of artifacts in EEG signals}
         \begin{table}[h]
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
