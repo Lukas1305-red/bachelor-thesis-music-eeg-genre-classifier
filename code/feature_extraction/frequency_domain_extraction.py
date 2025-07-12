@@ -41,10 +41,12 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         dictionary[key] = {}
 
     total_power = np.trapezoid(psd, f)
-    psd_norm = psd / np.sum(psd)
+    psd_norm = psd / np.trapezoid(psd, f)
     spectral_entropy = -np.sum(psd_norm * np.log2(psd_norm + 1e-10))
-    mean_freq = np.sum(f * psd) / np.sum(psd)
-    rms_bandwith = np.sqrt(np.sum(((f - mean_freq) ** 2) * psd) / np.sum(psd))
+    mean_freq = np.sum(f * psd) / np.trapezoid(psd, f)
+    rms_bandwith = np.sqrt(
+        np.trapezoid(((f - mean_freq) ** 2) * psd, f) / np.trapezoid(psd, f)
+    )
 
     dictionary[key][channel_key] = {}
     dictionary[key][channel_key]["f_bins"] = f
@@ -65,9 +67,9 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         rythm_power[f"{rythm.name}"] = power
 
     # rythm ratios
-    dictionary[key][channel_key]["alpha_beta_ratio"] = (
-        rythm_power[f"{BrainRythm.ALPHA.name}"] / rythm_power[f"{BrainRythm.BETA.name}"]
-    )
+    dictionary[key][channel_key]["alpha_beta_ratio"] = rythm_power[
+        f"{BrainRythm.ALPHA.name}"
+    ] / (rythm_power[f"{BrainRythm.BETA.name}"] + 1e-10)
     dictionary[key][channel_key]["theta_alpha_ratio"] = (
         rythm_power[f"{BrainRythm.THETA.name}"]
         / rythm_power[f"{BrainRythm.ALPHA.name}"]
@@ -94,7 +96,7 @@ def power_spectral_density_fft(data, window_size, dictionary):
 
         pos_mask = fft_freqs >= 0
         freqs = fft_freqs[pos_mask]
-        psd = np.abs(fft_vals[pos_mask]) ** 2 / n_samples
+        psd = np.abs(fft_vals[pos_mask]) ** 2 / (n_samples * SAMPLING_RATE)
 
         extract_frequency_features(freqs, psd, "psd_fft", i, dictionary)
 

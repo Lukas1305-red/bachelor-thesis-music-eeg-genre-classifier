@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
-import seaborn as sns
+# import seaborn as sns
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import GridSearchCV, KFold, cross_val_predict
@@ -16,8 +17,8 @@ from sklearn.metrics import (
 )
 from sklearn.base import clone
 
-DATA_PATH = "../../data/eeg_data_v3_features/features"
-LABEL_PATH = "../../data/eeg_data_v7_denoised/pickle"
+DATA_PATH = "data/eeg_data_v3_features/features"
+LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
 
 
 def load_data():
@@ -31,7 +32,7 @@ def load_data():
 
         # Extract label from df_label
         genres = df_label["genre"]
-        y.extend(genres.toList())
+        y.extend(genres.to_list())
         # drop data columns
         X_df = df_data.drop(get_problematic_column_names(df_data), axis=1)
         # store features
@@ -51,9 +52,12 @@ def get_problematic_column_names(df: pd.DataFrame):
     return list(set(nan_columns + inf_columns + obj_columns))
 
 
-def create_grid_search(estimator, param_grid):
+def create_grid_search(estimator, param_grid, session_validation):
     # define cross validation
-    cv = KFold(n_splits=20, shuffle=False, random_state=1997)
+    if session_validation:
+        cv = KFold(n_splits=20, shuffle=False)
+    else:
+        cv = KFold(n_splits=5, shuffle=True, random_state=1997)
 
     # define scoring
     scoring = {
@@ -68,32 +72,43 @@ def create_grid_search(estimator, param_grid):
         scoring=scoring,
         refit="balanced_accuracy",
         cv=cv,
+        n_jobs=-1,
+        verbose=2,
     )
 
 
-def perform_grid_search(estimator, param_grid, estimator_name):
+def perform_grid_search(estimator, param_grid, estimator_name, session_validation):
     # Experiment tracking
     mlflow.sklearn.autolog(max_tuning_runs=10)
+    print(mlflow.get_registry_uri())
 
     X, y = load_data()
 
-    with mlflow.start_run(run_name=f"{estimator_name} Hyperparameter Tuning"):
-        grid_search = create_grid_search(estimator=estimator, param_grid=param_grid)
+    with mlflow.start_run(
+        run_name=f"{estimator_name} Hyperparameter Tuning", experiment_id="1"
+    ):
+        grid_search = create_grid_search(
+            estimator=estimator,
+            param_grid=param_grid,
+            session_validation=session_validation,
+        )
 
         grid_search.fit(X, y)
 
         # get the best model
-        best_estimator = grid_search.best_estimator_
+        # best_estimator = grid_search.best_estimator_
+        print(f"Best parameters: {grid_search.best_params_}")
+        print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
 
-        cm = draw_confusion_matrix(best_estimator)
+        # cm = draw_confusion_matrix(best_estimator, X, y)
 
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-        plt.title("Confusion Matrix")
-        plt.ylabel("Actual")
-        plt.xlabel("Predicted")
+        # plt.figure(figsize=(8, 6))
+        # # sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+        # plt.title("Confusion Matrix")
+        # plt.ylabel("Actual")
+        # plt.xlabel("Predicted")
 
-        mlflow.log_figure(plt.gcf(), "confusion_matrix.png")
+        # # mlflow.log_figure(plt.gcf(), "confusion_matrix.png")
 
 
 def draw_confusion_matrix(estimator, X, y):
