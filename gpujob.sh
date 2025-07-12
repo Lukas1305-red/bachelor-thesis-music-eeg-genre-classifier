@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#SBATCH --time=00:10:00
 #SBATCH --partition=students # or "staff" or "dfl" if you are a staff member
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=8
@@ -15,4 +14,6 @@
 direnv allow . && eval "$(direnv export bash)"
 
 python --version
+
+python -m code.classification.random_forest
 

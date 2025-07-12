@@ -252,7 +252,7 @@ def main(only_eeg_segments, filter_on, feature_extraction_on):
     if only_eeg_segments:
         DIR_NAME = "eeg_data_v7_denoised"
     if only_eeg_segments and feature_extraction_on:
-        DIR_NAME = "eeg_data_v3_features"
+        DIR_NAME = "eeg_data_v4_features"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
