@@ -32,37 +32,39 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=1
 def continous_wavelet_transform(data, dictionary, epoch_duration=5):
     dictionary["continous_wavelet"] = {}
     samples_per_epoch = SAMPLE_RATE * epoch_duration
-    wavelet = "morl"  # Morlet wavelet
+    wavelet = "morl"
 
     for i, channel in enumerate(data, 1):
         ch_key = f"EEG_Ch{i}"
         dictionary["continous_wavelet"][ch_key] = {}
 
-        # Step 1: Partition signal into non-overlapping epochs
         num_epochs = len(channel) // samples_per_epoch
         epochs = np.array_split(channel[: num_epochs * samples_per_epoch], num_epochs)
 
-        # Step 2: Compute CWT
         all_cwt_epochs = []
+
+        min_scale = 1
+        max_scale = SAMPLE_RATE // 2
+        scales = np.logspace(np.log10(min_scale), np.log10(max_scale), 100)
+
         for epoch in epochs:
-            freqs = np.linspace(1, 30, 100)
-            scales = pywt.scale2frequency(wavelet, 1) * SAMPLE_RATE / freqs
-            coef, _ = pywt.cwt(epoch, scales, wavelet, sampling_period=1 / SAMPLE_RATE)
+            coef, freqs = pywt.cwt(
+                epoch, scales, wavelet, sampling_period=1 / SAMPLE_RATE
+            )
             all_cwt_epochs.append(np.abs(coef))
 
-        # Step 3: Average across epochs
         avg_cwt = np.mean(np.array(all_cwt_epochs), axis=0)
 
-        # Step 4: Partition into brain rhythm bands
+        # Extract features per brain rhythm
         for rythm in BrainRythm:
             (low_f, high_f) = rythm.value
             freq_idxs = np.where((freqs >= low_f) & (freqs <= high_f))[0]
             if len(freq_idxs) == 0:
                 continue
-            band_cwt = avg_cwt[freq_idxs, :]
 
-            # Step 5: Extract statistical features
+            band_cwt = avg_cwt[freq_idxs, :]
             values = band_cwt.flatten()
+
             dictionary["continous_wavelet"][ch_key][rythm.name] = {
                 "mean": np.mean(values),
                 "std": np.std(values),
@@ -70,13 +72,12 @@ def continous_wavelet_transform(data, dictionary, epoch_duration=5):
                 "kurtosis": scipy.stats.kurtosis(values),
             }
 
+            # Proper entropy calculation
             power = values**2
-            power /= np.sum(power) + 1e-8
+            power_norm = power / (np.sum(power) + 1e-8)
             dictionary["continous_wavelet"][ch_key][rythm.name]["entropy"] = (
-                scipy.stats.entropy(power)
+                scipy.stats.entropy(power_norm)
             )
-
-    return dictionary
 
 
 # MARK: Helpers
@@ -100,13 +101,17 @@ def extract_dwt_features(channel_data, wavelet="db4", level=4):
     ret["approx"]["std"] = np.std(cA)
     ret["approx"]["skew"] = scipy.stats.skew(cA)
     ret["approx"]["kurtosis"] = scipy.stats.kurtosis(cA)
-    ret["approx"]["entropy"] = scipy.stats.entropy(cA)
+    power = cA**2
+    power_norm = power / (np.sum(power) + 1e-8)
+    ret["approx"]["entropy"] = scipy.stats.entropy(power_norm)
 
     cD_all = np.concatenate(cDs)
     ret["detailed"]["mean"] = np.mean(cD_all)
     ret["detailed"]["std"] = np.std(cD_all)
     ret["detailed"]["skew"] = scipy.stats.skew(cD_all)
     ret["detailed"]["kurtosis"] = scipy.stats.kurtosis(cD_all)
-    ret["detailed"]["kurtosis"] = scipy.stats.entropy(cD_all)
+    power = cD_all**2
+    power_norm = power / (np.sum(power) + 1e-8)
+    ret["detailed"]["entropy"] = scipy.stats.entropy(power_norm)
 
     return ret
