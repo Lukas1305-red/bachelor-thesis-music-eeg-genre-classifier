@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 # import matplotlib.pyplot as plt
 import mlflow
@@ -17,7 +18,7 @@ from sklearn.metrics import (
 )
 from sklearn.base import clone
 
-DATA_PATH = "data/eeg_data_v3_features/features"
+DATA_PATH = "data/eeg_data_v4_features/features"
 LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
 
 
@@ -83,9 +84,10 @@ def perform_grid_search(estimator, param_grid, estimator_name, session_validatio
     print(mlflow.get_registry_uri())
 
     X, y = load_data()
-
+    slurm_job_id = os.getenv("SLURM_JOB_ID", "default_experiment")
     with mlflow.start_run(
-        run_name=f"{estimator_name} Hyperparameter Tuning", experiment_id="1"
+        run_name=f"{estimator_name} Hyperparameter Tuning",
+        experiment_id=f"{slurm_job_id}",
     ):
         grid_search = create_grid_search(
             estimator=estimator,
