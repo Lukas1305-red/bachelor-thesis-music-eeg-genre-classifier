@@ -1,6 +1,6 @@
 \chapter{Theoretical Background}\label{chapter:theoretical_background}
 
-  \section{Medical foundations of \ac{EEG} signals}
+  \section{Medical foundations of EEG signals} \label{sec:medicalFoundation}
     Before one can talk about how to \ac{EEG} signals can be used for classification or further analysis, it is vital to understand how these signals can be measured non-invasively and how they depict the brain's activity. \par
     The \ac{CNS} of nerve and glia cells can be found between neurons. Nerve cells can recognize and transmit stimuli through other nerve cells to further locations. To understand how this is possible, one must understand the structure and functionality of a single nerve cell. This kind of cell consists of three main components. At first, there is the cell body with a single nucleus. It is responsible for the cell's metabolism and protein synthesis. Secondly, the Axon, a long cylinder, transmits electrical impulses up to a metre through the body. The third component, dendrites, further supports the transportation of electricity. They are either connected to other dendrites or axons of neighboring cells from which they can receive impulses. Vice versa, it is also possible to transmit the impulse to another cell \cite{sanei2021eeg}. \par
     Related to the transmission of electrical impulses, the so-called \ac{AP} is very important regarding \ac{EEG}, since the \ac{AP} represents information sent by a nerve. In simple words, \ac{AP} "is a temporary change in the membrane potential that is transmitted along the axon" \cite{sanei2021eeg} caused by the exchange of ions. The \ac{AP} lasts between 5 and 10 ms, resulting in a peak during the positive polarization of the membrane. After repolarizing to a negative potential, the nerve returns to resting potential after being more negative than the base potential. It is important to remember that an \ac{AP} is only generated if there is a strong enough stimulus. If the stimulus is not powerful enough, only a small local electrical impulse is created, which is not enough to be transmitted to another nerve, thus not resulting in an \ac{AP} \cite{sanei2021eeg}. \par
@@ -22,11 +22,23 @@
         \caption{The five brain rhythms in \ac{EEG} \cite{sanei2021eeg}}
         \label{fig:brainRhythms}
       \end{figure}
-  \section{Recording and measurement of \ac{EEG} signals} \label{sec:measurementEEGTheory}
-    % Mention common placements
+  \section{Recording and measurement of EEG signals} \label{sec:measurementEEGTheory}
+    In the previous two sections, it became clear that the electrical activity coming from the \ac{AP}s can be used to depict the neural state of the brain. Therefore, it is also important to cover how these impulses can be measured. \par
+    An \ac{EEG} system mostly consist of multiple electrodes (called channels), differentials amplifiers for each channels and filters. Mulitchannel \ac{ADC} are employed to convert the measured signal points to enable the connection to computerized systems \cite{sanei2021eeg}. \par
+    The most crucial component for data quality are hereby the electrodes. There are different types of electrodes depending on the use case of the study (disposable, reusable disc electrodes, headbands, etc.). However, headbands with Ag-AgCl disc are the most popular when it comes to multichannel measurements. As already mentioned in \autoref{sec:medicalFoundation}, because of the layered anatomy of the scalp, there is high impedance between the cortex and the electrodes which can lead to deformations in the signal. A rule of thumb is that the impedances should be less than 5 $k\Omega$ and balanced to 1 $k\Omega$ within each other \cite{sanei2021eeg}. \par
+    For unification in measurement and placement in multichannel \ac{EEG} recordings, the 10-20 system is recommended as a conventional electrode setting. A setup for 21 electrodes can be seen in \autoref{fig:10-20-placement}. This system not only avoids eyeball placement but also employs constant distances between the electrodes. It is called 10-20 system because the electrodes are placed at intervals of 10 or 20\% of the total front-back/left-right distance of the skull. In \ac{EEG} systems with a larger amount of electrodes, the additional electrodes would be placed between the electrodes with equidistance between them \cite{sanei2021eeg}. \par
+    \begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/chapter02/10-20-placement.png}
+    \caption{Conventional 10-20 \ac{EEG} electrode positions for 21 electrodes \cite{sanei2021eeg}}
+    \label{fig:10-20-placement}
+  \end{figure}
+
+    As the effective bandwidth of \ac{EEG} signals lie around 100 Hz, the mininmum sample rate should be 200 Hz to meet the Nyquist criterion\footnote{The Nyquist criterion states that to accurately reconstruct a signal without aliasing, it must be sampled at a rate at least twice its highest frequency component.} Depending on the required resolution, sampling frequencies up to 2000 Hz are possible. In quantification of the signal, 16 bits for each samples are sufficient and popular for many \ac{EEG} recording systems \cite{sanei2021eeg}. \par
+    
   \section{Denoising and preprocessing of EEG signals}\label{section:theoretical_background_denoising}
-    After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artefacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data. 
-    \subsection{Types of artifacts in \ac{EEG} signals}
+    After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artifacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data. 
+    \subsection{Types of artifacts in EEG signals}
         \begin{table}[h]
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
           \hline
@@ -68,4 +80,4 @@
       One of those methods is \ac{PCA}, which uses an orthogonal transformation to turn the observed data ot linearly uncorrelated variables (Principal components). The resulting components have the property of having the most significant possible variances while being orthogonal to each other. However, current research suggests that artifacts and cerebral activity can be modeled better as independent instead of orthogonal. To use this method, \ac{ICA} has emerged as the leading method for \ac{BSS}. \cite{Uriguen_2015} \par
       \ac{ICA} consists of multiple related methods, separating linearly mixed signals by taking advantage of the statistical independence of the sources. The algorithm usually works based on \ac{HOS}. After prewhitening the covariance matrix of the data, \ac{ICA} tries to find a linear transformation $\mathbf{W}$ for estimated sources $\hat{\mathbf{S}} = \mathbf{W} \mathbf{X}$. $\hat{\mathbf{S}}$ is then supposed to be as independent as possible. How effective the \ac{ICA} depends on the independence of sources and the full column rank of the mixing matrix $\mathbf{A}$. Since this algorithm relies on statistical features, the number of samples must be sufficiently large. In most cases, it is recommended to use all available data because cerebral activity and artifacts are spatially stationary through time. \cite{Uriguen_2015} \par
 
-  \section{Feature extraction and signal decomposition of \ac{EEG} signals}
+  \section{Feature extraction and signal decomposition of EEG signals}
