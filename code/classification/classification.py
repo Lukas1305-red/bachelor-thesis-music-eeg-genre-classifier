@@ -5,6 +5,7 @@ import os
 # import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
+from enum import Enum
 # import seaborn as sns
 
 from sklearn.preprocessing import LabelEncoder
@@ -18,15 +19,24 @@ from sklearn.metrics import (
 )
 from sklearn.base import clone
 
+
+class FreqDomain(Enum):
+    welch = "psd_welch"
+    periodogram = "periodogram"
+    fft = "psd_fft"
+
+
 DATA_PATH = "data/eeg_data_v4_features/features"
 LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
 
 
-def load_data():
+def load_data(psd_to_keep: FreqDomain):
     X = []
     y = []
+    print("Start loading data...")
     for i in range(20):
         session_number = str(i).zfill(3)
+        print(f"Load Session {session_number}...")
         filename = f"{session_number}.pkl"
         df_data: pd.DataFrame = pd.read_pickle(f"{DATA_PATH}/{filename}")
         df_label: pd.DataFrame = pd.read_pickle(f"{LABEL_PATH}/{filename}")
@@ -35,13 +45,17 @@ def load_data():
         genres = df_label["genre"]
         y.extend(genres.to_list())
         # drop data columns
-        X_df = df_data.drop(get_problematic_column_names(df_data), axis=1)
+        X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
+        print(f"Filter frequencies only for {psd_to_keep.name}...")
+        X_df = filter_out_freq_domains(X_df_buf, domain_to_keep=psd_to_keep)
         # store features
         X.append(X_df.values)
+        print(f"Finished loading session {session_number}!")
 
     le = LabelEncoder()
     y_numerical = le.fit_transform(y)
     X_combined = np.vstack(X)
+    print("Finished loading data!")
     return X_combined, y_numerical
 
 
@@ -49,8 +63,19 @@ def get_problematic_column_names(df: pd.DataFrame):
     nan_columns = df.columns[df.isnull().any()].tolist()
     inf_columns = df.columns[df.isin([np.inf, -np.inf]).any()].tolist()
     obj_columns = df.columns[df.dtypes == "object"].tolist()
+    ret = list(set(nan_columns + inf_columns + obj_columns))
+    print(f"These are the columns that are problematic: {ret}")
+    return ret
 
-    return list(set(nan_columns + inf_columns + obj_columns))
+
+def filter_out_freq_domains(df: pd.DataFrame, domain_to_keep: FreqDomain):
+    ret = df.copy()
+    for domain in FreqDomain:
+        if domain != domain_to_keep:
+            # filter out all occurences that have the prefix
+            filtered_df = df.filter(regex=f"^(?!{domain.name}_)")
+            ret = filtered_df
+    return ret
 
 
 def create_grid_search(estimator, param_grid, session_validation):
