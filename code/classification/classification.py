@@ -1,15 +1,15 @@
 import pandas as pd
 import numpy as np
-import os
-
-# import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
 from enum import Enum
-# import seaborn as sns
-
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import GridSearchCV, KFold, cross_val_predict
+from sklearn.model_selection import (
+    GridSearchCV,
+    KFold,
+    cross_val_predict,
+    RandomizedSearchCV,
+)
 from sklearn.metrics import (
     make_scorer,
     f1_score,
@@ -78,7 +78,7 @@ def filter_out_freq_domains(df: pd.DataFrame, domain_to_keep: FreqDomain):
     return ret
 
 
-def create_grid_search(estimator, param_grid, session_validation):
+def create_search(estimator, params, session_validation, random_search: bool):
     # define cross validation
     if session_validation:
         cv = KFold(n_splits=20, shuffle=False)
@@ -92,50 +92,64 @@ def create_grid_search(estimator, param_grid, session_validation):
         "recall_macro": make_scorer(recall_score, average="macro"),
     }
 
-    return GridSearchCV(
-        estimator=estimator,
-        param_grid=param_grid,
-        scoring=scoring,
-        refit="balanced_accuracy",
-        cv=cv,
-        n_jobs=-1,
-        verbose=2,
-    )
+    if random_search:
+        return RandomizedSearchCV(
+            estimator=estimator,
+            param_distributions=params,
+            n_iter=100,
+            cv=cv,
+            scoring=scoring,
+            refit="balanced_accuracy",
+            n_jobs=-1,
+            random_state=1997,
+            verbose=1,
+        )
+    else:
+        return GridSearchCV(
+            estimator=estimator,
+            param_grid=params,
+            scoring=scoring,
+            refit="balanced_accuracy",
+            cv=cv,
+            n_jobs=-1,
+            verbose=2,
+        )
 
 
-def perform_grid_search(estimator, param_grid, estimator_name, session_validation):
+def perform_hyperparam_tuning(
+    estimator,
+    param_grid,
+    estimator_name,
+    session_validation,
+    psd: FreqDomain,
+    random_search: bool,
+):
     # Experiment tracking
     mlflow.sklearn.autolog(max_tuning_runs=10)
     print(mlflow.get_registry_uri())
 
-    X, y = load_data()
-    slurm_job_id = os.getenv("SLURM_JOB_ID", "default_experiment")
-    with mlflow.start_run(
-        run_name=f"{estimator_name} Hyperparameter Tuning",
-        experiment_id=f"{slurm_job_id}",
-    ):
-        grid_search = create_grid_search(
+    X, y = load_data(psd_to_keep=psd)
+    with mlflow.start_run(run_name=f"{estimator_name} Hyperparameter Tuning"):
+        grid_search = create_search(
             estimator=estimator,
-            param_grid=param_grid,
+            params=param_grid,
             session_validation=session_validation,
+            random_search=random_search,
         )
 
         grid_search.fit(X, y)
 
-        # get the best model
-        # best_estimator = grid_search.best_estimator_
+        # Log best parameters and score
+        mlflow.log_params(grid_search.best_params_)
+        mlflow.log_metric("best_cv_score", grid_search.best_score_)
+
+        # Log all CV results
+        results_df = pd.DataFrame(grid_search.cv_results_)
+        mlflow.log_table(results_df, "grid_search_results.json")
+
         print(f"Best parameters: {grid_search.best_params_}")
         print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
-
-        # cm = draw_confusion_matrix(best_estimator, X, y)
-
-        # plt.figure(figsize=(8, 6))
-        # # sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-        # plt.title("Confusion Matrix")
-        # plt.ylabel("Actual")
-        # plt.xlabel("Predicted")
-
-        # # mlflow.log_figure(plt.gcf(), "confusion_matrix.png")
+        print(grid_search.best_estimator_)
 
 
 def draw_confusion_matrix(estimator, X, y):
