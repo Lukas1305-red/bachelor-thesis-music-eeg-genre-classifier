@@ -1,3 +1,5 @@
+import mlflow.sklearn
+import os
 import pandas as pd
 import numpy as np
 import mlflow
@@ -7,17 +9,10 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import (
     GridSearchCV,
     KFold,
-    cross_val_predict,
+    StratifiedKFold,
     RandomizedSearchCV,
 )
-from sklearn.metrics import (
-    make_scorer,
-    f1_score,
-    recall_score,
-    balanced_accuracy_score,
-    confusion_matrix,
-)
-from sklearn.base import clone
+from sklearn.metrics import make_scorer, f1_score, recall_score, balanced_accuracy_score
 
 
 class FreqDomain(Enum):
@@ -47,9 +42,9 @@ def load_data(psd_to_keep: FreqDomain):
         # drop data columns
         X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
         print(f"Filter frequencies only for {psd_to_keep.name}...")
-        X_df = filter_out_freq_domains(X_df_buf, domain_to_keep=psd_to_keep)
+        # X_df = filter_out_freq_domains(X_df_buf, domain_to_keep=psd_to_keep)
         # store features
-        X.append(X_df.values)
+        X.append(X_df_buf.values)
         print(f"Finished loading session {session_number}!")
 
     le = LabelEncoder()
@@ -83,7 +78,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
     if session_validation:
         cv = KFold(n_splits=20, shuffle=False)
     else:
-        cv = KFold(n_splits=5, shuffle=True, random_state=1997)
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=1997)
 
     # define scoring
     scoring = {
@@ -125,6 +120,8 @@ def perform_hyperparam_tuning(
     random_search: bool,
 ):
     # Experiment tracking
+    slurm_id = os.environ.get("SLURM_JOB_ID")
+    mlflow.set_experiment(f"Experiment {slurm_id}")
     mlflow.sklearn.autolog(max_tuning_runs=10)
     print(mlflow.get_registry_uri())
 
@@ -142,6 +139,9 @@ def perform_hyperparam_tuning(
         # Log best parameters and score
         mlflow.log_params(grid_search.best_params_)
         mlflow.log_metric("best_cv_score", grid_search.best_score_)
+        mlflow.sklearn.log_model(
+            sk_model=grid_search.best_estimator_, artifact_path="best_model"
+        )
 
         # Log all CV results
         results_df = pd.DataFrame(grid_search.cv_results_)
@@ -150,12 +150,3 @@ def perform_hyperparam_tuning(
         print(f"Best parameters: {grid_search.best_params_}")
         print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
         print(grid_search.best_estimator_)
-
-
-def draw_confusion_matrix(estimator, X, y):
-    estimator_clone = clone(estimator)
-    y_pred = cross_val_predict(
-        estimator_clone, X, y, cv=KFold(n_splits=20, shuffle=False, random_state=1997)
-    )
-    cm = confusion_matrix(y, y_pred)
-    return cm
