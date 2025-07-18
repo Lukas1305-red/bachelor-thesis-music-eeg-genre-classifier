@@ -30,4 +30,4 @@ devenv.local.nix
 .pre-comit-config.yaml
 
 *.out
-/mlruns
+/mlruns_descriptive
