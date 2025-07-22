@@ -74,17 +74,17 @@ def autocorr_lag(x):
     return np.corrcoef(x[:-1], x[1:])[0, 1]
 
 
-def get_thresholds(sources):
+def get_thresholds(sources, percentile):
     ptp_values = [np.ptp(sources[:, i]) for i in range(sources.shape[1])]
     kurt_values = [scipy.stats.kurtosis(sources[:, i]) for i in range(sources.shape[1])]
     skew_values = [scipy.stats.skew(sources[:, i]) for i in range(sources.shape[1])]
     autocorr_values = [autocorr_lag(sources[:, i]) for i in range(sources.shape[1])]
 
     # Calculate thresholds
-    ptp_threshold = np.percentile(ptp_values, 85)
-    kurt_threshold = np.percentile(kurt_values, 85)
-    skew_threshold = np.percentile(skew_values, 85)
-    autocorr_threshold = np.percentile(autocorr_values, 85)
+    ptp_threshold = np.percentile(ptp_values, percentile)
+    kurt_threshold = np.percentile(kurt_values, percentile)
+    skew_threshold = np.percentile(skew_values, percentile)
+    autocorr_threshold = np.percentile(autocorr_values, percentile)
 
     return ptp_threshold, kurt_threshold, skew_threshold, autocorr_threshold
 
@@ -106,8 +106,9 @@ def artifact_removal_ica(data):
 
     sparsity = calculate_sparsity(mixing_matrix=mixing_matrix)
 
+    # TODO: Change to 90 or even 95 for less strict component removal
     ptp_threshold, kurt_threshold, skew_threshold, autocorr_threshold = get_thresholds(
-        sources
+        sources, 90
     )
 
     rejected_components = []

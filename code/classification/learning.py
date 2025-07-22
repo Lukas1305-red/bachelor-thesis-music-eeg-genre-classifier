@@ -1,5 +1,4 @@
 import mlflow
-import mlflow.sklearn
 from sklearn.model_selection import (
     GridSearchCV,
     KFold,

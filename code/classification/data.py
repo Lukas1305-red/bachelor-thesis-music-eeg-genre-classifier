@@ -31,12 +31,13 @@ def load_data(psd_to_keep: FreqDomain):
         y.extend(genres.to_list())
         # drop data columns
         X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
+        X_df_buf_buf = remove_reference_channel(df=X_df_buf)
         print(f"Filter frequencies only for {psd_to_keep.name}...")
         # X_df = filter_out_freq_domains(X_df_buf, FreqDomain.welch)
-        feature_names = X_df_buf.columns.tolist()
+        feature_names = X_df_buf_buf.columns.tolist()
 
         # store features
-        X.append(X_df_buf.values)
+        X.append(X_df_buf_buf.values)
         print(f"Finished loading session {session_number}!")
 
     le = LabelEncoder()
@@ -49,10 +50,6 @@ def load_data(psd_to_keep: FreqDomain):
 
     print("Finished loading data!")
     return X_filtered, y_numerical
-
-
-def recursive_feature_selection(X):
-    print("Start Feature Selectoin")
 
 
 def remove_constant_features(X_original, feature_names):
@@ -98,3 +95,15 @@ def filter_out_freq_domains(df: pd.DataFrame, domain_to_keep: FreqDomain):
             filtered_df = ret.filter(regex=f"^(?!{domain.name}_)")
             ret = filtered_df
     return ret
+
+
+def remove_reference_channel(df: pd.DataFrame):
+    # The channel 3 is the reference channel
+    # Eliminate all columns that have Ch3 in them
+    ch3_columns = []
+    for col in df.columns:
+        if "ch3" in col.lower():
+            ch3_columns.append(col)
+    df_cleaned = df.drop(columns=ch3_columns)
+    print(f"Removed {len(ch3_columns)} features that came from Channel 3.")
+    return df_cleaned
