@@ -1,4 +1,3 @@
-import mlflow.sklearn
 import os
 import pandas as pd
 import numpy as np
@@ -130,7 +129,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
         return RandomizedSearchCV(
             estimator=estimator,
             param_distributions=params,
-            n_iter=300,
+            n_iter=500,
             cv=cv,
             scoring=scoring,
             refit="balanced_accuracy",
@@ -148,7 +147,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
             refit="balanced_accuracy",
             cv=cv,
             n_jobs=-1,
-            verbose=2,
+            verbose=1,
         )
 
 
