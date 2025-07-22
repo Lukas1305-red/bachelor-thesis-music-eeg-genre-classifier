@@ -1,26 +1,20 @@
 from code.classification.classification import perform_hyperparam_tuning, FreqDomain
 from sklearn.svm import SVC
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-import numpy as np
 
 
 def train():
-    svm_pipeline = Pipeline(
-        [("scaler", StandardScaler()), ("svm", SVC(random_state=1997))]
-    )
+    svm = SVC(random_state=1997)
 
-    params = {
-        "svm__kernel": ["rbf", "linear"],  # Include linear kernel for comparison
-        "svm__C": np.logspace(-3, 2, 20),  # Logarithmic scale: 0.001 to 100
-        "svm__gamma": ["scale", "auto"]
-        + list(np.logspace(-4, 0, 15)),  # Include 'scale'/'auto' + log scale
-        "svm__class_weight": ["balanced", None],  # Test both balanced and None
+    params2 = {
+        "kernel": ["rbf", "poly", "linear"],
+        "C": [0.01, 0.1, 0.5, 1, 10, 100],
+        "gamma": ["auto", "scale", 1, 0.75, 0.5, 0.25, 0.1, 0.01, 0.001],
+        "decision_function_shape": ["ovo", "ovr"],
     }
 
     perform_hyperparam_tuning(
-        svm_pipeline,
-        params,
+        svm,
+        params2,
         "SVM",
         session_validation=False,
         psd=FreqDomain.welch,
