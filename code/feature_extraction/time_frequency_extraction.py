@@ -10,7 +10,6 @@ from code.feature_extraction.feature_extraction_utils import flatten_dict
 SAMPLE_RATE = 250
 
 
-# TODO: Leave continouse wavelet transform out
 def time_frequency_domain_feature_extraction(eeg_data):
     features = {}
     # continous_wavelet_transform(eeg_data, features)
