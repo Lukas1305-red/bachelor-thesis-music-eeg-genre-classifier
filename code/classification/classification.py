@@ -64,5 +64,19 @@ def perform_hyperparam_tuning(
         mlflow.log_table(results_df, "grid_search_results.json")
 
         print(f"Best parameters: {grid_search.best_params_}")
-        print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
+        results_df = pd.DataFrame(grid_search.cv_results_)
+
+        # Print all rows, showing relevant columns
+        with pd.option_context("display.max_rows", None, "display.max_columns", None):
+            print(
+                results_df[
+                    [
+                        "params",
+                        "mean_test_f1_macro",
+                        "mean_test_accuracy",
+                        "mean_test_recall_macro",
+                        "rank_test_f1_macro",
+                    ]
+                ].sort_values(by="rank_test_f1_macro")
+            )
         print(grid_search.best_estimator_)

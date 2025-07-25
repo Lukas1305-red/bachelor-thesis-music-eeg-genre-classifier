@@ -5,7 +5,7 @@ from sklearn.model_selection import (
     StratifiedKFold,
     RandomizedSearchCV,
 )
-from sklearn.metrics import make_scorer, f1_score, recall_score, balanced_accuracy_score
+from sklearn.metrics import make_scorer, f1_score, recall_score, accuracy_score
 from enum import Enum
 from datetime import datetime
 import os
@@ -27,7 +27,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
     # define scoring
     scoring = {
         "f1_macro": make_scorer(f1_score, average="macro"),
-        "balanced_accuracy": make_scorer(balanced_accuracy_score),
+        "accuracy": make_scorer(accuracy_score),
         "recall_macro": make_scorer(recall_score, average="macro"),
     }
 
@@ -35,10 +35,10 @@ def create_search(estimator, params, session_validation, random_search: bool):
         return RandomizedSearchCV(
             estimator=estimator,
             param_distributions=params,
-            n_iter=300,
+            n_iter=50,
             cv=cv,
             scoring=scoring,
-            refit="balanced_accuracy",
+            refit="f1_macro",
             n_jobs=-1,
             random_state=1997,
             verbose=1,
@@ -68,7 +68,7 @@ def setup_mlflow_experiment(
     cv_type = "SessionCV" if session_validation else "StratifiedCV"
 
     # Create descriptive folder name
-    experiment_name = f"EEG_{estimator_name}_{psd.name}_{cv_type}_{timestamp}"
+    experiment_name = f"{estimator_name}_{timestamp}_{slurm_id}"
 
     # Set custom tracking URI to get descriptive folder names
     tracking_uri = f"file:./mlruns_descriptive/{experiment_name}"

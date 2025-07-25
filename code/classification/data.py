@@ -3,9 +3,12 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_selection import VarianceThreshold
+from collections import Counter
 
 
-DATA_PATH = "data/eeg_data_v4_features/features"
+DATA_PATH = (
+    "data/eeg_data_normalized_features_noCh3_lessStrict_reduced_unnormalized/features"
+)
 LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
 
 
@@ -31,17 +34,19 @@ def load_data(psd_to_keep: FreqDomain):
         y.extend(genres.to_list())
         # drop data columns
         X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
-        X_df_buf_buf = remove_reference_channel(df=X_df_buf)
         print(f"Filter frequencies only for {psd_to_keep.name}...")
-        # X_df = filter_out_freq_domains(X_df_buf, FreqDomain.welch)
-        feature_names = X_df_buf_buf.columns.tolist()
+        X_df = filter_out_freq_domains(X_df_buf, FreqDomain.welch)
+        feature_names = X_df.columns.tolist()
 
         # store features
-        X.append(X_df_buf_buf.values)
+        X.append(X_df.values)
         print(f"Finished loading session {session_number}!")
 
     le = LabelEncoder()
     y_numerical = le.fit_transform(y)
+    counter = Counter(y_numerical)
+    for label, count in sorted(counter.items()):
+        print(f"Class {label}: {count} samples")
     X_combined = np.vstack(X)
 
     X_filtered = remove_constant_features(

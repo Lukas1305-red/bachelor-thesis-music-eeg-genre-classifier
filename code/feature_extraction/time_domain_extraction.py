@@ -30,15 +30,15 @@ def time_domain_feature_extraction(song_data):
         [ant.hjorth_params(signal)[1] for signal in song_data]
     )
 
-    time_domain_features["ar_model"] = [
-        autoregressive_modeling(signal) for signal in song_data
-    ]
+    # time_domain_features["ar_model"] = [
+    #     autoregressive_modeling(signal) for signal in song_data
+    # ]
 
-    time_domain_features["higuchi"] = np.array(
-        [ant.higuchi_fd(signal) for signal in song_data]
-    )
+    # time_domain_features["higuchi"] = np.array(
+    #     [ant.higuchi_fd(signal) for signal in song_data]
+    # )
 
-    time_domain_features["mad"] = np.array([mad(signal) for signal in song_data])
+    # time_domain_features["mad"] = np.array([mad(signal) for signal in song_data])
 
     time_domain_features["moment3"] = scipy.stats.moment(song_data, order=3, axis=1)
     time_domain_features["moment4"] = scipy.stats.moment(song_data, order=4, axis=1)
