@@ -17,8 +17,8 @@ class BrainRythm(Enum):
 def frequency_domain_feature_extraction(eeg_data):
     frequency_features = {}
     power_spectral_density_welch(eeg_data, 2, frequency_features)
-    #  power_spectral_density_fft(eeg_data, 2, frequency_features)
-    #  periodogram(eeg_data, frequency_features)
+    power_spectral_density_fft(eeg_data, 2, frequency_features)
+    periodogram(eeg_data, frequency_features)
     return flatten_dict(frequency_features)
 
 

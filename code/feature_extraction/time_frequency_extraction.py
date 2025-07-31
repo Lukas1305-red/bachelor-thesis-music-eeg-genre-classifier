@@ -30,13 +30,13 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=1
 
 
 def continous_wavelet_transform(data, dictionary, epoch_duration=5):
-    dictionary["continuous_wavelet"] = {}
+    dictionary["continous_wavelet"] = {}
     samples_per_epoch = SAMPLE_RATE * epoch_duration
     wavelet = "morl"  # Morlet wavelet
 
     for i, channel in enumerate(data, 1):
         ch_key = f"EEG_Ch{i}"
-        dictionary["continuous_wavelet"][ch_key] = {}
+        dictionary["continous_wavelet"][ch_key] = {}
 
         # Step 1: Partition signal into non-overlapping epochs
         num_epochs = len(channel) // samples_per_epoch
@@ -63,7 +63,7 @@ def continous_wavelet_transform(data, dictionary, epoch_duration=5):
 
             # Step 5: Extract statistical features
             values = band_cwt.flatten()
-            dictionary["continuous_wavelet"][ch_key][rythm.name] = {
+            dictionary["continous_wavelet"][ch_key][rythm.name] = {
                 "mean": np.mean(values),
                 "std": np.std(values),
                 "skewness": scipy.stats.skew(values),
@@ -72,7 +72,7 @@ def continous_wavelet_transform(data, dictionary, epoch_duration=5):
 
             power = values**2
             power /= np.sum(power) + 1e-8
-            dictionary["continuous_wavelet"][ch_key][rythm.name]["entropy"] = (
+            dictionary["continous_wavelet"][ch_key][rythm.name]["entropy"] = (
                 scipy.stats.entropy(power)
             )
 
@@ -80,6 +80,11 @@ def continous_wavelet_transform(data, dictionary, epoch_duration=5):
 
 
 # MARK: Helpers
+
+
+def hz_to_scale(freq):
+    return SAMPLE_RATE / freq
+
 
 def extract_dwt_features(channel_data, wavelet="db4", level=4):
     coeffs = pywt.wavedec(channel_data, wavelet, level=level)
@@ -102,32 +107,6 @@ def extract_dwt_features(channel_data, wavelet="db4", level=4):
     ret["detailed"]["std"] = np.std(cD_all)
     ret["detailed"]["skew"] = scipy.stats.skew(cD_all)
     ret["detailed"]["kurtosis"] = scipy.stats.kurtosis(cD_all)
-    ret["detailed"]["entropy"] = scipy.stats.entropy(cD_all)
+    ret["detailed"]["kurtosis"] = scipy.stats.entropy(cD_all)
 
     return ret
-
-# def extract_time_frequency_features(signal, wavelet="db4", level=4):
-#     """
-#     Extract 65 time-frequency domain features from a 1D signal.
-#     Using a DWT with level=4 gives (level+1)=5 sub-bands.
-#     For each sub-band, we compute 13 features.
-#     """
-#     features = {}
-#     coeffs = pywt.wavedec(signal, wavelet, level=level)
-#     n_subbands = len(coeffs)  # should be level+1
-#     for i, coeff in enumerate(coeffs):
-#         prefix = f"tfd_band_{i}_"
-#         features[prefix + "mean"] = np.mean(coeff)
-#         features[prefix + "median"] = np.median(coeff)
-#         features[prefix + "std"] = np.std(coeff)
-#         features[prefix + "variance"] = np.var(coeff)
-#         features[prefix + "energy"] = np.sum(np.square(coeff))
-#         features[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
-#         features[prefix + "mean_abs"] = np.mean(np.abs(coeff))
-#         features[prefix + "waveform_length"] = np.sum(np.abs(np.diff(coeff)))
-#         features[prefix + "skewness"] = stats.skew(coeff)
-#         features[prefix + "kurtosis"] = stats.kurtosis(coeff)
-#         features[prefix + "min"] = np.min(coeff)
-#         features[prefix + "max"] = np.max(coeff)
-#         features[prefix + "range"] = features[prefix + "max"] - features[prefix + "min"]
-#     return features
