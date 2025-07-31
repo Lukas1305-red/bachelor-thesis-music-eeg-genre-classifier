@@ -19,8 +19,7 @@ def time_domain_feature_extraction(song_data):
     time_domain_features["skew"] = scipy.stats.skew(song_data, axis=1)
     time_domain_features["kurtosis"] = scipy.stats.kurtosis(song_data, axis=1)
 
-    stacked = np.stack(song_data, axis=0)  # shape: (channels, samples)
-    time_domain_features["rms"] = np.sqrt(np.mean(stacked**2, axis=1))
+    time_domain_features["rms"] = np.sqrt(np.mean(song_data**2, axis=1))
     time_domain_features["zcr"] = np.array([zcr(signal) for signal in song_data])
 
     time_domain_features["h_mobility"] = np.array(

@@ -59,6 +59,33 @@ def extract_dwt_features(channel_data, wavelet="db4", level=5):
     return ret
 
 
+# def extract_time_frequency_features(signal, wavelet="db4", level=4):
+#     """
+#     Extract 65 time-frequency domain features from a 1D signal.
+#     Using a DWT with level=4 gives (level+1)=5 sub-bands.
+#     For each sub-band, we compute 13 features.
+#     """
+#     features = {}
+#     coeffs = pywt.wavedec(signal, wavelet, level=level)
+#     n_subbands = len(coeffs)  # should be level+1
+#     for i, coeff in enumerate(coeffs):
+#         prefix = f"tfd_band_{i}_"
+#         features[prefix + "mean"] = np.mean(coeff)
+#         features[prefix + "median"] = np.median(coeff)
+#         features[prefix + "std"] = np.std(coeff)
+#         features[prefix + "variance"] = np.var(coeff)
+#         features[prefix + "energy"] = np.sum(np.square(coeff))
+#         features[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
+#         features[prefix + "mean_abs"] = np.mean(np.abs(coeff))
+#         features[prefix + "waveform_length"] = np.sum(np.abs(np.diff(coeff)))
+#         features[prefix + "skewness"] = stats.skew(coeff)
+#         features[prefix + "kurtosis"] = stats.kurtosis(coeff)
+#         features[prefix + "min"] = np.min(coeff)
+#         features[prefix + "max"] = np.max(coeff)
+#         features[prefix + "range"] = features[prefix + "max"] - features[prefix + "min"]
+#     return features
+
+
 def continous_wavelet_transform(data, dictionary, epoch_duration=5):
     dictionary["continous_wavelet"] = {}
     samples_per_epoch = SAMPLE_RATE * epoch_duration
@@ -108,10 +135,3 @@ def continous_wavelet_transform(data, dictionary, epoch_duration=5):
             dictionary["continous_wavelet"][ch_key][rythm.name]["entropy"] = (
                 scipy.stats.entropy(power_norm)
             )
-
-
-# MARK: Helpers
-
-
-def hz_to_scale(freq):
-    return SAMPLE_RATE / freq
