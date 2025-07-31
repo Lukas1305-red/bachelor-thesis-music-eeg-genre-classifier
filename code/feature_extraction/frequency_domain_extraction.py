@@ -17,8 +17,8 @@ class BrainRythm(Enum):
 def frequency_domain_feature_extraction(eeg_data):
     frequency_features = {}
     power_spectral_density_welch(eeg_data, 2, frequency_features)
-    power_spectral_density_fft(eeg_data, 2, frequency_features)
-    periodogram(eeg_data, frequency_features)
+    # power_spectral_density_fft(eeg_data, 2, frequency_features)
+    # periodogram(eeg_data, frequency_features)
     return flatten_dict(frequency_features)
 
 
@@ -41,11 +41,11 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         dictionary[key] = {}
 
     total_power = np.trapezoid(psd, f)
-    psd_norm = psd / np.trapezoid(psd, f)
+    psd_norm = psd / total_power
     spectral_entropy = -np.sum(psd_norm * np.log2(psd_norm + 1e-10))
-    mean_freq = np.sum(f * psd) / np.trapezoid(psd, f)
+    mean_freq = np.trapz(f * psd, f) / total_power
     rms_bandwith = np.sqrt(
-        np.trapezoid(((f - mean_freq) ** 2) * psd, f) / np.trapezoid(psd, f)
+        np.trapezoid(((f - mean_freq) ** 2) * psd, f) / total_power
     )
 
     dictionary[key][channel_key] = {}
