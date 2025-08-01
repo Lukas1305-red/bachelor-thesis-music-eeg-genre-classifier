@@ -1,11 +1,13 @@
 import pickle
 import numpy as np
+from code.feature_extraction.feature_extraction import feature_extraction
 
 
 def load_deap_dataset():
     eeg_data = load_deap_eeg()
     labels = load_deap_labels()
-    return eeg_data, labels
+    feature_array = feature_extraction(eeg_data)
+    return feature_array, labels
 
 
 def load_deap_eeg():
@@ -16,6 +18,7 @@ def load_deap_eeg():
     return eeg_data_np
 
 
+# TODO: Write in .csv or pickle
 def load_deap_labels():
     deap_labels = [
         "Folk",
