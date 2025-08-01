@@ -15,7 +15,7 @@ def train(scaling=True):
         )
 
         params = {
-            "svm__kernel": ["rbf", "linear"],
+            "svm__kernel": ["linear"],
             "svm__C": [0.05, 0.1, 1, 10, 100],
             "svm__gamma": ["scale", 0.1, 0.01, 0.001],
             "svm__decision_function_shape": ["ovr"],

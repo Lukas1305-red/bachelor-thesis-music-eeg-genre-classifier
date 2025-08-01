@@ -1,29 +1,38 @@
 import pickle
 import numpy as np
 from code.feature_extraction.feature_extraction import feature_extraction
+from sklearn.preprocessing import LabelEncoder
 
 
 def load_deap_dataset():
+    labels = load_deap_labels()
+    le = LabelEncoder()
+    labels_numeric = le.fit_transform(labels)
+    print("Loading DEAP EEG signals...")
     eeg_data = load_deap_eeg()
+    print(np.shape(eeg_data))
     assert np.shape(eeg_data) == (1280, 32, 8064)
 
+    print("Extract Features from DEAP Dataset...")
     feature_array = []
     for song in eeg_data:
         song_features = feature_extraction(song_data=song)
         feature_values = list(song_features.values())
         feature_array.append(feature_values)
     feature_array_np = np.array(feature_array)
+    feature_array_np = feature_array_np[
+        :, np.all(np.isfinite(feature_array_np), axis=0)
+    ]
+    print(np.shape(feature_array_np))
 
-    labels = load_deap_labels()
-
-    return feature_array_np, labels
+    return feature_array_np, labels_numeric
 
 
 def load_deap_eeg():
     eeg_data = load_all_subjects()
-    eeg_data_np = np.array(eeg_data, axis=0)
+    eeg_data_np = np.array(eeg_data)
     eeg_data_reshaped = eeg_data_np.reshape(1280, 40, 8064)  # no assertion necessary
-    eeg_data_reshaped_eeg = eeg_data_reshaped[:, 32, :]  # only keep EEG channels
+    eeg_data_reshaped_eeg = eeg_data_reshaped[:, :32, :]  # only keep EEG channels
     return eeg_data_reshaped_eeg
 
 
@@ -76,7 +85,8 @@ def load_deap_labels():
     for i in range(32):
         labels.extend(deap_labels)
 
-    assert np.shape(labels) == (1280)
+    print(np.shape(labels))
+    assert np.shape(labels) == (1280,)
     return labels
 
 
@@ -93,6 +103,6 @@ def load_all_subjects():
 def load_subject(subject: str):
     file_path = f"data/deap/deap/subjects/{subject}.dat"
     subject_data = pickle.load(open(file_path, "rb"), encoding="latin1")
-    subject_signal_data = np.array(subject_data["deap"])
+    subject_signal_data = np.array(subject_data["data"])
     assert np.shape(subject_signal_data) == (40, 40, 8064)
     return subject_signal_data
