@@ -44,25 +44,23 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
     psd_norm = psd / total_power
     spectral_entropy = -np.sum(psd_norm * np.log2(psd_norm + 1e-10))
     mean_freq = np.trapz(f * psd, f) / total_power
-    rms_bandwith = np.sqrt(
-        np.trapezoid(((f - mean_freq) ** 2) * psd, f) / total_power
-    )
+    # rms_bandwith = np.sqrt(np.trapezoid(((f - mean_freq) ** 2) * psd, f) / total_power)
 
     dictionary[key][channel_key] = {}
-    dictionary[key][channel_key]["f_bins"] = f
-    dictionary[key][channel_key]["power"] = psd
+    # dictionary[key][channel_key]["f_bins"] = f
+    # dictionary[key][channel_key]["power"] = psd
     dictionary[key][channel_key]["spectral_entropy"] = spectral_entropy
     dictionary[key][channel_key]["mean_freq"] = mean_freq
-    dictionary[key][channel_key]["rms_bandwidth"] = rms_bandwith
+    # dictionary[key][channel_key]["rms_bandwidth"] = rms_bandwith
 
     rythm_power = {}
 
     for rythm in BrainRythm:
         power = extract_brain_rythm(f, psd, rythm=rythm)
         peak = get_peak_frequency(f, psd, rythm=rythm)
-        rel_power = power / total_power
+        # rel_power = power / total_power
         dictionary[key][channel_key][f"{rythm.name}"] = power
-        dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
+        # dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
         dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
         rythm_power[f"{rythm.name}"] = power
 
