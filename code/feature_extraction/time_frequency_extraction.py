@@ -20,7 +20,7 @@ def time_frequency_domain_feature_extraction(eeg_data):
 # MARK: Main computations
 
 
-def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=5, top_k=10):
+def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=10):
     dictionary["discrete_wavelet"] = {}
 
     for i, channel in enumerate(data, 1):
@@ -29,32 +29,24 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=5, top_k=1
         dictionary["discrete_wavelet"][ch_key] = feature_dict
 
 
-def extract_dwt_features(channel_data, wavelet="db4", level=5):
+def extract_dwt_features(channel_data, wavelet="db4", level=4):
     coeffs = pywt.wavedec(channel_data, wavelet, level=level)
-    cA = coeffs[0]
-    cDs = coeffs[1:]
-
+    n_subbands = len(coeffs)  # should be level+1
+    assert n_subbands == level + 1
     ret = {
         "approx": {},
         "detailed": {},
     }
-
-    ret["approx"]["mean"] = np.mean(cA)
-    ret["approx"]["std"] = np.std(cA)
-    ret["approx"]["skew"] = scipy.stats.skew(cA)
-    ret["approx"]["kurtosis"] = scipy.stats.kurtosis(cA)
-    power = cA**2
-    power_norm = power / (np.sum(power) + 1e-8)
-    ret["approx"]["entropy"] = scipy.stats.entropy(power_norm)
-
-    cD_all = np.concatenate(cDs)
-    ret["detailed"]["mean"] = np.mean(cD_all)
-    ret["detailed"]["std"] = np.std(cD_all)
-    ret["detailed"]["skew"] = scipy.stats.skew(cD_all)
-    ret["detailed"]["kurtosis"] = scipy.stats.kurtosis(cD_all)
-    power = cD_all**2
-    power_norm = power / (np.sum(power) + 1e-8)
-    ret["detailed"]["entropy"] = scipy.stats.entropy(power_norm)
+    for i, coeff in enumerate(coeffs):
+        prefix = f"tfd_band_{i}_"
+        ret[prefix + "mean"] = np.mean(coeff)
+        ret[prefix + "median"] = np.median(coeff)
+        ret[prefix + "std"] = np.std(coeff)
+        ret[prefix + "variance"] = np.var(coeff)
+        ret[prefix + "energy"] = np.sum(np.square(coeff))
+        ret[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
+        ret[prefix + "skewness"] = scipy.stats.skew(coeff)
+        ret[prefix + "kurtosis"] = scipy.stats.kurtosis(coeff)
 
     return ret
 

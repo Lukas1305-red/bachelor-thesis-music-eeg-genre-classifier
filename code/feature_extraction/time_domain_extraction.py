@@ -39,8 +39,12 @@ def time_domain_feature_extraction(song_data):
 
     # time_domain_features["mad"] = np.array([mad(signal) for signal in song_data])
 
-    time_domain_features["moment3"] = scipy.stats.moment(song_data, order=3, axis=1)
-    time_domain_features["moment4"] = scipy.stats.moment(song_data, order=4, axis=1)
+    # time_domain_features["moment3"] = scipy.stats.moment(song_data, order=3, axis=1)
+    # time_domain_features["moment4"] = scipy.stats.moment(song_data, order=4, axis=1)
+    time_domain_features["energy"] = np.sum(np.square(song_data))
+    time_domain_features["shannon_entropy"] = [
+        scipy.stats.entropy(signal) for signal in song_data
+    ]
 
     return flatten_time_domain_features(time_domain_features=time_domain_features)
 
