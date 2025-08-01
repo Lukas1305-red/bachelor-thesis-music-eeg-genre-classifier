@@ -33,10 +33,7 @@ def extract_dwt_features(channel_data, wavelet="db4", level=4):
     coeffs = pywt.wavedec(channel_data, wavelet, level=level)
     n_subbands = len(coeffs)  # should be level+1
     assert n_subbands == level + 1
-    ret = {
-        "approx": {},
-        "detailed": {},
-    }
+    ret = {}
     for i, coeff in enumerate(coeffs):
         prefix = f"tfd_band_{i}_"
         ret[prefix + "mean"] = np.mean(coeff)
