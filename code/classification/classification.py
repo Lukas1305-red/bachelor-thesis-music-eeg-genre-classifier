@@ -1,4 +1,3 @@
-import pandas as pd
 import mlflow
 import mlflow.sklearn
 from enum import Enum
@@ -63,24 +62,11 @@ def perform_hyperparam_tuning(
             sk_model=grid_search.best_estimator_, artifact_path="best_model"
         )
 
-        # Log all CV results
-        results_df = pd.DataFrame(grid_search.cv_results_)
-        mlflow.log_table(results_df, "grid_search_results.json")
+        # Get the index of the best estimator
+        best_index = grid_search.best_index_
 
-        print(f"Best parameters: {grid_search.best_params_}")
-        results_df = pd.DataFrame(grid_search.cv_results_)
+        # Get the mean test accuracy of the best estimator
+        best_accuracy = grid_search.cv_results_["mean_test_accuracy"][best_index]
 
-        # Print all rows, showing relevant columns
-        with pd.option_context("display.max_rows", None, "display.max_columns", None):
-            print(
-                results_df[
-                    [
-                        "params",
-                        "mean_test_f1_macro",
-                        "mean_test_accuracy",
-                        "mean_test_recall_macro",
-                        "rank_test_f1_macro",
-                    ]
-                ].sort_values(by="rank_test_f1_macro")
-            )
-        print(grid_search.best_estimator_)
+        # Print it
+        print(f"Best estimator accuracy: {best_accuracy:.4f}")
