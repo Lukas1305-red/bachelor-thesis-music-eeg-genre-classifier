@@ -5,6 +5,7 @@ from enum import Enum
 from datetime import datetime
 
 from code.classification.data import load_data
+from code.classification.deap_data import load_deap_dataset
 from code.classification.learning import setup_mlflow_experiment, create_search
 
 
@@ -21,6 +22,7 @@ def perform_hyperparam_tuning(
     session_validation,
     psd: FreqDomain,
     random_search: bool,
+    deap: bool,
 ):
     # Experiment tracking
     experiment_name, experiment_id = setup_mlflow_experiment(
@@ -36,12 +38,14 @@ def perform_hyperparam_tuning(
     cv_type = "Session" if session_validation else "Stratified"
     search_type = "Random" if random_search else "Grid"
     timestamp = datetime.now().strftime("%H%M%S")
+    dataset = "DEAP" if deap else "Headset"
 
-    run_name = (
-        f"{estimator_name}_{psd.name}_{cv_type}CV_{search_type}Search_{timestamp}"
-    )
+    run_name = f"{estimator_name}_{psd.name}_{cv_type}CV_{search_type}Search_{timestamp}_{dataset}_Dataset"
+    if deap:
+        X, y = load_deap_dataset()
+    else:
+        X, y = load_data(psd_to_keep=psd)
 
-    X, y = load_data(psd_to_keep=psd)
     with mlflow.start_run(run_name=f"{run_name}"):
         grid_search = create_search(
             estimator=estimator,
