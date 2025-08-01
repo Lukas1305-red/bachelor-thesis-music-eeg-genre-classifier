@@ -91,7 +91,7 @@ def load_all_subjects():
 
 
 def load_subject(subject: str):
-    file_path = f"data/deap/deap/subjects({subject}.dat)"
+    file_path = f"data/deap/deap/subjects/{subject}.dat"
     subject_data = pickle.load(open(file_path, "rb"), encoding="latin1")
     subject_signal_data = np.array(subject_data["deap"])
     assert np.shape(subject_signal_data) == (40, 40, 8064)
