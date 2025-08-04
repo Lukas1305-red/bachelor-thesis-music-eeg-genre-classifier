@@ -39,7 +39,7 @@ def perform_hyperparam_tuning(
     timestamp = datetime.now().strftime("%H%M%S")
     dataset = "DEAP" if deap else "Headset"
 
-    run_name = f"{estimator_name}_{psd.name}_{cv_type}CV_{search_type}Search_{timestamp}_{dataset}_Dataset"
+    run_name = f"{estimator_name}_{psd.name}_{cv_type}CV_{search_type}Search_{timestamp}_{dataset}_Dataset_Only_Freq_Domain"
     if deap:
         X, y = load_deap_dataset()
     else:
@@ -67,6 +67,10 @@ def perform_hyperparam_tuning(
 
         # Get the mean test accuracy of the best estimator
         best_accuracy = grid_search.cv_results_["mean_test_accuracy"][best_index]
+        best_f1 = grid_search.cv_results_["mean_test_f1_macro"][best_index]
 
         # Print it
+        print(f"Best estimator params: {grid_search.best_params_}")
         print(f"Best estimator accuracy: {best_accuracy:.4f}")
+        print(f"Best estimator f-score: {best_f1:.4f}")
+        print(f"Best estimator: {grid_search.best_estimator_}")
