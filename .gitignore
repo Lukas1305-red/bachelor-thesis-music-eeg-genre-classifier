@@ -31,3 +31,5 @@ devenv.local.nix
 
 *.out
 /mlruns_descriptive
+
+/feature_analysis_plots

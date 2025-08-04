@@ -7,7 +7,8 @@ from code.feature_extraction.frequency_domain_extraction import BrainRythm
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
 
-SAMPLE_RATE = 250
+# SAMPLE_RATE = 250
+SAMPLE_RATE = 256
 
 
 def time_frequency_domain_feature_extraction(eeg_data):
@@ -31,7 +32,7 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=1
 
 def extract_dwt_features(channel_data, wavelet="db4", level=4):
     coeffs = pywt.wavedec(channel_data, wavelet, level=level)
-    n_subbands = len(coeffs)  # should be level+1
+    n_subbands = len(coeffs)
     assert n_subbands == level + 1
     ret = {}
     for i, coeff in enumerate(coeffs):
