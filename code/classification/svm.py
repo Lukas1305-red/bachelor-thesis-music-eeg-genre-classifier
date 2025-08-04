@@ -2,6 +2,7 @@ from code.classification.classification import perform_hyperparam_tuning, FreqDo
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 
 def train(scaling=True):
@@ -10,15 +11,18 @@ def train(scaling=True):
         svm = Pipeline(
             [
                 ("scaler", StandardScaler()),
-                ("svm", SVC(random_state=1997)),
+                (
+                    "lda",
+                    LinearDiscriminantAnalysis(n_components=1),
+                ),  # . n_components = classes - 1
+                ("svm", SVC(random_state=1997, class_weight="balanced")),
             ]
         )
 
         params = {
-            "svm__kernel": ["linear"],
-            "svm__C": [0.05, 0.1, 1, 10, 100],
-            "svm__gamma": ["scale", 0.1, 0.01, 0.001],
-            "svm__decision_function_shape": ["ovr"],
+            "svm__kernel": ["rbf", "linear"],
+            "svm__C": [0.1, 1, 10],
+            "svm__gamma": ["scale", 0.01, 0.1],
         }
     else:
         svm = SVC(random_state=1997)
@@ -33,7 +37,7 @@ def train(scaling=True):
     perform_hyperparam_tuning(
         svm,
         params,
-        "SVM",
+        "SVM_DEAP_BINARY_TIME_FREQ_",
         session_validation=False,
         psd=FreqDomain.welch,
         random_search=True,
