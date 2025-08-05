@@ -58,11 +58,11 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
 
     for rythm in BrainRythm:
         power = extract_brain_rythm(f, psd, rythm=rythm)
-        peak = get_peak_frequency(f, psd, rythm=rythm)
+        # peak = get_peak_frequency(f, psd, rythm=rythm)
         rel_power = power / total_power
         # dictionary[key][channel_key][f"{rythm.name}"] = power
         dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
-        dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
+        # dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
         rythm_power[f"{rythm.name}"] = power
 
     # rythm ratios

@@ -27,7 +27,10 @@ def perform_hyperparam_tuning(
     experiment_name, experiment_id = setup_mlflow_experiment(
         estimator_name, psd, session_validation
     )
-
+    if deap:
+        X, y = load_deap_dataset()
+    else:
+        X, y = load_data(psd_to_keep=psd)
     mlflow.sklearn.autolog(max_tuning_runs=1)
 
     print(f"MLflow Tracking URI: {mlflow.get_tracking_uri()}")
@@ -40,10 +43,6 @@ def perform_hyperparam_tuning(
     dataset = "DEAP" if deap else "Headset"
 
     run_name = f"{estimator_name}_{psd.name}_{cv_type}CV_{search_type}Search_{timestamp}_{dataset}_Dataset_Only_Freq_Domain"
-    if deap:
-        X, y = load_deap_dataset()
-    else:
-        X, y = load_data(psd_to_keep=psd)
 
     with mlflow.start_run(run_name=f"{run_name}"):
         grid_search = create_search(
