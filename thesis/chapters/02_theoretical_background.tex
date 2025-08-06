@@ -82,7 +82,7 @@
 
   \section{Feature Extraction of EEG Signals}
     Before classification tasks can be performed on the denoised signal, it is essential to map the characterstics of each signal to specific metrics, called features. In biomedical signal analysis, big data became more common thus leading to high dimensionalities. Therefore, the biggest goal of feature extraction is to reduce this dimensionality and represent the data in a more compact way. Overall feature extraction techniques not only allow for reduction of complexity but also for saving on resources and computational time \cite{singh2023trends}. \par
-    There are different ways of extracting features from the \ac{EEG} signal. Depending on the task and circumstances, distinct measures can lead to independent results. For that reason, it is important to explore as many different features across multiple domains as possible. In general, there are three domains metrics can be derived from, namely the time domain, frequency domain and time-frequency domain, each extracting features based on different attributes of the \ac{EEG} signal. The following sections explain characteristics of its features alongside with examples of metrics within this domain. \par
+    There are different ways of extracting features from the \ac{EEG} signal. Depending on the task and circumstances, distinct measures can lead to independent results. For that reason, it is important to explore as many different features across multiple domains as possible. In general, there are three domains metrics can be derived from, namely the time domain, frequency domain and time-frequency domain, each extracting features based on different attributes of the \ac{EEG} signal. It is important to mention that those domains compute metrics from 1D-data, meaning that the features are calculated for each individual \ac{EEG} channel. The following sections explain characteristics of its features alongside with examples of metrics within this domain. \par
     \subsection{Time Domain Feature Extraction}
       In time domain feature extraction, the signals/data are analyzed based on time to quantify how the signal changes over time. Depending on the amount of data points in a session, windowing is employed to achieve desirable results \cite{singh2023trends}. \par
       One of the most simple and common approaches is calculating basic statistical features from the signal at hand. This includes measures like mean, standard deviation, maximum, minimum, median, variance, range, skewness and kurtosis \cite{singh2023trends}. \par
@@ -108,5 +108,6 @@
       \end{equation}
       Mathematically, each parameter stands for a specific charactersitc of the signal. While the activity stands for the signal power, the mobility depicts the mean frequency and the complexity the change in frequncy \cite{vidaurre2009time}.
     \subsection{Frequency Domain Feature Extraction}
-
+      Time is only one of the domains a signal can be described with. A more popular approach in \ac{EEG} analysis is the frequency domain. % search citation
+      
     \subsection{Time-Frequency Domain Feature Extraction}
