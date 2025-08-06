@@ -84,7 +84,29 @@
     Before classification tasks can be performed on the denoised signal, it is essential to map the characterstics of each signal to specific metrics, called features. In biomedical signal analysis, big data became more common thus leading to high dimensionalities. Therefore, the biggest goal of feature extraction is to reduce this dimensionality and represent the data in a more compact way. Overall feature extraction techniques not only allow for reduction of complexity but also for saving on resources and computational time \cite{singh2023trends}. \par
     There are different ways of extracting features from the \ac{EEG} signal. Depending on the task and circumstances, distinct measures can lead to independent results. For that reason, it is important to explore as many different features across multiple domains as possible. In general, there are three domains metrics can be derived from, namely the time domain, frequency domain and time-frequency domain, each extracting features based on different attributes of the \ac{EEG} signal. The following sections explain characteristics of its features alongside with examples of metrics within this domain. \par
     \subsection{Time Domain Feature Extraction}
-
+      In time domain feature extraction, the signals/data are analyzed based on time to quantify how the signal changes over time. Depending on the amount of data points in a session, windowing is employed to achieve desirable results \cite{singh2023trends}. \par
+      One of the most simple and common approaches is calculating basic statistical features from the signal at hand. This includes measures like mean, standard deviation, maximum, minimum, median, variance, range, skewness and kurtosis \cite{singh2023trends}. \par
+      In addition to these basic statistical features, characterstics tailored for electrical signals can be used for desirable results and information. One of those is \ac{RMS}, which measures the average power of a signal, representing a signal's energy or loudness. It can be calculated with \autoref{eq:rms}, where $N$ is the number of samples and $V(i)$ the amplitude of the signal of the $i$-th sample \cite{moulin2003rms}. \par 
+      \begin{equation}
+        V_{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} V^{2}(i)} \label{eq:rms}
+      \end{equation}
+      In order to depict the noisiness of the \ac{EEG} signal, the \ac{ZCR} can be calculated. As the name suggests, it counts the number of sign changes and normalizes the value with the number of samples. \par
+      In information theory, the (Shannon) entropy describes the uncertainty and information content of a signal in bits. A low entropy means that the signal is predictable tending to a constant signal, whereas a high entropy stands for a tendency to random noise \cite{BEIN2006101}. The Shannon Entropy can be computed by using \autoref{eq:entropy}. $p_{i}$ hereby stands for the probability of the $i$-th data point within the sample window \cite{gray2011entropy}. \par
+      \begin{equation}
+        H = - \sum_{i=1}^{n} p_{i}\log_{2}(p_{i})
+        \label{eq:entropy}
+      \end{equation}
+      Furthermore, used in recent \ac{EEG} studies, the so-called Hjorth parameters gained more popularity as they are able to quantify power, frequency content and signal shape variation. These parameters are three features, the activity (\autoref{eq:h0}), mobility (\autoref{eq:h1}) and complexity (\autoref{eq:h2}) of a signal $x(t)$.
+      \begin{equation}
+        h_{0}(x(t)) = var(x(t)) \label{eq:h0}
+      \end{equation}
+      \begin{equation}
+        h_{1}(x(t)) = \sqrt{\frac{h_0(\frac{dx(t)}{dt})}{h_{0}(x(t))}} \label{eq:h1}
+      \end{equation}
+      \begin{equation}
+        h_{2}{x(t)} = \frac{h_{1}(\frac{dx(t)}{dt})}{h_{1}(x(t))} \label{eq:h2}
+      \end{equation}
+      Mathematically, each parameter stands for a specific charactersitc of the signal. While the activity stands for the signal power, the mobility depicts the mean frequency and the complexity the change in frequncy \cite{vidaurre2009time}.
     \subsection{Frequency Domain Feature Extraction}
 
     \subsection{Time-Frequency Domain Feature Extraction}
