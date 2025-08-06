@@ -37,10 +37,10 @@ def extract_dwt_features(channel_data, wavelet="db4", level=4):
     ret = {}
     for i, coeff in enumerate(coeffs):
         prefix = f"tfd_band_{i}_"
-        # ret[prefix + "mean"] = np.mean(coeff)
-        # ret[prefix + "median"] = np.median(coeff)
-        # ret[prefix + "std"] = np.std(coeff)
-        # ret[prefix + "variance"] = np.var(coeff)
+        ret[prefix + "mean"] = np.mean(coeff)
+        ret[prefix + "median"] = np.median(coeff)
+        ret[prefix + "std"] = np.std(coeff)
+        ret[prefix + "variance"] = np.var(coeff)
         ret[prefix + "entropy"] = -np.sum(
             (p := np.square(coeff) / np.sum(np.square(coeff))) * np.log2(p + 1e-12)
         )
@@ -48,8 +48,8 @@ def extract_dwt_features(channel_data, wavelet="db4", level=4):
         ret[prefix + "relative_energy"] = np.sum(np.square(coeff)) / total_energy
         # ret[prefix + "energy"] = np.sum(np.square(coeff))
         # ret[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
-        # ret[prefix + "skewness"] = scipy.stats.skew(coeff)
-        # ret[prefix + "kurtosis"] = scipy.stats.kurtosis(coeff)
+        ret[prefix + "skewness"] = scipy.stats.skew(coeff)
+        ret[prefix + "kurtosis"] = scipy.stats.kurtosis(coeff)
 
     return ret
 
