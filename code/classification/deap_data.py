@@ -42,7 +42,7 @@ def load_deap_dataset():
     print("STARTING COMPREHENSIVE FEATURE ANALYSIS")
     print("=" * 50)
 
-    perform_feature_analysis(feature_array_np, labels_numeric, labels, list(keys))
+    # perform_feature_analysis(feature_array_np, labels_numeric, labels, list(keys))
 
     return feature_array_np, labels_numeric
 
