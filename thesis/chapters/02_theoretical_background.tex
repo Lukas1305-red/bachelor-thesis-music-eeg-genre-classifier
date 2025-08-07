@@ -108,6 +108,21 @@
       \end{equation}
       Mathematically, each parameter stands for a specific charactersitc of the signal. While the activity stands for the signal power, the mobility depicts the mean frequency and the complexity the change in frequncy \cite{vidaurre2009time}.
     \subsection{Frequency Domain Feature Extraction}
-      Time is only one of the domains a signal can be described with. A more popular approach in \ac{EEG} analysis is the frequency domain. % search citation
-      
+      The frequency domain stands for an analytical space in which the \ac{EEG} signal is interpreted in terms of frequency \cite{cui2022review}. While in time domain, the data is conveyed as a change of signal amplitude, the frequency domain represents the change of signal power. In order to do that, the signal has to be transformed from time to frequency domain by spectral estimation. This technique estimates the \ac{PSD} of a function to detect periodicities in the data. Therefore, one could say that the signal is decomposed into distinct sinusoids, which is further illustrated in \autoref{fig:spectral} \cite{hu2019eeg}. In this example, the signal can be described as three sinusoids with, respectively 5 Hz, 9 Hz and 13 Hz and amplitudes of 13, 25 and 36 respectively \cite{singh2023trends}. \par
+      One of the most accurate methods to compute \ac{PSD} is Welch's method combined with \ac{DFT}. In general, \ac{DFT} is responsible for representing the signal in the frequency domain. A Fourier transform characterizes a time-dependent signal as the summation of multiple sines and cosines. Welch's method now divides the signal into $K$ windowed data segments of $M$ samples (overlapping by $D$ samples) and computes the \ac{DFT} over each segment. The average of all results then lead to the final spectral estimation. This approach causes a reduction in variance by $1/K$, making it more precise than other common methods \cite{hu2019eeg}. \par
+
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/chapter02/spectralEstimation.png}
+        \caption{Comparision between Time and Frequency domain \cite{singh2023trends}}
+        \label{fig:spectral}
+      \end{figure}
+      From the \ac{PSD}, mutltiple different features can be extracted to access frequency related charactersitics of an \ac{EEG} signal. One of the most prominent \ac{EEG} spectral features is heareby the band-limited power. It represents the spectral power within a certain frequency band, i.e. within the frequency range of each respective brain rhythm. It can be calculated by making use of \autoref{eq:powerBand}. In words, the sum of all power values $P$ at each frequency point $f_{i}$ within a frequency band $I_{band}$. For normalization and elimination of differences in individuals, the relative power can be taken by dividing with the total power in the whole frequency range \cite{hu2019eeg}. \par
+
+      \begin{equation}
+        P_{band} = \frac{1}{N}\sum_{f_{i} \in I_{band}}^{}P(f_{i})
+        \label{eq:powerBand} 
+      \end{equation}
     \subsection{Time-Frequency Domain Feature Extraction}
+
+      
