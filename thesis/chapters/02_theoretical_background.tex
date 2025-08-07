@@ -127,6 +127,19 @@
     \subsection{Time-Frequency Domain Feature Extraction}
       It could be seen that many useful features can be computed from the frequency domain. However, in all of them, it is assumed that the spectrum of an \ac{EEG} signal does not change over time. This assumption oversimplifies the signal at hand since \ac{EEG} is defined by non-stationary and dynamic behaviours, leading to a change of the spectrum over time \cite{hu2019eeg}. \par
       In order to solve this issue by combining the time-domain with the frequency-domain, \ac{TFA} methods emerged to simultaneously analyse time and frequency characteristics. Normally, there are two main types of \ac{TFA} techniques. The first one comprises methods that assining the amount of signal power per frequency point. These so-called Time-frequency power distributions can be computed by a \ac{STFT} or a \ac{CWT}. The second class of techniques is called Time-frequency signal decomposition. As the name suggests, it decomposes the signal into additive components in respect to their time-frequency properties. In that case, methods like \ac{DWT} or matching pursuit can be employed \cite{hu2019eeg}. In the following, both Wavelet Transform techniques will be explained. \par
-      
-      
+      % Give intro to Wavelet real quick: What are wavelets? What is the result?
+      % Translation and dilitation
+      Mathematically, a \ac{CWT} can be described by following equation:
+      \begin{equation}
+        CWT(a,b) = \int_{}^{}x(t)\psi_{a,b}^{*}(t)dt
+      \end{equation}  
+      While $x(t)$ stands for the \ac{EEG} signal, $a$ is the dilitation and $b$ the translation factor. $\psi_{a,b}^{*}(t)$ hereby stands for the complex conjugate of $\phi(t)$, which stands for the mother wavelet \cite{al2014methods,singh2023trends}. \par
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{figures/chapter02/dwt.png}
+        \caption{Visualization of a \ac{DWT} \cite{al2014methods}}
+        \label{fig:dwt}
+      \end{figure}
+      One of the biggest problems of \ac{CWT} is the result of a lot of unused information and computational effort due to the continous changes in $a$ and $b$. To solve this issue, \ac{DWT} can be employed instead, which is showcased in \autoref{fig:dwt}. Each step consists of two digital filters $g[n]$ and $h[n]$ and two downsamplers by two. $g[n]$ stands for the mother wavelet function and acts as high pass filter while $h[n]$ is its mirror function working as a low pass filter. Each of these stages output a detail of the signal $D$ and an estimation of the signal $A$, which is then used as an input for the next step \cite{al2014methods}. \par
+
       
