@@ -9,7 +9,7 @@
 
 
   \section{Brain Rhythms}
-    Visual inspection is traditionally the way to do that when analysing \ac{EEG} signals for brain disorders or other malfunctions. Specific amplitudes and frequencies of these signals change in a healthy human depending on their state. For instance, the \ac{EEG} signal differs between wakefulness and sleep. To distinguish the different appearances of the signal, the frequency range is taken into account to form five brain rhythms (cf. \autoref{fig:brainRhythms}), each of which defines a particular state of the brain \cite{sanei2021eeg}. \par
+    Visual inspection is traditionally the way to do when analysing \ac{EEG} signals for brain disorders or other malfunctions. Specific amplitudes and frequencies of these signals change in a healthy human depending on their state. For instance, the \ac{EEG} signal differs between wakefulness and sleep. To distinguish the different appearances of the signal, the frequency range is taken into account to form five brain rhythms (cf. \autoref{fig:brainRhythms}), each of which defines a particular state of the brain \cite{sanei2021eeg}. \par
     Delta waves occupy the range of 0.5-4 Hz and represent the brain's grey matter \cite{kumar2012analysis}. They mainly occur in deep sleep and may be present in the waking state. These signals are very easy to confuse with large muscle artifacts from the jaw or neck, since they are very near the skin's surface. On the other hand, the Delta signals coming from the brain are highly attenuated in passing through the skull \cite{sanei2021eeg}. \par
     Theta waves lie between 4-7.5 Hz and are primarily present in the thalamic origin. They appear when a human's mental state transitions from consciousness towards drowsiness, which is why they dominate during meditation therapy. \cite{sanei2021eeg,kumar2012analysis} Combined with that, it also stands for human growth and serotonin hormones \cite{kumar2012analysis}. \par
     Within the range of 8-13Hz, Alpha signals are present and are shown as a round-shaped signal. Being the most dominant rhythm in the whole brain and standing for the brain's white matter, it indicates relaxed awareness without any attention and concentration \cite{sanei2021eeg,kumar2012analysis}. Studies also show that Alpha waves are a waiting pattern by the visual region of the brain as they are reduced or even eliminated by opening the eyes \cite{sanei2021eeg}. \par
@@ -22,7 +22,7 @@
         \caption{The five brain rhythms in \ac{EEG} \cite{sanei2021eeg}}
         \label{fig:brainRhythms}
       \end{figure}
-  \section{Recording and Measurement of EEG signals} \label{sec:measurementEEGTheory}
+  \section{Recording and Measurement of EEG Signals} \label{sec:measurementEEGTheory}
     In the previous two sections, it became clear that the electrical activity coming from the \ac{AP}s can be used to depict the neural state of the brain. Therefore, covering how these impulses can be measured is also important. \par
     An \ac{EEG} system mainly consists of multiple electrodes (called channels), differential amplifiers for each channel, and filters. Multichannel \ac{ADC} are employed to convert the measured signal points to enable the connection to computerized systems \cite{sanei2021eeg}. \par
     The most crucial components for data quality are the electrodes. There are different types of electrodes depending on the study’s use case (disposable, reusable disc electrodes, headbands, etc.). However, headbands with Ag-AgCl discs are the most popular for multichannel measurements. As already mentioned in \autoref{sec:medicalFoundation}, because of the layered anatomy of the scalp, there is high impedance between the cortex and the electrodes, which can lead to deformations in the signal. A rule of thumb is that the impedances should be less than 5 $k\Omega$ and balanced to 1 $k\Omega$ within each other \cite{sanei2021eeg}. \par
@@ -38,7 +38,7 @@
     
   \section{Denoising and Preprocessing of EEG signals}\label{section:theoretical_background_denoising}
     After acquiring the EEG signals, one must follow further steps before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artifacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data. 
-    \subsection{Types of artifacts in EEG signals}
+    \subsection{Types of Artifacts in EEG signals}
         \begin{table}[h]
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
           \hline
@@ -83,7 +83,7 @@
   \section{Feature Extraction of EEG Signals}
     Before classification tasks can be performed on the denoised signal, it is essential to map the characterstics of each signal to specific metrics, called features. In biomedical signal analysis, big data became more common thus leading to high dimensionalities. Therefore, the biggest goal of feature extraction is to reduce this dimensionality and represent the data in a more compact way. Overall feature extraction techniques not only allow for reduction of complexity but also for saving on resources and computational time \cite{singh2023trends}. \par
     There are different ways of extracting features from the \ac{EEG} signal. Depending on the task and circumstances, distinct measures can lead to independent results. For that reason, it is important to explore as many different features across multiple domains as possible. In general, there are three domains metrics can be derived from, namely the time domain, frequency domain and time-frequency domain, each extracting features based on different attributes of the \ac{EEG} signal. It is important to mention that those domains compute metrics from 1D-data, meaning that the features are calculated for each individual \ac{EEG} channel. The following sections explain characteristics of its features alongside with examples of metrics within this domain. \par
-    \subsection{Time Domain Feature Extraction}
+    \subsection{Time Domain Feature Extraction} \label{sec:time-domain}
       In time domain feature extraction, the signals/data are analyzed based on time to quantify how the signal changes over time. Depending on the amount of data points in a session, windowing is employed to achieve desirable results \cite{singh2023trends}. \par
       One of the most simple and common approaches is calculating basic statistical features from the signal at hand. This includes measures like mean, standard deviation, maximum, minimum, median, variance, range, skewness and kurtosis \cite{singh2023trends}. \par
       In addition to these basic statistical features, characterstics tailored for electrical signals can be used for desirable results and information. One of those is \ac{RMS}, which measures the average power of a signal, representing a signal's energy or loudness. It can be calculated with \autoref{eq:rms}, where $N$ is the number of samples and $V(i)$ the amplitude of the signal of the $i$-th sample \cite{moulin2003rms}. \par 
@@ -123,6 +123,10 @@
         P_{band} = \frac{1}{N}\sum_{f_{i} \in I_{band}}^{}P(f_{i})
         \label{eq:powerBand} 
       \end{equation}
+      Furhtermore, the spectrum can be treated as a random process, thus calculating statistical features similar to those mentioned in the time-domain (cf. \autoref{sec:time-domain}) \cite{hu2019eeg}.
     \subsection{Time-Frequency Domain Feature Extraction}
-
+      It could be seen that many useful features can be computed from the frequency domain. However, in all of them, it is assumed that the spectrum of an \ac{EEG} signal does not change over time. This assumption oversimplifies the signal at hand since \ac{EEG} is defined by non-stationary and dynamic behaviours, leading to a change of the spectrum over time \cite{hu2019eeg}. \par
+      In order to solve this issue by combining the time-domain with the frequency-domain, \ac{TFA} methods emerged to simultaneously analyse time and frequency characteristics. Normally, there are two main types of \ac{TFA} techniques. The first one comprises methods that assining the amount of signal power per frequency point. These so-called Time-frequency power distributions can be computed by a \ac{STFT} or a \ac{CWT}. The second class of techniques is called Time-frequency signal decomposition. As the name suggests, it decomposes the signal into additive components in respect to their time-frequency properties. In that case, methods like \ac{DWT} or matching pursuit can be employed \cite{hu2019eeg}. In the following, both Wavelet Transform techniques will be explained. \par
+      
+      
       
