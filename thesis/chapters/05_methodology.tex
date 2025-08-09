@@ -71,10 +71,10 @@
     After all these steps, the denoised, segmented, and normalized data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
   \section{Feature extraction}
-    The next step that comes after the preprocessing of the signal is the extraction of meaningful features that are being used for the classification task of predicting each genre. In this particular use case, finding the right features is a difficult task. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, therefore lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardized electrode placement. \par
-    To overcome those obstacles, it is essential to compute as many different features across all the domains as possible to have a versatile range of different characteristics. An optimal feature subset can then be chosen by utilizing certain feature selection techniques, allowing for sufficient classification results. \par
-    As already mentioned, features are computed across all three domains (being the time domain, the frequency domain and the time-frequency-domain). All features are computed per \ac{EEG} channel, thus leading to a feature space of $n_{channel} \times n_{features}$ different parameters. \par
-    An overview of all features extracted in the time-domain is given in \autoref{tab:time_domain_features}. The features calculated are a mix of classic statistical measures like mean, maximum and minimum and tailored signal metrics like entropy, \ac{RMS} and the Hjorth parameters. \par 
+    The next step after the signal preprocessing is the extraction of meaningful features used for the classification task of predicting genres. Finding the right features is a difficult task in this particular use case. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardized electrode placement, on which little research exists. \par
+    To overcome those obstacles, it is essential to compute as many different features across all the domains as possible to have a versatile range of different characteristics. An optimal feature subset can be chosen using specific feature selection techniques, allowing for sufficient classification results. \par
+    As mentioned, features are computed across all three domains (the time domain, the frequency domain, and the time-frequency domain). All features are computed per \ac{EEG} channel, thus leading to a feature space of $n_{channel} \times n_{features}$ different parameters. \par
+    An overview of all features extracted in the time domain is given in \autoref{tab:time_domain_features}. The features calculated are a mix of classic statistical measures like mean, maximum, and minimum, and tailored signal metrics like entropy, \ac{RMS}, and the Hjorth parameters. \par 
     \begin{table}[h!]
       \centering
       \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
@@ -115,7 +115,7 @@
       \caption{Extracted Time-Domain Features}
       \label{tab:time_domain_features}
     \end{table}
-    To not only gain knowledge about the signal's time properties, features from the frequency-domain have been extracted as well. For all features described in \autoref{tab:frequency_domain_features}, Welch's method was applied as a basis to determine the \ac{PSD}. To balance both computational cost and accuracy, a 2s window is used. With the \ac{PSD} at hand, the spectral entropy is calculated to measure its complexity and irregularity, which can have information about different mental states. More importantly, the relative power of each brain rhythm frequency band is calculated to further depict the neurological condition of the brain during each session. The brain rhythm's frequency bands are defined as follows:
+    To gain knowledge about the signal's time properties, features from the frequency domain have also been extracted. For all features described in \autoref{tab:frequency_domain_features}, Welch's method was applied as a basis to determine the \ac{PSD}. To balance both computational cost and accuracy, a 2s window is used. With the \ac{PSD} at hand, the spectral entropy is calculated to measure its complexity and irregularity, which can provide information about different mental states. More importantly, the relative power of each brain rhythm frequency band is calculated to further depict the neurological condition of the brain during each session. The brain rhythm's frequency bands are defined as follows:
     \begin{itemize}
       \item Delta: $0.5 - 4$ Hz
       \item Theta: $4 - 8$ Hz
@@ -123,7 +123,7 @@
       \item Beta: $13 - 30$ Hz
       \item Gamma: $30 - 50$ Hz
     \end{itemize}
-    To accompany for the individual sessions, thus leading to different recordig conditions, the relative power is used to take account for session-dependent measurements. In addition the the relative band power, ratios between specific rhythms can not only further normalize the results the but also giving a relative measure of brain state changes. \par
+    The relative power is taken to normalize the data across all sessions to account for the session-dependent measurements. In addition to the relative band power, ratios between specific rhythms can not only further normalize the results but also give a relative measure of brain state changes. \par
 
     \begin{table}[h!]
       \centering
@@ -155,7 +155,7 @@
       \caption{Extracted Frequency-Domain Features with Welch's method}
       \label{tab:frequency_domain_features}
     \end{table}
-    To combine time and frequency domain, a \ac{DWT} is employed to calculate the features mentioned in \autoref{tab:time_frequency_domain_features}. In that case, Daubechies wavelet is used as the mother wavelet function and a level of four is chosen, resulting into five subbands. From each subband, time domain features are extracted including statistical measures and signal specific parameters. \par
+    To combine the time and frequency domains, a \ac{DWT} calculates the features mentioned in \autoref{tab:time_frequency_domain_features}. In that case, the Daubechies wavelet is used as the mother wavelet function, and a level of four is chosen, resulting in five subbands. Time domain features are extracted from each subband, including statistical measures and signal-specific parameters. \par
     \begin{table}[h!]
       \centering
       \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
@@ -182,9 +182,9 @@
       \caption{Extracted Time–Frequency Domain Features with a level 4 \ac{DWT}}
       \label{tab:time_frequency_domain_features}
     \end{table}
-    As already hinted at, the number of total features depends on the number of \ac{EEG} channels, thus leading to high dimensionalities. To choose the optimal feature set out of all calculated parameters, an \ac{MRMR} feature selection algorithm using MID is used. For both Relevance and Redundancy, the mutual information value is utilized to calculate both measures. The number of selected features is variable and can be optimized depending on the classification task or the \ac{ML} model applied. \par
-    In conclusion, a rich set of versatile features is provided that give information about many different facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification. 
-
+    As already hinted, total features depend on the number of \ac{EEG} channels, thus leading to high dimensionality. An \ac{MRMR} feature selection algorithm using MID is used to choose the optimal feature set out of all calculated parameters. For both Relevance and Redundancy, the mutual information value is utilized to calculate both measures. The number of selected features is variable and can be optimized depending on the classification task or the \ac{ML} model applied. \par
+    In conclusion, a rich set of versatile features provides information about many facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification.
+ 
   \section{Classification}
 
     \subsection{DEAP}
