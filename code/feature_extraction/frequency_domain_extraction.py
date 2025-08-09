@@ -63,7 +63,7 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         # dictionary[key][channel_key][f"{rythm.name}"] = power
         dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
         # dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
-        rythm_power[f"{rythm.name}"] = power
+        rythm_power[f"{rythm.name}"] = rel_power
 
     # rythm ratios
     dictionary[key][channel_key]["alpha_beta_ratio"] = rythm_power[
