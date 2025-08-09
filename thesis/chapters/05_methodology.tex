@@ -70,13 +70,124 @@
     To further improve the data quality for supporting good results in a classification task, each segment is z-normalized with the formula $Z = \frac{X - \mu}{\sigma + \varepsilon}$ so that the data at hand has zero mean and a unit variance.\par
     After all these steps, the denoised, segmented, and normalized data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
-
   \section{Feature extraction}
+    The next step after the signal preprocessing is the extraction of meaningful features used for the classification task of predicting genres. Finding the right features is a difficult task in this particular use case. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardized electrode placement, on which little research exists. \par
+    To overcome those obstacles, it is essential to compute as many different features across all the domains as possible to have a versatile range of different characteristics. An optimal feature subset can be chosen using specific feature selection techniques, allowing for sufficient classification results. \par
+    As mentioned, features are computed across all three domains (the time domain, the frequency domain, and the time-frequency domain). All features are computed per \ac{EEG} channel, thus leading to a feature space of $n_{channel} \times n_{features}$ different parameters. \par
+    An overview of all features extracted in the time domain is given in \autoref{tab:time_domain_features}. The features calculated are a mix of classic statistical measures like mean, maximum, and minimum, and tailored signal metrics like entropy, \ac{RMS}, and the Hjorth parameters. \par 
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        max & Maximum value of the signal \\
+        \hline
+        min & Minimum value of the signal \\
+        \hline
+        std & Standard deviation of the signal \\
+        \hline
+        mean & Mean value of the signal \\
+        \hline
+        median & Median value of the signal \\
+        \hline
+        var & Variance of the signal \\
+        \hline
+        range & Peak-to-peak range of the signal \\
+        \hline
+        skew & Skewness of the signal distribution \\
+        \hline
+        kurtosis & Kurtosis of the signal distribution \\
+        \hline
+        rms & Root mean square value of the signal \\
+        \hline
+        zcr & Zero crossing rate \\
+        \hline
+        h\_mobility & Hjorth mobility parameter \\
+        \hline
+        h\_complexity & Hjorth complexity parameter \\
+        \hline
+        energy & Total energy (sum of squares) of the signal \\
+        \hline
+        shannon\_entropy & Shannon entropy of the signal \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Time-Domain Features}
+      \label{tab:time_domain_features}
+    \end{table}
+    To gain knowledge about the signal's time properties, features from the frequency domain have also been extracted. For all features described in \autoref{tab:frequency_domain_features}, Welch's method was applied as a basis to determine the \ac{PSD}. To balance both computational cost and accuracy, a 2s window is used. With the \ac{PSD} at hand, the spectral entropy is calculated to measure its complexity and irregularity, which can provide information about different mental states. More importantly, the relative power of each brain rhythm frequency band is calculated to further depict the neurological condition of the brain during each session. The brain rhythm's frequency bands are defined as follows:
+    \begin{itemize}
+      \item Delta: $0.5 - 4$ Hz
+      \item Theta: $4 - 8$ Hz
+      \item Alpha: $8 - 13$ Hz
+      \item Beta: $13 - 30$ Hz
+      \item Gamma: $30 - 50$ Hz
+    \end{itemize}
+    The relative power is taken to normalize the data across all sessions to account for the session-dependent measurements. In addition to the relative band power, ratios between specific rhythms can not only further normalize the results but also give a relative measure of brain state changes. \par
 
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        spectral\_entropy & Shannon entropy of the normalized power spectral density \\
+        \hline
+        DELTA\_relative & Relative power in the delta band \\
+        \hline
+        THETA\_relative & Relative power in the theta band \\
+        \hline
+        ALPHA\_relative & Relative power in the alpha band \\
+        \hline
+        BETA\_relative & Relative power in the beta band \\
+        \hline
+        GAMMA\_relative & Relative power in the gamma band \\
+        \hline
+        alpha\_beta\_ratio & Ratio of alpha power to beta power \\
+        \hline
+        theta\_alpha\_ratio & Ratio of theta power to alpha power \\
+        \hline
+        theta\_beta\_ratio & Ratio of theta power to beta power \\
+        \hline
+        low\_high\_ratio & Ratio of low-frequency (delta + theta) to high-frequency (alpha + beta + gamma) power \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Frequency-Domain Features with Welch's method}
+      \label{tab:frequency_domain_features}
+    \end{table}
+    To combine the time and frequency domains, a \ac{DWT} calculates the features mentioned in \autoref{tab:time_frequency_domain_features}. In that case, the Daubechies wavelet is used as the mother wavelet function, and a level of four is chosen, resulting in five subbands. Time domain features are extracted from each subband, including statistical measures and signal-specific parameters. \par
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        tfd\_band\_i\_mean & Mean of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_median & Median of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_std & Standard deviation of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_variance & Variance of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_entropy & Shannon entropy of normalized wavelet energy in subband $i$ \\
+        \hline
+        tfd\_band\_i\_relative\_energy & Relative energy of subband $i$ with respect to total wavelet energy \\
+        \hline
+        tfd\_band\_i\_skewness & Skewness of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_kurtosis & Kurtosis of wavelet coefficients in subband $i$ \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Time–Frequency Domain Features with a level 4 \ac{DWT}}
+      \label{tab:time_frequency_domain_features}
+    \end{table}
+    As already hinted, total features depend on the number of \ac{EEG} channels, thus leading to high dimensionality. An \ac{MRMR} feature selection algorithm using MID is used to choose the optimal feature set out of all calculated parameters. For both Relevance and Redundancy, the mutual information value is utilized to calculate both measures. The number of selected features is variable and can be optimized depending on the classification task or the \ac{ML} model applied. \par
+    In conclusion, a rich set of versatile features provides information about many facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification.
+ 
   \section{Classification}
 
-    \subsection{Support Vector Machine}
+    \subsection{DEAP}
 
-    \subsection{Random Forest}
+    \subsection{Headset data}
 
-    \subsection{XGBoost}
