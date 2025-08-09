@@ -19,6 +19,8 @@ def load_deap_dataset():
     eeg_data = load_deap_eeg()
     print(np.shape(eeg_data))
     assert np.shape(eeg_data) == (1280, 32, 8064)
+    eeg_data_first_2s = eeg_data[:, :, :512]
+    assert np.shape(eeg_data_first_2s) == (1280, 32, 512)
 
     print("Extract Features from DEAP Dataset...")
     feature_array = []
@@ -26,18 +28,29 @@ def load_deap_dataset():
     for song in eeg_data:
         song_features = feature_extraction(song_data=song)
         if keys is None:
-            keys = song_features.keys()
+            keys = list(song_features.keys())
         feature_values = []
         for k in keys:
             feature_values.append(song_features[k])
         feature_array.append(feature_values)
     feature_array_np = np.array(feature_array)
-    feature_array_np = feature_array_np[
-        :, np.all(np.isfinite(feature_array_np), axis=0)
-    ]
-    print(np.shape(feature_array_np))
 
-    # Perform comprehensive feature analysis
+    # Check for NaN/Inf and log removed features
+    valid_mask = np.all(np.isfinite(feature_array_np), axis=0)
+    removed_indices = np.where(~valid_mask)[0]
+    removed_features = [keys[i] for i in removed_indices]
+
+    if removed_features:
+        print(f"\nRemoved {len(removed_features)} features due to NaN/Inf values:")
+        for feat in removed_features:
+            print(f"  - {feat}")
+    else:
+        print("\nNo features removed due to NaN/Inf values.")
+
+    # Apply filtering
+    feature_array_np = feature_array_np[:, valid_mask]
+    print(f"Shape after removal: {feature_array_np.shape}")
+
     print("\n" + "=" * 50)
     print("STARTING COMPREHENSIVE FEATURE ANALYSIS")
     print("=" * 50)

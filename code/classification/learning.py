@@ -35,7 +35,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
         return RandomizedSearchCV(
             estimator=estimator,
             param_distributions=params,
-            n_iter=100,
+            n_iter=5,
             cv=cv,
             scoring=scoring,
             refit="f1_macro",
