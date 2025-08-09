@@ -70,8 +70,106 @@
     To further improve the data quality for supporting good results in a classification task, each segment is z-normalized with the formula $Z = \frac{X - \mu}{\sigma + \varepsilon}$ so that the data at hand has zero mean and a unit variance.\par
     After all these steps, the denoised, segmented, and normalized data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
-
   \section{Feature extraction}
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        max & Maximum value of the signal \\
+        \hline
+        min & Minimum value of the signal \\
+        \hline
+        std & Standard deviation of the signal \\
+        \hline
+        mean & Mean value of the signal \\
+        \hline
+        median & Median value of the signal \\
+        \hline
+        var & Variance of the signal \\
+        \hline
+        range & Peak-to-peak range of the signal \\
+        \hline
+        skew & Skewness of the signal distribution \\
+        \hline
+        kurtosis & Kurtosis of the signal distribution \\
+        \hline
+        rms & Root mean square value of the signal \\
+        \hline
+        zcr & Zero crossing rate \\
+        \hline
+        h\_mobility & Hjorth mobility parameter \\
+        \hline
+        h\_complexity & Hjorth complexity parameter \\
+        \hline
+        energy & Total energy (sum of squares) of the signal \\
+        \hline
+        shannon\_entropy & Shannon entropy of the signal \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Time-Domain Features}
+      \label{tab:time_domain_features}
+    \end{table}
+
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        spectral\_entropy & Shannon entropy of the normalized power spectral density \\
+        \hline
+        DELTA\_relative & Relative power in the delta band \\
+        \hline
+        THETA\_relative & Relative power in the theta band \\
+        \hline
+        ALPHA\_relative & Relative power in the alpha band \\
+        \hline
+        BETA\_relative & Relative power in the beta band \\
+        \hline
+        GAMMA\_relative & Relative power in the gamma band \\
+        \hline
+        alpha\_beta\_ratio & Ratio of alpha power to beta power \\
+        \hline
+        theta\_alpha\_ratio & Ratio of theta power to alpha power \\
+        \hline
+        theta\_beta\_ratio & Ratio of theta power to beta power \\
+        \hline
+        low\_high\_ratio & Ratio of low-frequency (delta + theta) to high-frequency (alpha + beta + gamma) power \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Frequency-Domain Features with Welch's method}
+      \label{tab:frequency_domain_features}
+    \end{table}
+
+    \begin{table}[h!]
+      \centering
+      \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+        \hline
+        \textbf{Feature} & \textbf{Description} \\
+        \hline
+        tfd\_band\_i\_mean & Mean of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_median & Median of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_std & Standard deviation of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_variance & Variance of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_entropy & Shannon entropy of normalized wavelet energy in subband $i$ \\
+        \hline
+        tfd\_band\_i\_relative\_energy & Relative energy of subband $i$ with respect to total wavelet energy \\
+        \hline
+        tfd\_band\_i\_skewness & Skewness of wavelet coefficients in subband $i$ \\
+        \hline
+        tfd\_band\_i\_kurtosis & Kurtosis of wavelet coefficients in subband $i$ \\
+        \hline
+      \end{tabular}
+      \caption{Extracted Time–Frequency Domain Features (Discrete Wavelet Transform)}
+      \label{tab:time_frequency_domain_features}
+    \end{table}
+
 
   \section{Classification}
 
