@@ -186,8 +186,20 @@
     In conclusion, a rich set of versatile features provides information about many facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification.
  
   \section{Classification}
+    When it comes to classification, many different difficulties appear as it is the most difficult step in the \ac{EEG} Pipeline. It is particularly difficult within this thesis out of two reasons. Firstly, reseach on \ac{EEG} based \ac{MGR} is very limited, which is why state of the art methods for this area do not really exist. Additionally, one of the only reference papers achieved mediocre performance on the \ac{DEAP} dataset only on subject-level \cite{ghaemmaghami2016brain}. Secondly, the fact that the data was acquired with an unconventional method on which no related work exists, makes it hard to verify whether the gathered data is even suitable for such a classification task. Furthermore, it is unknown which preprocessing steps including feature extraction methods work best. \par
+    To overcome those hurldes, \ac{MGR} is performed not only on the thesis' hand crafted dataset but also on the well-known \ac{DEAP} dataset. Since this is a common source for \ac{EEG} based classification and already provides genre labels provided by \cite{ghaemmaghami2016brain}, it can be used as a source of truth in this specific classification task. Therefore, the Classification methodology can be split up into two parts. The first part involves performing \ac{MGR} on the \ac{DEAP} dataset to research and find out what works best and what doesn't yield desirable results. With this knowledge and usable results from the first part, this then is transferred to the Headset data. In this way, it can be investigated whether the same methodology that works for a state-of-the-art dataset also applies to the Headset data. This way, not only faster results can be expected but also a hint to the signal's quality is given. \par
 
     \subsection{DEAP}
+
+    % Include environment, data, etc.
+      % - Labels (distribution)
+      % - Features (+ Feature Selection)
+    
+    % Describe what you have tried, like models and stuff
+    % Include Randomized Search, Metrics for observation etc.
+    % In general, what was the procedure of getting the data
+
+    % Then write what has worked, so model, basic configuration, etc.
 
     \subsection{Headset data}
 
