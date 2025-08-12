@@ -204,7 +204,7 @@
       The selected subset is then feeded into an \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
       In this case, a subject-based classification approach is followed. This means that the performance of the model is evaluated with a five-fold cross validation. The mean accuracy over all subjects is then taken as a performance measure in this case. This does not only allow the model to learn more local neural patterns, but also lets it easily compare to results of existing work (cf. \cite{ghaemmaghami2016brain}).
       To get the best performing model possible, a Randomized Search is embedded to find the optimal configuration. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. \par
-      \textcolor{orange}{TODO: Write about metrics used for performance evaluation.}
+      In order to evaluate the model's performance, the main metric used is the mean accuracy between all subjects. Alongside that, the f1-score is taken into account to have a measure for both precision and and recall in an imbalanced class environment. As additional performance analysis, the confusion matrix is calculated to give an insight into the predictions of the model. For evaluating whether the classifier is over- or underfitting, training measures are also taken into account, mirroring the performance techniques used for validation. \par
 
     \subsection{Headset data}
 
