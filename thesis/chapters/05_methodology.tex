@@ -186,8 +186,24 @@
     In conclusion, a rich set of versatile features provides information about many facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification.
  
   \section{Classification}
+    Many difficulties appear when it comes to classification, as it is the most challenging step in the \ac{EEG} Pipeline. It is particularly difficult to understand this thesis for two reasons. Firstly, research on \ac{EEG} based \ac{MGR} is minimal, so state-of-the-art methods for this area do not exist. Additionally, one of the only reference papers achieved mediocre performance on the \ac{DEAP} dataset only on subject-level \cite{ghaemmaghami2016brain}. Secondly, the fact that the data was acquired using an unconventional method for which no related work exists makes it hard to verify whether the gathered data is even suitable for such a classification task. Furthermore, which preprocessing steps, including feature extraction methods, work best is unknown. \par
+    To overcome those hurdles, \ac{MGR} is performed on the thesis's handcrafted dataset and the well-known \ac{DEAP} dataset. Since this is a common source for \ac{EEG} based classification and already provides genre labels provided by \cite{ghaemmaghami2016brain}, it can be used as a source of truth in this specific classification task. Therefore, the Classification methodology can be split into two parts. The first part involves performing \ac{MGR} on the \ac{DEAP} dataset to research and find out what works best and what doesn't yield desirable results. This knowledge and usable results from the first part are transferred to the Headset data. In this way, whether the same methodology that works for a state-of-the-art dataset also applies to the Headset data can be investigated. This way, faster results can be expected, and a hint at the signal's quality is given. \par
 
     \subsection{DEAP}
+      As already said, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre, so we take the genre tags applied by \cite{ghaemmaghami2016brain}. In this way, it is easily possible to compare the results to current research in \ac{EEG} based genre recognition. This results in an imbalanced dataset because of the 40 songs, 60\% belong to the POP genre and 40\% to the ROCK label. \par
+      Regarding classification, a sophisticated, modular \ac{ML} pipeline is employed to get sufficient results and allow for easy embedding in Hyperparameter tuning techniques like Grid search or Randomized Search. At first, a z-normalization is applied for each feature, so the data have zero mean and unit variance. This step is important since it accounts for and unifies the data, leading to better classification results. An \ac{MRMR} feature selection method is utilized to choose the optimal subset of features for this task. This also reduces the dimensionality, which is important since the number of samples is small (40 samples per subject). The selector has access to the following pre computed features computed per channel:
+      \begin{itemize}
+        \item Alpha, Beta, Theta, Delta, Gamma relative band power
+        \item Alpha-Beta ratio
+        \item Theta-Alpha ratio
+        \item Theta-Beta ratio
+        \item Entropy from each subband from a level 4 \ac{DWT}
+      \end{itemize}
+      This results in a feature space of 416 distinct features.
+      The selected subset is then fed into an \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
+      In this case, a subject-based classification approach is followed. This means that the model's performance is evaluated with a five-fold cross-validation. In this case, the mean accuracy over all subjects is then taken as a performance measure. This allows the model to learn more local neural patterns and easily compare to results of existing work (cf. \cite{ghaemmaghami2016brain}).
+      A Randomized Search is embedded to find the optimal configuration to get the best performing model possible. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. \par
+      To evaluate the model's performance, the primary metric used is the mean accuracy between all subjects. Alongside that, the f1-score is taken into account to have a measure for both precision and and recall in an imbalanced class environment. As an additional performance analysis, the confusion matrix is calculated to give an insight into the model's predictions. Training measures are also taken into account to evaluate whether the classifier is over- or underfitting, mirroring the performance techniques used for validation. \par
 
     \subsection{Headset data}
 
