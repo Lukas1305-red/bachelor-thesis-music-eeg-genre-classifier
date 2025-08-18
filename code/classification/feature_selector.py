@@ -1,9 +1,8 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
-from sklearn.preprocessing import KBinsDiscretizer
-from sklearn.metrics import mutual_info_score
-from sklearn.feature_selection import mutual_info_classif
+import pandas as pd
+from mrmr import mrmr_classif
 
 
 class FeatureSelectorFromModel(BaseEstimator, TransformerMixin):
@@ -22,63 +21,117 @@ class FeatureSelectorFromModel(BaseEstimator, TransformerMixin):
     def transform(self, X):
         return X[:, self.top_indices_]
 
+    def get_support(self):
+        """Returns mask of selected features for compatibility with other selectors."""
+        n_features = len(self.importances_)
+        support = np.zeros(n_features, dtype=bool)
+        support[self.top_indices_] = True
+        return support
+
 
 class MRMRSelector(BaseEstimator, TransformerMixin):
-    def __init__(self, k=64, n_bins=10):
+    def __init__(self, k=64, relevance="f", redundancy="c", denominator="mean"):
+        """
+        MRMR feature selector using the mrmr package.
+
+        Parameters:
+        -----------
+        k : int
+            Number of features to select
+        relevance : str, default 'f'
+            Method for relevance calculation ('f' for F-statistic, 'mic' for MIC)
+        redundancy : str, default 'c'
+            Method for redundancy calculation ('c' for correlation, 'mic' for MIC)
+        denominator : str, default 'mean'
+            How to aggregate redundancy ('mean' or 'max')
+        """
         self.k = k
-        self.n_bins = n_bins
+        self.relevance = relevance
+        self.redundancy = redundancy
+        self.denominator = denominator
+        self.selected_features_ = []
         self.selected_indices_ = []
 
     def fit(self, X, y):
-        print("Starting to select features:")
-        X = np.array(X)
-        y = np.array(y)
-        n_features = X.shape[1]
+        # print(f"Starting MRMR feature selection for {self.k} features...")
 
-        # Step 1: Discretize X for mutual info estimation
-        est = KBinsDiscretizer(n_bins=self.n_bins, encode="ordinal", strategy="uniform")
-        X_disc = est.fit_transform(X)
+        # Convert to DataFrame if needed
+        if isinstance(X, np.ndarray):
+            # Create column names if not provided
+            feature_names = [f"feature_{i}" for i in range(X.shape[1])]
+            X_df = pd.DataFrame(X, columns=feature_names)
+        else:
+            X_df = X.copy()
 
-        # Step 2: Compute relevance
-        relevance = mutual_info_classif(X, y, discrete_features="auto")
+        # Convert y to pandas Series if needed
+        if isinstance(y, np.ndarray):
+            y_series = pd.Series(y)
+        else:
+            y_series = y.copy()
 
-        # Step 3: Compute redundancy matrix
-        redundancy = np.zeros((n_features, n_features))
-        for i in range(n_features):
-            for j in range(i + 1, n_features):
-                mi = mutual_info_score(X_disc[:, i], X_disc[:, j])
-                redundancy[i, j] = redundancy[j, i] = mi
+        try:
+            # Run MRMR selection
+            self.selected_features_ = mrmr_classif(
+                X=X_df,
+                y=y_series,
+                K=min(self.k, X_df.shape[1]),  # Don't select more than available
+                relevance=self.relevance,
+                redundancy=self.redundancy,
+                denominator=self.denominator,
+                show_progress=False,
+            )
 
-        # Step 4: MRMR selection
-        selected = []
-        remaining = list(range(n_features))
+            # Get indices for selected features
+            if isinstance(X, np.ndarray):
+                # Map feature names back to indices
+                self.selected_indices_ = [
+                    int(name.split("_")[1]) for name in self.selected_features_
+                ]
+            else:
+                # Get indices from DataFrame columns
+                self.selected_indices_ = [
+                    X_df.columns.get_loc(feat) for feat in self.selected_features_
+                ]
 
-        for _ in range(min(self.k, n_features)):
-            mrmr_scores = []
-            for feature in remaining:
-                rel = relevance[feature]
-                red = (
-                    np.mean([redundancy[feature, s] for s in selected])
-                    if selected
-                    else 0
-                )
-                score = rel - red
-                mrmr_scores.append(score)
+        except Exception as e:
+            print(f"MRMR selection failed: {e}")
+            print("Falling back to top-k features by mutual information...")
+            # Fallback to simple mutual info selection
+            from sklearn.feature_selection import mutual_info_classif
 
-            best_idx = np.argmax(mrmr_scores)
-            selected_feature = remaining[best_idx]
-            selected.append(selected_feature)
-            remaining.remove(selected_feature)
+            mi_scores = mutual_info_classif(X_df, y_series)
+            self.selected_indices_ = np.argsort(mi_scores)[::-1][: self.k]
+            self.selected_features_ = [X_df.columns[i] for i in self.selected_indices_]
 
-        self.selected_indices_ = selected
-        print("End feature selection.")
+        # print(f"Selected {len(self.selected_features_)} features")
         return self
 
     def transform(self, X):
-        return np.array(X)[:, self.selected_indices_]
+        if isinstance(X, np.ndarray):
+            return X[:, self.selected_indices_]
+        else:
+            return X.iloc[:, self.selected_indices_].values
 
-    def get_support(self):
-        """Returns mask of selected features for compatibility with other selectors."""
-        support = np.zeros((len(self.selected_indices_),), dtype=bool)
-        support[self.selected_indices_] = True
-        return support
+    def get_support(self, indices=False):
+        """Returns mask or indices of selected features for compatibility."""
+        if hasattr(self, "n_features_in_"):
+            n_features = self.n_features_in_
+        else:
+            # Estimate from selected indices
+            n_features = (
+                max(self.selected_indices_) + 1 if self.selected_indices_ else 0
+            )
+
+        if indices:
+            return np.array(self.selected_indices_)
+        else:
+            support = np.zeros(n_features, dtype=bool)
+            support[self.selected_indices_] = True
+            return support
+
+    def get_feature_names_out(self, input_features=None):
+        """Get output feature names for display."""
+        if input_features is None:
+            return [f"feature_{i}" for i in self.selected_indices_]
+        else:
+            return [input_features[i] for i in self.selected_indices_]
