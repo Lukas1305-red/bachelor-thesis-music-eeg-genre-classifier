@@ -4,7 +4,7 @@ import numpy as np
 
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
-SAMPLING_RATE = 256
+SAMPLING_RATE = 128
 # SAMPLING_RATE = 250
 
 
@@ -77,9 +77,9 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         rythm_power[f"{BrainRythm.THETA.name}"] / rythm_power[f"{BrainRythm.BETA.name}"]
     )
 
-    low_freq = rythm_power["DELTA"] + rythm_power["THETA"]
-    high_freq = rythm_power["ALPHA"] + rythm_power["BETA"] + rythm_power["GAMMA"]
-    dictionary[key][channel_key]["low_high_ratio"] = low_freq / (high_freq + 1e-10)
+    # low_freq = rythm_power["DELTA"] + rythm_power["THETA"]
+    # high_freq = rythm_power["ALPHA"] + rythm_power["BETA"] + rythm_power["GAMMA"]
+    # dictionary[key][channel_key]["low_high_ratio"] = low_freq / (high_freq + 1e-10)
 
 
 def power_spectral_density_welch(data, window_size, dictionary):
