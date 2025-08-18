@@ -10,8 +10,11 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
+NUM_SUBJECTS = 1
+SAMPLE_RATE = 128
 
-def load_deap_dataset():
+
+def load_deap_dataset(subject=0):
     labels = load_deap_labels()
     le = LabelEncoder()
     labels_numeric = le.fit_transform(labels)
@@ -19,13 +22,17 @@ def load_deap_dataset():
     eeg_data = load_deap_eeg()
     print(np.shape(eeg_data))
     assert np.shape(eeg_data) == (1280, 32, 8064)
-    eeg_data_first_2s = eeg_data[:, :, :512]
+    eeg_data_first_2s = eeg_data[:, :, : SAMPLE_RATE * 4]  # first 4 seconds
     assert np.shape(eeg_data_first_2s) == (1280, 32, 512)
+    eeg_data_first_subject = eeg_data_first_2s[
+        (40 * subject) : (40 * (subject + 1)), :, :
+    ]
+    assert np.shape(eeg_data_first_subject) == (40, 32, 512)
 
     print("Extract Features from DEAP Dataset...")
     feature_array = []
     keys = None
-    for song in eeg_data:
+    for song in eeg_data_first_subject:
         song_features = feature_extraction(song_data=song)
         if keys is None:
             keys = list(song_features.keys())
@@ -115,11 +122,11 @@ def load_deap_labels():
     print(len(deap_labels))
     labels = []
     # iterate over all subjects
-    for i in range(32):
+    for i in range(NUM_SUBJECTS):
         labels.extend(deap_labels)
 
     print(np.shape(labels))
-    assert np.shape(labels) == (1280,)
+    assert np.shape(labels) == (40 * NUM_SUBJECTS,)
     return labels
 
 
@@ -139,12 +146,6 @@ def load_subject(subject: str):
     subject_signal_data = np.array(subject_data["data"])
     assert np.shape(subject_signal_data) == (40, 40, 8064)
     return subject_signal_data
-
-
-###########################
-
-
-##########################################
 
 
 def perform_feature_analysis(features, labels_numeric, labels_original, feature_names):
