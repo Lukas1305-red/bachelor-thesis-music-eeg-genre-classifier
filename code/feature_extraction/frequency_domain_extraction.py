@@ -4,7 +4,8 @@ import numpy as np
 
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
-SAMPLING_RATE = 250
+SAMPLING_RATE = 128
+# SAMPLING_RATE = 250
 
 
 class BrainRythm(Enum):
@@ -12,13 +13,12 @@ class BrainRythm(Enum):
     BETA = (13, 30)
     THETA = (4, 8)
     DELTA = (0.5, 4)
+    GAMMA = (30, 50)
 
 
 def frequency_domain_feature_extraction(eeg_data):
     frequency_features = {}
     power_spectral_density_welch(eeg_data, 2, frequency_features)
-    # power_spectral_density_fft(eeg_data, 2, frequency_features)
-    # periodogram(eeg_data, frequency_features)
     return flatten_dict(frequency_features)
 
 
@@ -41,28 +41,29 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
         dictionary[key] = {}
 
     total_power = np.trapezoid(psd, f)
-    psd_norm = psd / total_power
-    spectral_entropy = -np.sum(psd_norm * np.log2(psd_norm + 1e-10))
-    mean_freq = np.trapz(f * psd, f) / total_power
+    psd_norm = psd / np.sum(psd)
+    psd_norm = psd_norm[psd_norm > 0]
+    spectral_entropy = -np.sum(psd_norm * np.log2(psd_norm))
+    # mean_freq = np.trapz(f * psd, f) / total_power
     # rms_bandwith = np.sqrt(np.trapezoid(((f - mean_freq) ** 2) * psd, f) / total_power)
 
     dictionary[key][channel_key] = {}
     # dictionary[key][channel_key]["f_bins"] = f
     # dictionary[key][channel_key]["power"] = psd
     dictionary[key][channel_key]["spectral_entropy"] = spectral_entropy
-    dictionary[key][channel_key]["mean_freq"] = mean_freq
+    # dictionary[key][channel_key]["mean_freq"] = mean_freq
     # dictionary[key][channel_key]["rms_bandwidth"] = rms_bandwith
 
     rythm_power = {}
 
     for rythm in BrainRythm:
         power = extract_brain_rythm(f, psd, rythm=rythm)
-        peak = get_peak_frequency(f, psd, rythm=rythm)
-        # rel_power = power / total_power
-        dictionary[key][channel_key][f"{rythm.name}"] = power
-        # dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
-        dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
-        rythm_power[f"{rythm.name}"] = power
+        # peak = get_peak_frequency(f, psd, rythm=rythm)
+        rel_power = power / total_power
+        # dictionary[key][channel_key][f"{rythm.name}"] = power
+        dictionary[key][channel_key][f"{rythm.name}_relative"] = rel_power
+        # dictionary[key][channel_key][f"{rythm.name}_peak"] = peak
+        rythm_power[f"{rythm.name}"] = rel_power
 
     # rythm ratios
     dictionary[key][channel_key]["alpha_beta_ratio"] = rythm_power[
@@ -75,6 +76,10 @@ def extract_frequency_features(f, psd, key, channel_idx, dictionary):
     dictionary[key][channel_key]["theta_beta_ratio"] = (
         rythm_power[f"{BrainRythm.THETA.name}"] / rythm_power[f"{BrainRythm.BETA.name}"]
     )
+
+    # low_freq = rythm_power["DELTA"] + rythm_power["THETA"]
+    # high_freq = rythm_power["ALPHA"] + rythm_power["BETA"] + rythm_power["GAMMA"]
+    # dictionary[key][channel_key]["low_high_ratio"] = low_freq / (high_freq + 1e-10)
 
 
 def power_spectral_density_welch(data, window_size, dictionary):

@@ -7,7 +7,9 @@ from code.feature_extraction.frequency_domain_extraction import BrainRythm
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
 
-SAMPLE_RATE = 250
+# SAMPLE_RATE = 250
+
+SAMPLE_RATE = 128
 
 
 def time_frequency_domain_feature_extraction(eeg_data):
@@ -31,19 +33,24 @@ def discrete_wavelet_transform(data, dictionary, wavelet="db4", level=4, top_k=1
 
 def extract_dwt_features(channel_data, wavelet="db4", level=4):
     coeffs = pywt.wavedec(channel_data, wavelet, level=level)
-    n_subbands = len(coeffs)  # should be level+1
+    n_subbands = len(coeffs)
     assert n_subbands == level + 1
     ret = {}
     for i, coeff in enumerate(coeffs):
         prefix = f"tfd_band_{i}_"
-        ret[prefix + "mean"] = np.mean(coeff)
-        ret[prefix + "median"] = np.median(coeff)
-        ret[prefix + "std"] = np.std(coeff)
-        ret[prefix + "variance"] = np.var(coeff)
-        ret[prefix + "energy"] = np.sum(np.square(coeff))
-        ret[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
-        ret[prefix + "skewness"] = scipy.stats.skew(coeff)
-        ret[prefix + "kurtosis"] = scipy.stats.kurtosis(coeff)
+        # ret[prefix + "mean"] = np.mean(coeff)
+        # ret[prefix + "median"] = np.median(coeff)
+        # ret[prefix + "std"] = np.std(coeff)
+        # ret[prefix + "variance"] = np.var(coeff)
+        ret[prefix + "entropy"] = -np.sum(
+            (p := np.square(coeff) / np.sum(np.square(coeff))) * np.log2(p + 1e-12)
+        )
+        # total_energy = sum(np.sum(np.square(c)) for c in coeffs)
+        # ret[prefix + "relative_energy"] = np.sum(np.square(coeff)) / total_energy
+        # ret[prefix + "energy"] = np.sum(np.square(coeff))
+        # ret[prefix + "rms"] = np.sqrt(np.mean(np.square(coeff)))
+        # ret[prefix + "skewness"] = scipy.stats.skew(coeff)
+        # ret[prefix + "kurtosis"] = scipy.stats.kurtosis(coeff)
 
     return ret
 

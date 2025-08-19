@@ -5,7 +5,13 @@ from sklearn.model_selection import (
     StratifiedKFold,
     RandomizedSearchCV,
 )
-from sklearn.metrics import make_scorer, f1_score, recall_score, accuracy_score
+from sklearn.metrics import (
+    make_scorer,
+    f1_score,
+    recall_score,
+    accuracy_score,
+    balanced_accuracy_score,
+)
 from enum import Enum
 from datetime import datetime
 import os
@@ -29,6 +35,7 @@ def create_search(estimator, params, session_validation, random_search: bool):
         "f1_macro": make_scorer(f1_score, average="macro"),
         "accuracy": make_scorer(accuracy_score),
         "recall_macro": make_scorer(recall_score, average="macro"),
+        "balanced_accuracy": make_scorer(balanced_accuracy_score),
     }
 
     if random_search:
@@ -38,10 +45,10 @@ def create_search(estimator, params, session_validation, random_search: bool):
             n_iter=50,
             cv=cv,
             scoring=scoring,
-            refit="f1_macro",
+            refit="balanced_accuracy",
             n_jobs=-1,
             random_state=1997,
-            verbose=1,
+            verbose=2,
             error_score="raise",
             return_train_score=True,
         )
