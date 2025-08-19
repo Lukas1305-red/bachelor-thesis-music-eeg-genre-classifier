@@ -4,8 +4,8 @@ import numpy as np
 
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
-SAMPLING_RATE = 128
-# SAMPLING_RATE = 250
+# SAMPLING_RATE = 128
+SAMPLING_RATE = 250
 
 
 class BrainRythm(Enum):
@@ -13,7 +13,7 @@ class BrainRythm(Enum):
     BETA = (13, 30)
     THETA = (4, 8)
     DELTA = (0.5, 4)
-    GAMMA = (30, 50)
+    # GAMMA = (30, 50)
 
 
 def frequency_domain_feature_extraction(eeg_data):
