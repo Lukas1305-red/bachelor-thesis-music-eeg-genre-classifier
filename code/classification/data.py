@@ -18,29 +18,39 @@ class FreqDomain(Enum):
     fft = "psd_fft"
 
 
+def load_data_session(session_number: int):
+    str_session = str(session_number).zfill(3)
+    print(f"Load Session {str_session}")
+    filename = f"{str_session}.pkl"
+    df_data = pd.DataFrame = pd.read_pickle(f"{DATA_PATH}/{filename}")
+    df_label = pd.DataFrame = pd.read_pickle(f"{LABEL_PATH}/{filename}")
+    genres = extract_genres(df_label)
+    features = extract_features(df_data)
+
+    print(f"Finished loading session {str_session}!")
+
+    return features, genres
+
+
+def extract_features(df_data):
+    X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
+    X_df = filter_out_freq_domains(X_df_buf, domain_to_keep=FreqDomain.welch)
+    return X_df
+
+
+def extract_genres(df_labels):
+    genres = df_labels["genre"]
+    return genres.to_list()
+
+
 def load_data(psd_to_keep: FreqDomain):
     X = []
     y = []
     print("Start loading data...")
     for i in range(20):
-        session_number = str(i).zfill(3)
-        print(f"Load Session {session_number}...")
-        filename = f"{session_number}.pkl"
-        df_data: pd.DataFrame = pd.read_pickle(f"{DATA_PATH}/{filename}")
-        df_label: pd.DataFrame = pd.read_pickle(f"{LABEL_PATH}/{filename}")
-
-        # Extract label from df_label
-        genres = df_label["genre"]
-        y.extend(genres.to_list())
-        # drop data columns
-        X_df_buf = df_data.drop(get_problematic_column_names(df_data), axis=1)
-        print(f"Filter frequencies only for {psd_to_keep.name}...")
-        X_df = filter_out_freq_domains(X_df_buf, FreqDomain.welch)
-        feature_names = X_df.columns.tolist()
-
-        # store features
-        X.append(X_df.values)
-        print(f"Finished loading session {session_number}!")
+        X_sess, y_sess = load_data_session(session_number=i)
+        y.extend(y_sess.to_list())
+        X.append(X_sess.values)
 
     le = LabelEncoder()
     y_numerical = le.fit_transform(y)
@@ -49,12 +59,8 @@ def load_data(psd_to_keep: FreqDomain):
         print(f"Class {label}: {count} samples")
     X_combined = np.vstack(X)
 
-    X_filtered = remove_constant_features(
-        X_original=X_combined, feature_names=feature_names
-    )
-
     print("Finished loading data!")
-    return X_filtered, y_numerical
+    return X_combined, y_numerical
 
 
 def remove_constant_features(X_original, feature_names):
