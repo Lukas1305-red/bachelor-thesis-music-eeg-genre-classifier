@@ -41,12 +41,36 @@ def time_domain_feature_extraction(song_data):
 
     # time_domain_features["moment3"] = scipy.stats.moment(song_data, order=3, axis=1)
     # time_domain_features["moment4"] = scipy.stats.moment(song_data, order=4, axis=1)
-    time_domain_features["energy"] = np.sum(np.square(song_data))
-    time_domain_features["shannon_entropy"] = [
-        scipy.stats.entropy(signal) for signal in song_data
-    ]
+    time_domain_features["energy"] = [np.sum(np.square(signal)) for signal in song_data]
+    shannon_entropy(song_data=song_data, time_domain_features=time_domain_features)
 
     return flatten_time_domain_features(time_domain_features=time_domain_features)
+
+
+def shannon_entropy(song_data, time_domain_features):
+    time_domain_features["shannon_entropy"] = []
+    for signal in song_data:
+        # Convert to probability distribution
+        signal = np.array(signal, dtype=np.float64)
+
+        # Make all values positive (e.g., take absolute or min-max shift)
+        signal = np.abs(signal)
+
+        # Avoid division by zero
+        total = np.sum(signal)
+        if total == 0:
+            time_domain_features["shannon_entropy"].append(0.0)
+            continue
+
+        # Normalize to sum to 1
+        prob_dist = signal / total
+
+        # Avoid log(0) by adding epsilon
+        prob_dist = np.clip(prob_dist, 1e-12, 1.0)
+
+        # Compute Shannon entropy
+        ent = scipy.stats.entropy(prob_dist, base=2)
+        time_domain_features["shannon_entropy"].append(ent)
 
 
 def zcr(signal):
