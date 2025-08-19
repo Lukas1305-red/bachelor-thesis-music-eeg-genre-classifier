@@ -3,7 +3,7 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=10G
-#SBATCH --output=./data/results/deap/slurm_%A.out
+#SBATCH --output=./data/results/headset/slurm_%A.out
 
 # This activates the environment (given .envrc is in the current directory)
 # If you do not want to have the .envrc in your current directory, use this snippet
@@ -15,4 +15,4 @@ direnv allow . && eval "$(direnv export bash)"
 
 python --version
 
-python -m code.classification.svm
+python -m code.classification.headset_classification

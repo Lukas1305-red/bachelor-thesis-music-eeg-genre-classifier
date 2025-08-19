@@ -6,9 +6,7 @@ from sklearn.feature_selection import VarianceThreshold
 from collections import Counter
 
 
-DATA_PATH = (
-    "data/eeg_data_normalized_features_noCh3_lessStrict_reduced_unnormalized/features"
-)
+DATA_PATH = "data/eeg_data_first_4s_unnormalized_v3/features"
 LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
 
 
@@ -18,16 +16,30 @@ class FreqDomain(Enum):
     fft = "psd_fft"
 
 
-def load_data_session(session_number: int):
+def load_data_session(session_number: int, process=False):
     str_session = str(session_number).zfill(3)
     print(f"Load Session {str_session}")
     filename = f"{str_session}.pkl"
-    df_data = pd.DataFrame = pd.read_pickle(f"{DATA_PATH}/{filename}")
-    df_label = pd.DataFrame = pd.read_pickle(f"{LABEL_PATH}/{filename}")
+    df_data: pd.DataFrame = pd.read_pickle(f"{DATA_PATH}/{filename}")
+    df_label: pd.DataFrame = pd.read_pickle(f"{LABEL_PATH}/{filename}")
     genres = extract_genres(df_label)
     features = extract_features(df_data)
 
     print(f"Finished loading session {str_session}!")
+    if process:
+        le = LabelEncoder()
+        y_numerical = le.fit_transform(genres)
+        counter = Counter(y_numerical)
+
+        for label, count in sorted(counter.items()):
+            print(f"Class {label}: {count} samples")
+
+        X_combined = df_data.to_numpy()
+        print("\n=== Feature Info ===")
+        print(f"X shape: {X_combined.shape}")
+        print(f"y shape: {y_numerical.shape}")
+
+        return X_combined, y_numerical
 
     return features, genres
 
