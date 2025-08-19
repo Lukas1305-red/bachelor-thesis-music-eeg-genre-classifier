@@ -34,8 +34,7 @@ def feature_extraction(song_data):
     keys = ["time_domain", "frequency_domain", "time_frequency_domain"]
 
     for key in keys:
-        if key != "time_domain":
-            current = ret[key]
-            for feature_key, value in current.items():
-                features[feature_key] = value
+        current = ret[key]
+        for feature_key, value in current.items():
+            features[feature_key] = value
     return features

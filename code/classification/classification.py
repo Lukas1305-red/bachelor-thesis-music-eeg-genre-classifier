@@ -4,7 +4,7 @@ from enum import Enum
 from datetime import datetime
 import numpy as np
 
-from code.classification.data import load_data
+from code.classification.data import load_data, load_data_session
 from code.classification.deap_data import load_deap_dataset
 from code.classification.learning import setup_mlflow_experiment, create_search
 from sklearn.model_selection import StratifiedKFold, ParameterSampler
@@ -41,7 +41,11 @@ def perform_hyperparam_tuning(
         else:
             X, y = load_deap_dataset(subject=subj)
     else:
-        X, y = load_data(psd_to_keep=psd)
+        if subj is None:
+            X, y = load_data(psd_to_keep=psd)
+        else:
+            X, y = load_data_session(session_number=subj, process=True)
+
     mlflow.sklearn.autolog(max_tuning_runs=1)
 
     print(f"MLflow Tracking URI: {mlflow.get_tracking_uri()}")

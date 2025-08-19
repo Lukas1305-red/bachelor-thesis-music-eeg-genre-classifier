@@ -7,9 +7,9 @@ from code.feature_extraction.frequency_domain_extraction import BrainRythm
 from code.feature_extraction.feature_extraction_utils import flatten_dict
 
 
-# SAMPLE_RATE = 250
+SAMPLE_RATE = 250
 
-SAMPLE_RATE = 128
+# SAMPLE_RATE = 128
 
 
 def time_frequency_domain_feature_extraction(eeg_data):
