@@ -190,7 +190,7 @@
     To overcome those hurdles, \ac{MGR} is performed on the thesis's handcrafted dataset and the well-known \ac{DEAP} dataset. Since this is a common source for \ac{EEG} based classification and already provides genre labels provided by \cite{ghaemmaghami2016brain}, it can be used as a source of truth in this specific classification task. Therefore, the Classification methodology can be split into two parts. The first part involves performing \ac{MGR} on the \ac{DEAP} dataset to research and find out what works best and what doesn't yield desirable results. This knowledge and usable results from the first part are transferred to the Headset data. In this way, whether the same methodology that works for a state-of-the-art dataset also applies to the Headset data can be investigated. This way, faster results can be expected, and a hint at the signal's quality is given. \par
 
     \subsection{DEAP}
-      As already said, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre, so we take the genre tags applied by \cite{ghaemmaghami2016brain}. In this way, it is easily possible to compare the results to current research in \ac{EEG} based genre recognition. This results in an imbalanced dataset because of the 40 songs, 60\% belong to the POP genre and 40\% to the ROCK label. \par
+      As already said, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre, the genre tags applied by \cite{ghaemmaghami2016brain} are taken into account. In this way, it is easily possible to compare the results to current research in \ac{EEG} based genre recognition. This results in an imbalanced dataset because of the 40 songs, 60\% belong to the POP genre and 40\% to the ROCK label. \par
       Regarding classification, a sophisticated, modular \ac{ML} pipeline is employed to get sufficient results and allow for easy embedding in Hyperparameter tuning techniques like Grid search or Randomized Search. At first, a z-normalization is applied for each feature, so the data have zero mean and unit variance. This step is important since it accounts for and unifies the data, leading to better classification results. An \ac{MRMR} feature selection method is utilized to choose the optimal subset of features for this task. This also reduces the dimensionality, which is important since the number of samples is small (40 samples per subject). The selector has access to the following pre computed features computed per channel:
       \begin{itemize}
         \item Alpha, Beta, Theta, Delta, Gamma relative band power
@@ -201,9 +201,27 @@
       \end{itemize}
       This results in a feature space of 416 distinct features.
       The selected subset is then fed into an \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
-      In this case, a subject-based classification approach is followed. This means that the model's performance is evaluated with a five-fold cross-validation. In this case, the mean accuracy over all subjects is then taken as a performance measure. This allows the model to learn more local neural patterns and easily compare to results of existing work (cf. \cite{ghaemmaghami2016brain}).
-      A Randomized Search is embedded to find the optimal configuration to get the best performing model possible. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. \par
-      To evaluate the model's performance, the primary metric used is the mean accuracy between all subjects. Alongside that, the f1-score is taken into account to have a measure for both precision and and recall in an imbalanced class environment. As an additional performance analysis, the confusion matrix is calculated to give an insight into the model's predictions. Training measures are also taken into account to evaluate whether the classifier is over- or underfitting, mirroring the performance techniques used for validation. \par
+      In this case, a subject-based classification approach is followed. In this thesis, an individual model is optimized for each subject allowing for a more subject-centric classification approach. \par
+      A Grid Search is embedded to find the optimal configuration to get the best performing model possible. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. An overview of the hyperparameter space is illustrated in \autoref{tab:svm_hyperparam_space}. The distribution of the optimal parameters can then be further analysed to find out which values perform best in the task of \ac{MGR}.\par
+      To evaluate the model's performance, the primary metric used are the mean accuracy between all subjects. Alongside that, the f1-score is taken into account to have a measure for both precision and and recall in an imbalanced class environment.
+      \begin{table}[h!]
+        \centering
+        \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
+          \hline
+          \textbf{Parameter} & \textbf{Search Space} \\
+          \hline
+          selector\_\_k & \{2, 5, 8, 10, 15, 20, 30, 50\} \\
+          \hline
+          svm\_\_C & \{0.001, 0.01, 0.1, 1, 10, 100, 1000\} \\
+          \hline
+          svm\_\_kernel & \{linear, rbf, sigmoid\} \\
+          \hline
+          svm\_\_gamma & \{scale, auto, 0.0001, 0.001, 0.01, 0.1, 1, 10\} \\
+          \hline
+        \end{tabular}
+        \caption{Hyperparameter search space for SVM with feature selection.}
+        \label{tab:svm_hyperparam_space}
+      \end{table}
 
     \subsection{Headset data}
 
