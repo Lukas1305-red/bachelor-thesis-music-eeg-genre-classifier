@@ -199,10 +199,10 @@
         \item Theta-Beta ratio
         \item Entropy from each subband from a level 4 \ac{DWT}
       \end{itemize}
-      This results in a feature space of 416 distinct features.
+      This results in a feature space of 416 distinct features. Important to note is that the features were calculated for the first four seconds each
       The selected subset is then fed into an \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
       In this case, a subject-based classification approach is followed. In this thesis, an individual model is optimized for each subject allowing for a more subject-centric classification approach. \par
-      A Grid Search is embedded to find the optimal configuration to get the best performing model possible. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. An overview of the hyperparameter space is illustrated in \autoref{tab:svm_hyperparam_space}. The distribution of the optimal parameters can then be further analysed to find out which values perform best in the task of \ac{MGR}.\par
+      A Grid Search is embedded to find the optimal configuration to get the best performing model possible. Apart from the \ac{SVM}'s hyperparameters, the number of features selected by the \ac{MRMR} is also tuned. An overview of the hyperparameter space is illustrated in \autoref{tab:svm_hyperparam_space}. The distribution of the optimal parameters can then be further analysed to find out which values perform best in the task of \ac{MGR} for this dataset.\par
       To evaluate the model's performance, the primary metric used are the mean accuracy between all subjects. Alongside that, the f1-score is taken into account to have a measure for both precision and and recall in an imbalanced class environment.
       \begin{table}[h!]
         \centering
@@ -219,7 +219,7 @@
           svm\_\_gamma & \{scale, auto, 0.0001, 0.001, 0.01, 0.1, 1, 10\} \\
           \hline
         \end{tabular}
-        \caption{Hyperparameter search space for SVM with feature selection.}
+        \caption{Hyperparameter search space for SVM with \ac{MRMR} feature selection.}
         \label{tab:svm_hyperparam_space}
       \end{table}
 
