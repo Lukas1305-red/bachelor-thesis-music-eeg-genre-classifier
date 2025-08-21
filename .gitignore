@@ -28,3 +28,8 @@ devenv.local.nix
 
 # pre-commit
 .pre-comit-config.yaml
+
+*.out
+/mlruns_descriptive
+
+/feature_analysis_plots
