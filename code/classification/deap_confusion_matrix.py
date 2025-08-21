@@ -1,0 +1,75 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from code.classification.feature_selector import MRMRSelector
+from code.classification.deap_data import load_deap_dataset
+
+DATA_PATH = "data"
+MATRIX_PATH = f"{DATA_PATH}/results/deap/confusion_matrix"
+FILE_PATH = f"{DATA_PATH}/svm_gridsearch_results.csv"
+
+
+def create_matrices():
+    df = pd.read_csv(FILE_PATH)
+    for i, row in df.iterrows():
+        print(f"=======Subject {i}=========")
+        # Get the hyperparams from the dataframe
+        k_features = row["k_features"]
+        C_param = float(row["C"])
+
+        gamma_value = row["gamma"]
+        try:
+            gamma_param = float(gamma_value)
+        except ValueError:
+            gamma_param = gamma_value  # "scale" or "auto"
+        kernel_param = row["kernel"]
+
+        # Define ML pipeline
+        pipeline = Pipeline(
+            [
+                ("scaler", StandardScaler()),
+                ("selector", MRMRSelector(k=k_features)),
+                (
+                    "svm",
+                    SVC(
+                        random_state=1997,
+                        class_weight="balanced",
+                        C=C_param,
+                        kernel=kernel_param,
+                        gamma=gamma_param,
+                    ),
+                ),
+            ]
+        )
+
+        # Initialize CV
+        cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=1997)
+
+        # Load subject
+        X, y = load_deap_dataset(subject=i)
+        all_labels = []
+        all_predictions = []
+        for j, (train_index, test_index) in enumerate(cv.split(X, y)):
+            print(f"======Fold{j}=========")
+            X_train, X_test = X[train_index], X[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+
+            pipeline.fit(X_train, y_train)
+            y_pred = pipeline.predict(X_test)
+
+            all_labels.extend(y_test)
+            all_predictions.extend(y_pred)
+
+        matrix = confusion_matrix(all_labels, all_predictions, normalize="true")
+        display = ConfusionMatrixDisplay(matrix)
+        display.plot(values_format=".2f")
+        plt.savefig(f"{MATRIX_PATH}/confusion_matrix_subj_{i}")
+        plt.close()
+
+
+if __name__ == "__main__":
+    create_matrices()
