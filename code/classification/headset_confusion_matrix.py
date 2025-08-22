@@ -50,7 +50,9 @@ def create_matrices():
         cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=1997)
 
         # Load subject
-        X, y = load_data_session(session_number=i, process=True)
+        X, y, le = load_data_session(
+            session_number=i, process=True, ret_label_encoder=True
+        )
         all_labels = []
         all_predictions = []
         for j, (train_index, test_index) in enumerate(cv.split(X, y)):
@@ -64,10 +66,38 @@ def create_matrices():
             all_labels.extend(y_test)
             all_predictions.extend(y_pred)
 
-        matrix = confusion_matrix(all_labels, all_predictions, normalize="true")
-        display = ConfusionMatrixDisplay(matrix)
-        display.plot(values_format=".2f")
-        plt.savefig(f"{MATRIX_PATH}/confusion_matrix_subj_{i}")
+        all_labels_words = le.inverse_transform(all_labels)
+        all_predictions_words = le.inverse_transform(all_predictions)
+        classes = le.classes_
+        matrix = confusion_matrix(
+            all_labels_words, all_predictions_words, labels=classes, normalize="true"
+        )
+        fig, (ax1, ax2) = plt.subplots(
+            1, 2, figsize=(16, 8), gridspec_kw={"width_ratios": [3, 1]}
+        )
+
+        # Plot confusion matrix
+        display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=None)
+        display.plot(values_format=".2f", ax=ax1)
+
+        # Create legend in second subplot
+        ax2.axis("off")  # Hide axes
+        legend_text = "\n".join(
+            [f"{i}: {class_name}" for i, class_name in enumerate(classes)]
+        )
+        ax2.text(
+            0.1,
+            0.9,
+            "Class Labels:\n\n" + legend_text,
+            transform=ax2.transAxes,
+            fontsize=12,
+            verticalalignment="top",
+        )
+
+        plt.tight_layout()
+        plt.savefig(
+            f"{MATRIX_PATH}/confusion_matrix_subj_{i}", dpi=300, bbox_inches="tight"
+        )
         plt.close()
 
 
