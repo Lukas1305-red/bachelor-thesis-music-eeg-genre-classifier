@@ -39,9 +39,13 @@
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter05/raw_signal_ses0_ch1.png}
       \caption{Raw signal of Session 1}
-      % TODO add Preprocessed signal
-      % TODO change caption to anonymize the session
       \label{fig:raw_signal}
+    \end{figure}
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\textwidth]{figures/chapter05/denoisedSignal.png}
+      \caption{Denoised and preprocessed signal; The time is not the same because the signal was plotted after segmentation}
+      \label{fig:denoised_signal}
     \end{figure}
           \begin{table}[h!]
         \centering
@@ -67,7 +71,7 @@
         \caption{ICA Component Rejection Criteria}
         \label{tab:ica_components}
       \end{table}
-    After removing most of the frequency-related noise, the artifacts in the \ac{EEG} data must be detected and removed. An \ac{ICA} algorithm is applied to the session data. After prewhitening the data, an \ac{ICA} is applied, splitting the \ac{EEG} matrix into a mixing matrix accompanied by the sources. Since eight \ac{EEG} channels are present, the \ac{ICA} algorithm was performed with eight components. As a next step, it has to be decided whether a component is an artifact or an actual source of cerebral activity. This thesis deals with an unconventional way of measuring the \ac{EEG} data, so custom criteria must be determined for this task. In \autoref{tab:ica_components}, the rejection criteria for each component can be seen. \ac{PTP}, skewness, kurtosis, and autocorrelation are used to detect unusual signal characteristics deviating from brain activity. The spectral power thresholds, including the Delta and Beta Power ratio, find artifacts by finding components dominated by specific frequency bands. Lastly, by investigating the sparsity of the mixing matrix, it is evaluated how widely a component affects the \ac{EEG} channels. A component is classified as an artifact if at least two of the mentioned criteria are met. The components labelled as artifacts are then set to zero before converting the mixing matrix with the now cleaned sources to the artifact-removed version of the original \ac{EEG} data. This results in a signal where most of the high amplitudes are removed with a much more consistent \ac{EEG} signal, thus suggesting that most of the unwanted artifacts have been removed. \par
+    After removing most of the frequency-related noise, the artifacts in the \ac{EEG} data must be detected and removed. An \ac{ICA} algorithm is applied to the session data. After prewhitening the data, an \ac{ICA} is applied, splitting the \ac{EEG} matrix into a mixing matrix accompanied by the sources. Since eight \ac{EEG} channels are present, the \ac{ICA} algorithm was performed with eight components. As a next step, it has to be decided whether a component is an artifact or an actual source of cerebral activity. This thesis deals with an unconventional way of measuring the \ac{EEG} data, so custom criteria must be determined for this task. In \autoref{tab:ica_components}, the rejection criteria for each component can be seen. \ac{PTP}, skewness, kurtosis, and autocorrelation are used to detect unusual signal characteristics deviating from brain activity. The spectral power thresholds, including the Delta and Beta Power ratio, find artifacts by finding components dominated by specific frequency bands. Lastly, by investigating the sparsity of the mixing matrix, it is evaluated how widely a component affects the \ac{EEG} channels. A component is classified as an artifact if at least two of the mentioned criteria are met. The components labelled as artifacts are then set to zero before converting the mixing matrix with the now cleaned sources to the artifact-removed version of the original \ac{EEG} data. This results in a signal where most of the high amplitudes are removed with a much more consistent \ac{EEG} signal, thus suggesting that most of the unwanted artifacts have been removed. \par In \autoref{fig:denoised_signal}, the final denoised signal can be seen. It becomes obvious that the main drift is removed alongside with the unusual amplitudes.\par
     With the cleaned \ac{EEG} signal at hand, one can now segment the signal into its 50 individual songs\footnote{The custom Python script also supports the segmentation of biosignals other than \ac{EEG}. However, these will be ignored in the following as this thesis focuses on \ac{EEG} signals}. Since the start and the end of one song are pushed to the \ac{LSL} stream, the timestamp of those markers is read out to only keep the signal data appearing in this interval. This is done over each channel, thus resulting in a table with each song occupying a row and the channels as columns.\par
     After all these steps, the denoised and segmented data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
