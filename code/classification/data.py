@@ -57,13 +57,13 @@ def extract_genres(df_labels):
     return genres.to_list()
 
 
-def load_data(psd_to_keep: FreqDomain):
+def load_data(psd_to_keep: FreqDomain, ret_label_encoder=False):
     X = []
     y = []
     print("Start loading data...")
     for i in range(20):
         X_sess, y_sess = load_data_session(session_number=i)
-        y.extend(y_sess.to_list())
+        y.extend(y_sess)
         X.append(X_sess.values)
 
     le = LabelEncoder()
@@ -74,7 +74,10 @@ def load_data(psd_to_keep: FreqDomain):
     X_combined = np.vstack(X)
 
     print("Finished loading data!")
-    return X_combined, y_numerical
+    if ret_label_encoder:
+        return X_combined, y_numerical, le
+    else:
+        return X_combined, y_numerical
 
 
 def remove_constant_features(X_original, feature_names):
