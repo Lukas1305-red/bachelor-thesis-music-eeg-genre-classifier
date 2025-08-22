@@ -16,7 +16,7 @@ class FreqDomain(Enum):
     fft = "psd_fft"
 
 
-def load_data_session(session_number: int, process=False):
+def load_data_session(session_number: int, process=False, ret_label_encoder=False):
     str_session = str(session_number).zfill(3)
     print(f"Load Session {str_session}")
     filename = f"{str_session}.pkl"
@@ -38,8 +38,10 @@ def load_data_session(session_number: int, process=False):
         print("\n=== Feature Info ===")
         print(f"X shape: {X_combined.shape}")
         print(f"y shape: {y_numerical.shape}")
-
-        return X_combined, y_numerical
+        if ret_label_encoder:
+            return X_combined, y_numerical, le
+        else:
+            return X_combined, y_numerical
 
     return features, genres
 

@@ -50,7 +50,7 @@ def create_matrices():
         cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=1997)
 
         # Load subject
-        X, y = load_deap_dataset(subject=i)
+        X, y, le = load_deap_dataset(subject=i, ret_label_encoder=True)
         all_labels = []
         all_predictions = []
         for j, (train_index, test_index) in enumerate(cv.split(X, y)):
@@ -64,8 +64,13 @@ def create_matrices():
             all_labels.extend(y_test)
             all_predictions.extend(y_pred)
 
-        matrix = confusion_matrix(all_labels, all_predictions, normalize="true")
-        display = ConfusionMatrixDisplay(matrix)
+        all_labels_words = le.inverse_transform(all_labels)
+        all_predictions_words = le.inverse_transform(all_predictions)
+        classes = le.classes_
+        matrix = confusion_matrix(
+            all_labels_words, all_predictions_words, labels=classes, normalize="true"
+        )
+        display = ConfusionMatrixDisplay(matrix, display_labels=classes)
         display.plot(values_format=".2f")
         plt.savefig(f"{MATRIX_PATH}/confusion_matrix_subj_{i}")
         plt.close()
