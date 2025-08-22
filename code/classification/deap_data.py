@@ -14,7 +14,7 @@ NUM_SUBJECTS = 1
 SAMPLE_RATE = 128
 
 
-def load_deap_dataset(subject=0):
+def load_deap_dataset(subject=0, ret_label_encoder: bool = False):
     labels = load_deap_labels()
     le = LabelEncoder()
     labels_numeric = le.fit_transform(labels)
@@ -63,8 +63,10 @@ def load_deap_dataset(subject=0):
     print("=" * 50)
 
     # perform_feature_analysis(feature_array_np, labels_numeric, labels, list(keys))
-
-    return feature_array_np, labels_numeric
+    if ret_label_encoder:
+        return feature_array_np, labels_numeric, le
+    else:
+        return feature_array_np, labels_numeric
 
 
 def load_deap_eeg():
