@@ -1,5 +1,25 @@
 \chapter{Results}\label{chapter:results}
   The following chapter deals with evaluating the performance and results of the classification performed on both the \ac{DEAP} dataset and the Headset dataset. For each dataset, the same analysis approach is followed. Firstly, the accuracies of each model are analysed alongside the f1-score for each subject/session with a focus on variance between those values. Secondly, since the hyperparameters are optimized according to each subject/session, the distribution of those parameters\footnote{The hyperparameter space can be found in \autoref{tab:svm_hyperparam_space}} is further investigated to find certain trends within these models. Thirdly, normalised confusion matrices are taken as a measure to get insight in the actual predictions of each model. Apart from a global confusion matrix originating from all confusion matrices combined, the best and worst classifier's matrices are explored as well.
   \section{DEAP}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_accuracies.png}
+      \caption{Mean and balanced accuracies for each subject's best performing model}
+      \label{fig:deap_acc}
+    \end{figure}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_f1score.png}
+      \caption{f1-scores for each subject's best performing model}
+      \label{fig:deap_f1}
+    \end{figure}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_global_confusion.png}
+      \caption{Global confusion matrix of the DEAP dataset}
+      \label{fig:deap_global_confusion}
+    \end{figure}
 
   \section{Headset Data}
