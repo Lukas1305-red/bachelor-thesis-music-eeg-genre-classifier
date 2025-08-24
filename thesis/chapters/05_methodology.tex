@@ -194,7 +194,7 @@
 
     \subsection{DEAP} \label{sec:deap_methodology}
       As already said, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre; the genre tags applied by \cite{ghaemmaghami2016brain} are considered. In this way, comparing the results to current research in \ac{EEG} based genre recognition is easily possible. This results in an imbalanced dataset because of the 40 songs, 60\% belong to the POP genre and 40\% to the ROCK label. \par
-      From the available 32 \ac{EEG} channels, multiple features have been precomputed from each channel to depict the neural activity accordingly. The features are chosen based on past research using this dataset\footnote{cf. \autoref{sec:emotion_eeg}}:
+      From the available 32 \ac{EEG} channels, multiple features have been precomputed from each channel to depict the neural activity accordingly. The features are chosen based on past research using this dataset in emotion recognition\footnote{cf. \autoref{sec:emotion_eeg}}:
       \begin{itemize}
         \item Alpha, Beta, Theta, Delta, Gamma relative band power
         \item Alpha-Beta ratio
@@ -230,7 +230,7 @@
           svm\_\_gamma & \{scale, auto, 0.0001, 0.001, 0.01, 0.1, 1, 10\} \\
           \hline
         \end{tabular}
-        \caption{Hyperparameter search space for SVM with \ac{MRMR} feature selection.}
+        \caption{Hyperparameter search space for SVM with \ac{MRMR} feature selection}
         \label{tab:svm_hyperparam_space}
       \end{table}
 
