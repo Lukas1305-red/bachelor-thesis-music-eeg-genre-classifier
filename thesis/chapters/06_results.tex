@@ -1,24 +1,33 @@
 \chapter{Results}\label{chapter:results}
-  The following chapter deals with evaluating the performance and results of the classification performed on both the \ac{DEAP} dataset and the Headset dataset. For each dataset, the same analysis approach is followed. Firstly, the accuracies of each model are analysed alongside the f1-score for each subject/session with a focus on variance between those values. Secondly, since the hyperparameters are optimized according to each subject/session, the distribution of those parameters\footnote{The hyperparameter space can be found in \autoref{tab:svm_hyperparam_space}} is further investigated to find certain trends within these models. Thirdly, normalised confusion matrices are taken as a measure to get insight in the actual predictions of each model. Apart from a global confusion matrix originating from all confusion matrices combined, the best and worst classifier's matrices are explored as well.
+  The following chapter deals with evaluating the performance and results of the classification performed on both the \ac{DEAP} dataset and the Headset dataset. For each dataset, the same analysis approach is followed. Firstly, the accuracies of each model are analysed alongside the f1-score for each subject/session with a focus on variance between those values. Secondly, since the hyperparameters are optimized according to each subject/session, the distribution of those parameters\footnote{The hyperparameter space can be found in \autoref{tab:svm_hyperparam_space}} is further investigated to find certain trends within these models. Thirdly, normalised confusion matrices are taken as a measure to get insights of the actual predictions of each model. Apart from a global confusion matrix originating from all confusion matrices combined, the best and worst classifier's matrices are explored as well.
   \section{DEAP}
+    % Accuracies
+    The mean and balanced accuracies of each subject are illustrated in \autoref{fig:deap_acc}. It is notable that both mean and balanced accuracy are very close to each other with 68.3\% and 68.7\% respectively, concluding that each model makes overall balanced predictions although it is trained on an imbalanced dataset. Additionally, both the mean and balanced accuracy occupy a large range. While the mean accuracy ranges between 58\% and 83\%, the balanced accuracy varies from 59\% to 82\%. This suggests that there are many differences between subjects in \ac{EEG} patterns and quality in data. Nonetheless, each model is able to perform classifications above chance level, suggesting that the model actually learns patterns that are significant for \ac{MGR} in this case.\par
     \begin{figure}
       \centering
-      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_accuracies.png}
+      \includegraphics[width=0.8\textwidth]{figures/chapter06/deap/deap_accuracies.png}
       \caption{Mean and balanced accuracies for each subject's best performing model}
       \label{fig:deap_acc}
     \end{figure}
-
+    % f1-scores
+    In terms of f1-score, the distribution of results follows a similar pattern like the outcomes of the accuracies, illustrated in \autoref{fig:deap_f1}. With a mean value of 0.662 and values ranging from 0.55 to 0.82, the findings vary across subjects. Nonetheless, since the f1-score expresses the balance between precision and recall, the models have a reasonable well performance with flunctuating scores depending on the subject. Reasons for that could be noise or subject-dependent features. \par
+    
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_f1score.png}
       \caption{f1-scores for each subject's best performing model}
       \label{fig:deap_f1}
     \end{figure}
+    % Parameter distribution
+
+
+    % Confusion matrices
+
 
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_global_confusion.png}
-      \caption{Global confusion matrix of the DEAP dataset}
+      \caption{Global confusion matrix of the \ac{DEAP} dataset}
       \label{fig:deap_global_confusion}
     \end{figure}
 
