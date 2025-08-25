@@ -69,19 +69,20 @@
       \caption{Mean f1-scores of each session's best performing models in the Headset data}
       \label{fig:headset_mean_f1}
     \end{figure}
-
-    The optimal hyperparameter space is displayed in \autoref{fig:headset_hyperparams}. Similar to the \ac{DEAP} dataset, the sigmoid kernel is utilized the most, pointing out that the sigmoid kernel seems to be a favourable kernel for finding patterns in \ac{EEG} data for \ac{MGR}. Unlike the properties about the kernel, trends in feature count are different compared to the \ac{DEAP}. While the classification on the \ac{DEAP} data seem to favor a larger amount of features (more than ten), the models of the headset data prefer a lower amount of features (less than 15). The distribution of the C value are also different compared to the \ac{DEAP} data. In the case of the headset data, low and high C values come up nearly with the same frequency, with 0.001 and 1.0 being used most frequently. This smoother decision boundary by the low C values could be explained by overlapping of genres or general noise in the \ac{EEG} data. \par
     \begin{figure}
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter06/headset/headset_hyperparams_2x2.pdf}
       \caption{The distribution of optimal hyperparameters across all sessions in the Headset data presented in absolute counts}
       \label{fig:headset_hyperparams}
     \end{figure}
+    The optimal hyperparameter space is displayed in \autoref{fig:headset_hyperparams}. Similar to the \ac{DEAP} dataset, the sigmoid kernel is utilized the most, pointing out that the sigmoid kernel seems to be a favourable kernel for finding patterns in \ac{EEG} data for \ac{MGR}. Unlike the properties about the kernel, trends in feature count are different compared to the \ac{DEAP}. While the classification on the \ac{DEAP} data seem to favor a larger amount of features (more than ten), the models of the headset data prefer a lower amount of features (less than 15). The distribution of the C value are also different compared to the \ac{DEAP} data. In the case of the headset data, low and high C values come up nearly with the same frequency, with 0.001 and 1.0 being used most frequently. This smoother decision boundary by the low C values could be explained by overlapping of genres or general noise in the \ac{EEG} data. \par
 
-    As already suggested by the low F1-score, not all classes are predicted equally well, which is emphasized by the overall confusion matrix in \autoref{fig:global_confusion}
+    As already suggested by the low F1-score, not all classes are predicted equally well, which is emphasized by the overall confusion matrix in \autoref{fig:global_confusion}. The classes predicted correctly the most are blues, country and disco with 27.0\%, while metal was the worst with only 12\%. It is also interesting to see that some genres get mistaken with other genres. For instance, classical music was predicted correctly only 15\% of the time and was mistaken as country music 17\% of the time. Nonetheless, there are no very large misclassifications in genres, which gives the hint that it either is difficult to distinguish between ten music genres based on \ac{EEG} or that an \ac{SVM} is not able to capture genre-specific patterns well. \par 
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/headset/headset_global_confusion.png}
       \caption{Global confusion matrix accumulated over all sessions of the Headset data}
       \label{fig:global_confusion}
-    \end{figure} 
+    \end{figure}
+
+    Overall, one can say that there lies some information about different genres in the headset's acquired signal. However, since the performance is only a little bit above chance level raises concerns about the data quality of this hybrid approach. However, the results of the \ac{DEAP} dataset are not much better than the headset data, even though it is a binary decision, hinting that multi-class \ac{MGR} based on \ac{EEG} signals is still a difficult task for \ac{SVM}s, requiring more research in the future.
