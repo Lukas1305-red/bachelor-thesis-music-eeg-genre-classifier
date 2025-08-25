@@ -38,7 +38,7 @@
     As the adequate bandwidth of \ac{EEG} signals lies around 100 Hz, the minimum sample rate should be 200 Hz to meet the Nyquist criterion\footnote{The Nyquist criterion states that to accurately reconstruct a signal without aliasing, it must be sampled at a rate at least twice its highest frequency component.} Depending on the required resolution, sampling frequencies up to 2000 Hz are possible. In quantification of the signal, 16 bits for each sample is sufficient and popular for many \ac{EEG} recording systems \cite{sanei2021eeg}. \par
     
   \section{Denoising and Preprocessing of EEG signals}\label{section:theoretical_background_denoising}
-    After acquiring the EEG signals, further steps have to be followed before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artifacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data. 
+    After acquiring the EEG signals, further steps have to be followed before performing a classification task. Since \ac{EEG} is a non-invasive technique, other signals, so-called artifacts, are also measured. Different artifacts are presented before discussing possible methods to remove the data.
     \subsection{Types of Artifacts in EEG signals}
         \begin{table}[h]
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
@@ -90,7 +90,7 @@
     \subsection{Time Domain Feature Extraction} \label{sec:time-domain}
       In time domain feature extraction, signals are analysed to quantify how they change over time. Depending on the number of data points in a session, windowing is employed to achieve desirable results \cite{singh2023trends}. \par
       One of the simplest and common approaches is calculating basic statistical features from the signal at hand. This includes mean, standard deviation, maximum, minimum, median, variance, range, skewness, and kurtosis \cite{singh2023trends}. \par
-      In addition to these basic statistical features, parameters tailored for signals can be used to achieve desirable results and information. One of those is \ac{RMS}, which measures the average power of a signal, representing a signal's energy or loudness. It can be calculated with \autoref{eq:rms}, where $N$ is the number of samples and $V(i)$ the amplitude of the signal of the $i$-th sample \cite{moulin2003rms}. \par 
+      In addition to these basic statistical features, parameters tailored for signals can be used to achieve desirable results and information. One of those is \ac{RMS}, which measures the average power of a signal, representing a signal's energy or loudness. It can be calculated with \autoref{eq:rms}, where $N$ is the number of samples and $V(i)$ the amplitude of the signal of the $i$-th sample \cite{moulin2003rms}. \par
       \begin{equation}
         V_{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} V^{2}(i)} \label{eq:rms}
       \end{equation}
@@ -124,7 +124,7 @@
       Multiple different features can be extracted from the \ac{PSD} to access the frequency-related characteristics of an \ac{EEG} signal. One of the most prominent \ac{EEG} spectral features is hereby the band-limited power. It represents the spectral power within a particular frequency band, i.\,e., within the frequency range of each brain rhythm. It can be calculated by making use of \autoref{eq:powerBand}. The sum of all power values $P$ at each frequency point $f_{i}$ within a frequency band $I_{band}$. For normalization and elimination of individual differences, the relative power can be taken by dividing by the total power in the whole frequency range \cite{hu2019eeg}. This method allows a detailed analysis of the different mental states during a session. \par
       \begin{equation}
         P_{band} = \frac{1}{N}\sum_{f_{i} \in I_{band}}^{}P(f_{i})
-        \label{eq:powerBand} 
+        \label{eq:powerBand}
       \end{equation}
       Furthermore, the spectrum can be treated as a random process, thus calculating statistical features similar to those mentioned in the time-domain (cf. \autoref{sec:time-domain}) \cite{hu2019eeg}.
     \subsection{Time-Frequency Domain Feature Extraction}
@@ -145,7 +145,7 @@
         \label{fig:dwt}
       \end{figure}
       One of the biggest problems of \ac{CWT} is the result of a lot of unused information and computational effort due to the continuous changes in $a$ and $b$. To solve this issue, \ac{DWT} can be employed instead, which is showcased in \autoref{fig:dwt}. Each step (or level) consists of two digital filters $g[n]$ and $h[n]$ and two downsamplers by two. $g[n]$ stands for the mother wavelet function and acts as a high-pass filter, while $h[n]$ is its mirror function working as a low-pass filter. Each stage outputs a detail of the signal $D$ and an estimation of the signal $A$, which is then used as an input for the next step. This results in a hierarchical set of coefficients, which become more accurate the higher the level is set \cite{al2014methods}. \par
-  
+
   \subsection{Feature Selection}
     Based on the previous sections, it becomes clear that many different kinds of features can be calculated based on an \ac{EEG} signal. The number of features, especially scales, in \ac{EEG} based classification problems, since all features are computed for each channel and the metrics are very versatile. However, depending on the dataset, many features can lead to undesirable results, such as Over- or Underfitting. Therefore, it is vital to employ standard feature selection methods that choose the optimal subset of all these features. This not only leads to a reduction in dimensionality but also to choosing those features that hold the most information. One feature selection method in that domain is the \ac{MRMR} feature selection, which will be explained in the following. \par
     As the name suggests, the \ac{MRMR} algorithm tries to find the feature set that has maximal relevance and minimal redundancy between each other. On the one hand, relevance $V$ describes how much information a feature set $F$ provides about the different class labels. On the other hand, redundancy $W$ defines how much information is shared between features in the feature set \cite{jo2019improved}. \par

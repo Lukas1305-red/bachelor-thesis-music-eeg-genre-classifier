@@ -88,7 +88,8 @@ def debug_print_shapes(segmented_signal_data, song_count):
 def store_in_table(columns, segmented_signal_data, table, song_count):
     # initialize the rest of the columns in the table
     for channel in columns:
-        table[channel] = []
+        if channel != "EEG_Ch3":
+            table[channel] = []
 
     # now we have to construct the actual values of the columns
     for song_counter in range(song_count):
@@ -97,12 +98,13 @@ def store_in_table(columns, segmented_signal_data, table, song_count):
         for channel_data in current_song:
             column_name = columns[counter]
             counter += 1
-            table[column_name].append(channel_data)
+            if column_name != "EEG_Ch3":
+                table[column_name].append(channel_data)
 
 
 def filter_eeg(eeg_data, sample_rate):
     filtered = []
-    for i in range(8):
+    for i in range(7):
         channel = eeg_data[:, i]
         filtered_channel = bandpass(channel, [1, 30], sample_rate)
         filtered_channel = notch_filter(filtered_channel, 50, sample_rate)
@@ -175,24 +177,25 @@ def create_segment(session_id, song_count_param, only_eeg_segments, filter_on):
     for i in range(song_count_param):
         table["genre"].append(song_data[i][1])
 
-    eeg_data_processed = eeg_data[:, :8]
+    eeg_data_processed = np.delete(eeg_data[:, :8], 2, axis=1)
     if filter_on:
         eeg_data_denoised = filter_eeg(eeg_data_processed, sample_rate=250)
         eeg_data_denoised = remove_artefacts(eeg_data_denoised)
     channel_data_acc = segment_signal_data(
         timestamp_list=eeg_timestamps,
         signal_list=eeg_data_denoised if filter_on else eeg_data_processed,
-        channel_count=8,
+        channel_count=7,
         music_timestamps=music_markers_timestamps,
         song_count=song_count_param,
     )
-    if filter_on:
+    if False:
         buf = []
         for song in channel_data_acc:
             acc = apply_z_normalization(song_data=song)
             buf.append(acc)
         channel_data_acc = buf
     eeg_channels_col = [f"EEG_{eeg_channels[i]}" for i in range(8)]
+    eeg_channels_col.remove("EEG_Ch3")
     store_in_table(
         columns=eeg_channels_col,
         segmented_signal_data=channel_data_acc,
@@ -252,7 +255,7 @@ def main(only_eeg_segments, filter_on, feature_extraction_on):
     if only_eeg_segments:
         DIR_NAME = "eeg_data_v7_denoised"
     if only_eeg_segments and feature_extraction_on:
-        DIR_NAME = "eeg_data_v3_features"
+        DIR_NAME = "eeg_data_first_4s_unnormalized_v3"
     os.makedirs(f"{PATH_TO_DATA_ROOT}/{DIR_NAME}", exist_ok=True)
     for i in range(20):
         print(f"SEGMENTING SESSION {i}...")
@@ -274,6 +277,7 @@ def main(only_eeg_segments, filter_on, feature_extraction_on):
 
         if feature_extraction_on:
             column_names = [f"EEG_Ch{i + 1}" for i in range(8)]
+            column_names.remove("EEG_Ch3")
             print(f"START FEATURE EXTRACTION FOR {session_number}...")
             df_features = extract_features_from_table(
                 eeg_df=df, column_names=column_names
