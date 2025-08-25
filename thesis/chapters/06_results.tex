@@ -19,32 +19,37 @@
       \label{fig:deap_f1}
     \end{figure}
     % Parameter distribution
-    The overall hyperparameter distribution is showcased in \autoref{fig:deap_hyperparams_raw}, illustrating the count of each value appearing in an optimal configuration for the classification pipeline. It becomes obvious that the sigmoid function is the optimal kernel for most of the subjects. For C regularization, the majority of models utilize a value of 10.0, indicating the need to fit the training data more strictly for desirable results on the test validation dataset. Regarding the gamma values used, it is noticable that the \textit{auto} option is not in use, suggesting that it is not competitive compared to more robust options like \textit{scale}. The absolute distribution of the feature count, however, does not give away any trend in favor of performance when looking at the overall count. \par
+    The overall hyperparameter distribution is showcased in \autoref{fig:deap_hyperparams_raw}, illustrating the count of each value appearing in an optimal configuration for the classification pipeline. It becomes obvious that the sigmoid function is the optimal kernel for most of the subjects. For C regularization, the majority of models utilize a value of 10.0, indicating the need to fit the training data more strictly for desirable results on the test validation dataset. Regarding the gamma values used, it is noticable that the \textit{auto} option is not in use, suggesting that it is not competitive compared to more robust options like \textit{scale}. The absolute distribution of the feature count, however, does not give away any trend in favor of performance when looking at the overall count. Nonetheless, it is still observable that a larger count of features seem to yield better performance since most instances use a feature count greater than ten. \par
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_hyperparams_2x2.pdf}
       \caption{The distribution of optimal hyperparameters across all subjects presented in absolute counts}
       \label{fig:deap_hyperparams_raw}
     \end{figure}
-    To further explore the best possible hyperparameters for \ac{MGR} in the \ac{DEAP} dataset, \autoref{fig:deap_hyperparams_grouped} depicts the relative distribution of hyperparameters grouped by instances scoring above and below the average f1-score. In these diagrams, it becomes even more significant how well the sigmoid kernel performs as nearly every model above average uses this function. Besides that, the grouping also make more insights about the feature count visible. The diagram suggests that, one the one hand, most models that perform above the average f1-score use few features (around two to 20 builds the majority). One the other hand, models performing below average tend to use more features, as 35\% make use of the maximum available amount of features being 50. Another interesting result is that the choice of the parameter C doesn't show many differences between above and below average performance, as the distribution in both cases looks similar with a peak at $C = 10.0$. As the \textit{rbf} kernel is not utilized much, the choice for a specific $\gamma$ value does not give away any trend towards good or bad performance. \par
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_hyperparams_grouped_2x2.pdf}
-      \caption{Proportional distribution of optimal hyperparameters across all subjects, grouped by whether their F1-score was greater or less than/equal to the mean F1-score}
-      \label{fig:deap_hyperparams_grouped}
-    \end{figure}
 
     % Confusion matrices
     % Global matrix
-    \autoref{fig:deap_global_confusion} depicts the normalized global confusion matrix accumulated over all subjects and their respective models to get an understanding of the predictions made over all subjects.
-    % Best and worst matrix
-
+    \autoref{fig:deap_global_confusion} depicts the normalized global confusion matrix accumulated over all subjects and their respective models to get an understanding of the predictions made over all subjects. Overall, the predictions are well balanced between POP and ROCK as the predictions are right 67.3\% and 69.7\% respectively. Overall, it seems that the ROCK label is more predictable compared to the POP genre although only 40\% of all songs belong to this genre. \par
 
     \begin{figure}
       \centering
-      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_global_confusion.png}
+      \includegraphics[width=0.8\textwidth]{figures/chapter06/deap/deap_global_confusion.png}
       \caption{Global confusion matrix accumulated over all subjects}
       \label{fig:deap_global_confusion}
+    \end{figure}
+    When comparing the confusion matrices both of the best and worst performing subjects, noteworthy differences can be interpreted. When looking at the best performing subject's confusion matrix in \autoref{fig:deap_best_confusion}, it becomes clear that results are very balanced and perform very well with both classes being correctly predicted with accuracies of 83\% (POP) and 81\% (ROCK).
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_worst_confusion_09.png}
+      \caption{Confusion matrix of the worst performing subject (Subject 9, F1-score of 0.55)}
+      \label{fig:deap_worst_confusion}
+    \end{figure}
+    Contrary to that, the worst performing subject's confusion matrix, illustrated in \autoref{fig:deap_worst_confusion} has different attributes. Although the model predicts the ROCK songs within the average performance with 69\%, the classification of the POP songs results to chance level, indicating a bias towards the ROCK genre. Setting both matrices side to side emphasizes the subject-dependent patterns in neural activity being different and unique per person. \par
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.8\textwidth]{figures/chapter06/deap/deap_best_confusion_03.png}
+      \caption{Confusion matrix of the best performing subject (Subject 3, F1-score of 0.83)}
+      \label{fig:deap_best_confusion}
     \end{figure}
 
   \section{Headset Data}
