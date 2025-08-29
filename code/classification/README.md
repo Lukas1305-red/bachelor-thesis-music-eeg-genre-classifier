@@ -5,9 +5,8 @@ This subsystem holds all logic and functions that are important for performing c
 ## Functionality
 
 ### Classification Pipeline
-<div style="background-color: white; padding: 20px; display: inline-block;">
-  <img src="../../thesis/figures/chapter05/classification_pipeline.png" alt="Description">
-</div>
+![](../../thesis/figures/chapter05/classification_pipeline_dark.png#gh-dark-mode-only)
+![](../../thesis/figures/chapter05/classification_pipeline.png#gh-light-mode-only)
 
 ### Data loading
 [data.py](data.py) and [deap_data.py](deap_data.py) are responsible for loading the MuSiCGen dataset and DEAP dataset respectively. Beforehand, all `inf` or `nan` values are filtered out.
