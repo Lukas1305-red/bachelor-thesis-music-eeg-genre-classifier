@@ -24,7 +24,6 @@ This directory is responsible for extracting features from denoised and segmente
 |                    | `THETA_relative`        | Relative power in the theta band                          |
 |                    | `ALPHA_relative`        | Relative power in the alpha band                          |
 |                    | `BETA_relative`         | Relative power in the beta band                           |
-|                    | `GAMMA_relative`        | Relative power in the gamma band                          |
 |                    | `ALPHA_BETA_ratio`      | Ratio of alpha power to beta power                        |
 |                    | `THETA_ALPHA_ratio`     | Ratio of theta power to alpha power                       |
 |                    | `THETA_BETA_ratio`      | Ratio of theta power to beta power                        |
