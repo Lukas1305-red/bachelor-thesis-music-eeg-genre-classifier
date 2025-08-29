@@ -13,8 +13,7 @@ This project has 3 main directories:
 
 ## Code environment setup
 
-If you are intending to use the code in this project, please follow this guide:
-
+If you are intending to use the code in this project, please follow this guide. Also make sure to follow this guideline for the nix environment: [README](/_README.md):
 ### Prerequisites
 
 Ensure you have the following installed:
