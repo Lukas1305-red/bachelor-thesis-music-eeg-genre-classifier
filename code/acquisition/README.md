@@ -10,9 +10,8 @@ This directory contains the jupyter notebooks, python scripts and MATLAB functio
 
 ## Functionality
 
-<figure style="background-color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-  <img src="../../thesis/figures/chapter05/experimentalWorkflow.png" alt="Experimental Workflow" style="max-width: 100%; max-height: 400px; object-fit: contain;">
-</figure>
+![](../../thesis/figures/chapter05/experimentalWorkflowDark.png#gh-dark-mode-only)
+![](../../thesis/figures/chapter05/experimentalWorkflow.png#gh-light-mode-only)
 
 ### [Session generation](session-generator.ipynb)
 This notebook is responsible for generating the distinct sessions for the acquisition. The whole dataset is split in 20 distinct sessions each containing 50 songs. Each session is balanced according to their respective genre, so that each genre is represented by 5 songs. The distinct sessions are stored in an auto-generated folder in `data` called `music_sessions`. Each session directory contains the `.wav` files for each song.
