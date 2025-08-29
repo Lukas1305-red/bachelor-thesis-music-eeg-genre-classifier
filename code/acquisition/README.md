@@ -11,7 +11,7 @@ This directory contains the jupyter notebooks, python scripts and MATLAB functio
 ## Functionality
 
 <div style="background-color: white; padding: 20px; display: inline-block;">
-  <img src="../../thesis/figures/chapter05/experimentalWorkflow.png" alt="Description">
+  <img src="../../thesis/figures/chapter05/experimentalWorkflow.png" alt="Description" style="max-width: 100%; max-height: 400px; object-fit: contain;">
 </div>
 
 ### [Session generation](session-generator.ipynb)
