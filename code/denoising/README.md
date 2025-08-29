@@ -3,9 +3,11 @@
 This folder contains all the necessary code for the denoising of EEG signal data. The main file is [denoising.py](denoising.py), in which you'll find util functions for the single steps. The steps are then implemented in [segmentation.py](../acquisition/segmentation.py). Below, you'll find an overview of those functions:
 
 
-<div style="background-color: white; padding: 20px; display: inline-block;">
+<div style="background-color: white; padding: px; display: inline-block;">
   <img src="../../thesis/figures/chapter05/PreprocessingWorkflow.png" alt="Description">
 </div>
+
+## Functionality
 
 - `bandpass`
   - This function performs a bandpass filter on the eeg signal data. It takes the edges as a parameter, representing the lower and upper bound of the bandpass filter
@@ -32,3 +34,9 @@ This folder contains all the necessary code for the denoising of EEG signal data
   | Mixing Matrix Sparsity | < 3 active channels (relative threshold = 0.2) |
 
 The [Denoising notebook](denoising_nb.ipynb), is a playground to check whether the application of artifact removal by ICA was successful or not by visualizing and comparing the data. It does not add any logic to the denoising steps and serves as an easier way of checking correctness.
+
+## Comparision
+*Unprocessed EEG signal*
+![Raw Signal](../../thesis/figures/chapter05/raw_signal_ses1_ch1.png)
+*Denoised EEG signal*
+![Raw Signal](../../thesis/figures/chapter05/denoisedSignal.png)
