@@ -8,7 +8,7 @@ As mentioned before, this directory consists of all the code snippets responsibl
 
 3. Feature-Extraction: This folder handles feature extraction of cleaned EEG channel data in each domain. Refer to the respective [README](feature_extraction/README.md) for more information.
 
-4. Classification: TBA
+4. Classification: In this directory, the classification pipeline can be found including feature analysis and evaluations.. Refer to the respective [README](classification/README.md)
 
 ## Important Note
 Please make sure that you have followed the steps of setting up the virtual environment as it is needed throughout all pieces of code, no matter their purpose.
