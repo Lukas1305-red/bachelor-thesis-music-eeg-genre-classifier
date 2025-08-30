@@ -1,11 +1,11 @@
 \chapter{Methodology}\label{chapter:methodology}
-
+\acresetall
   \section{Acquisition}
-    \subsection{General setup, environment and stimuli}
+    \subsection{General setup, Environment and Stimuli}
     The experiment has been conducted in a laboratory setting. As mentioned in \autoref{chapter:music_datasets}, the GTZAN Music dataset is chosen as a basis for the music stimuli. However, for the sake of the quality of the data, it would not be beneficial to hear all 1000 songs in one session. To avoid quick attention loss during a session and gather as much different data under different circumstances, the whole set of audio files is partitioned into 20 distinct sessions, each lasting around 30 minutes. This means that per session, 50 songs are played\footnote{Because of a corrupt audio file, session ten only consists of 49 songs}. For each of these songs, not only are \ac{EEG} signals measured, but also other biosignals like \ac{PPG}, \ac{IMU} and temperature. However, this work will solely focus on the recorded \ac{EEG} data. During each session, five songs from each genre are being played to ensure that each of the ten genres from the dataset is represented. This also ensures no genre bias in the data, thus resulting in a balanced signal across genres. During listening, the order of the songs is randomised to evoke a brain reaction that is as natural as possible, as the brain cannot predict the genre that is being listened to. Additionally, a five-second break is implemented in between songs to not overstimulate the brain.\par
     All 20 sessions have been recorded over the course of two weeks, with an average of two sessions per day. Between each session, there was a short break of between ten and 30 minutes. This verifies a sufficient pause of the brain to fully prepare for the next session. The test person is the author, a 21-year-old, right-handed college student without any common (brain) diseases. To further guarantee a high quality in the acquired signal data, the experiment's environment and setting must be adapted. First and foremost, the test person is instructed to sit comfortably in a chair with his eyes closed to minimise artificats coming from blinking and eye-movement. Furthermore and most importantly, any movements, especially in the head region, must be limited and as minimal as possible since the \ac{EEG} device reacts very sensitive to head movements. Apart from that, the room was quiet and isolated with dimmed natural lighting combined with the brightness from a desktop monitor. The songs were played over the \ac{EEG} headset (cf. \autoref{section: headset}) with average and constant volume.
 
-    \subsection{Acquisition device}\label{section: headset}
+    \subsection{Acquisition Device}\label{section: headset}
     A non-traditional approach is chosen to record the \ac{EEG} signal data coming from the brain. For this study, a prototype for a multimodal biosensing platform is chosen. It is a Bluetooth headset that can play music and measure biosignals at the same time. For connecting with a standard PC, it uses classic bluetooth and low-energy bluetooth for audio and biosignals respectively.\par
     The headphones have multiple sensors and electrodes to measure biosignals like EEG, PPG, IMU and temperature. For \ac{EEG}, the headphones are supplied with 2 × 4 sensor electrodes and two bias electrodes. The sensors are easily configurable and provide an ultra-low-noise front-end, meaning that the data points are amplified with minimal distortion and interference. Besides that, the electrodes sample with 24-bit and a frequency of 250\,Hz.\par
     For \ac{PPG}, one optical sensor on the right side provides a high resolution of 19-bit ADC with a configurable sample rate. They also support raw data output or built-in algorithms to conclude heart rate or SpO2.\par
@@ -13,12 +13,12 @@
     Last but not least, there are three digital thermometers, one on the skin, another one inside the earcup and one on the outside of the earcup to measure ambient temperature. All of those temperature sensors have an accuracy of $\pm 0.1$\,\textdegree\,C.\par
     Since this headset is still a prototype, there still is ongoing development and research on the headset. Nonetheless, some small-scale research projects already employed the biosignals from the headphones. These projects range from stress detection using the \ac{PPG} data to device control and the recognition of cognitive fatigue using the \ac{EEG} sensors.\par
 
-    \subsection{Technical setup}
+    \subsection{Technical Setup}
       Multiple technical components have to come together to gather the experiment's data. All the components employ the \ac{LSL}. It provides a standardised way to stream time-sensitive data between devices and applications. Devices or apps then push data on this stream, which is captured and stored in a special file form called .xdf. The workflow is illustrated in \autoref{fig:technicalSetup} and will be explained in the following.\par
       \begin{figure}
         \centering
         \includegraphics[width=1.0\textwidth]{figures/chapter05/experimentalWorkflow.png}
-        \caption{Technical setup}
+        \caption{Technical setup of acquisition}
         \label{fig:technicalSetup}
       \end{figure}
       At the core, there are two main programs responsible for the data. On the one hand, there is the headset platform called acting as a Controller. This program is responsible for the sensor setup and starting and stopping the signal acquisition. Communicating with the headset's low-energy Bluetooth channel reliably sets up the biosensors of the multimodal headphones, making the device ready for acquisition. After a successful setup, the data is pushed on the corresponding \ac{LSL} Stream. On the other hand, the study uses a custom Python script having two tasks regarding playing the music. Firstly, it loads all the songs from one of the 20 pre-generated sessions and randomly shuffles them. After that, the program plays each song one by one. Simultaneously, the script also pushes timestamps during recording to assign each segment to each song later.\par
@@ -75,7 +75,7 @@
     With the cleaned \ac{EEG} signal at hand, one can now segment the signal into its 50 individual songs\footnote{The custom Python script also supports the segmentation of biosignals other than \ac{EEG}. However, these will be ignored in the following as this thesis focuses on \ac{EEG} signals}. Since the start and the end of one song are pushed to the \ac{LSL} stream, the timestamp of those markers is read out to only keep the signal data appearing in this interval. This is done over each channel, thus resulting in a table with each song occupying a row and the channels as columns.\par
     After all these steps, the denoised and segmented data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
-  \section{Feature extraction} \label{sec:feature_extract_method}
+  \section{Feature Extraction} \label{sec:feature_extract_method}
     The next step after the signal preprocessing is the extraction of meaningful features used for the classification task of predicting genres. Finding the right features is a difficult task in this particular use case. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardized electrode placement, on which little research exists. \par
     To overcome those obstacles, it is essential to compute as many different features across all the domains as possible to have a versatile range of different characteristics. An optimal feature subset can be chosen using feature selection techniques, allowing for sufficient classification results. \par
     For all features extracted from the channels, the first four seconds are taken into account. This way, the activation of the stimulus is captured. \par
@@ -234,7 +234,7 @@
         \label{tab:svm_hyperparam_space}
       \end{table}
 
-    \subsection{\ac{MuSiCGen}}
+    \subsection{MuSiCGen}
       To compare the results of the \ac{DEAP} dataset with the data originating from the multimodal \ac{EEG} headset, the same methodology described in \autoref{sec:deap_methodology} is employed, including the Classification pipeline and the hyperparameter space in \autoref{fig:ml_pipeline} and \autoref{tab:svm_hyperparam_space} respectively. Nonetheless, some critical differences will be mentioned below.\par
       Firstly, the number of channels is reduced compared to the \ac{DEAP} dataset, which was measured with a professional \ac{EEG} device. For this reason, and because no related work exists for the \ac{EEG} headset, all features mentioned in \autoref{sec:feature_extract_method} are available in the feature space from which the \ac{MRMR} feature selector can choose from.\par
       Secondly, in contrast to the \ac{DEAP} dataset, the \ac{MuSiCGen} is balanced in terms of genres as each session contains five songs from each possible genre (ten in total). Therefore, the balanced accuracy is not taken into account, as it will yield the same results as the mean accuracy. However, the F1-score and confusion matrices are still analysed to measure how well the model performs on multi-class prediction. \par
