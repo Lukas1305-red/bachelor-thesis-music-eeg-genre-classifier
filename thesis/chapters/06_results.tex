@@ -11,15 +11,16 @@
       \caption{Mean and balanced accuracies for each subject's best performing model in the \ac{DEAP} dataset}
       \label{fig:deap_acc}
     \end{figure}
-    % f1-scores
-    In terms of F1-score, the distribution of results follows a similar pattern to the outcomes of the accuracies, demonstrated in \autoref{fig:deap_f1}. With a mean value of 66.2\% and values ranging from 55\% to 82\%, the findings vary across subjects, too. Nonetheless, since the F1-score expresses the balance between precision and recall, the models have a reasonable performance with fluctuating scores depending on the subject. Reasons for that could be noise or subject-dependent features. \par
-    
+        
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_f1score.png}
       \caption{F1-scores for each subject's best performing model in the \ac{DEAP} dataset}
       \label{fig:deap_f1}
     \end{figure}
+    % f1-scores
+    In terms of F1-score, the distribution of results follows a similar pattern to the outcomes of the accuracies, demonstrated in \autoref{fig:deap_f1}. With a mean value of 66.2\% and values ranging from 55\% to 82\%, the findings vary across subjects, too. Nonetheless, since the F1-score expresses the balance between precision and recall, the models have a reasonable performance with fluctuating scores depending on the subject. Reasons for that could be noise or subject-dependent features. \par
+
     \begin{figure}
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter06/deap/deap_hyperparams_2x2.pdf}
@@ -39,24 +40,25 @@
       \caption{Global confusion matrix accumulated over all subjects of the \ac{DEAP} dataset}
       \label{fig:deap_global_confusion}
     \end{figure}
-    When comparing the confusion matrices of both the best and worst performing subjects, noteworthy differences can be interpreted. When looking at the best performing subject's confusion matrix in \autoref{fig:deap_best_confusion}, it becomes clear that results are very balanced and perform very well with both classes being correctly predicted with accuracies of 83\% (POP) and 81\% (ROCK). \par
     \begin{figure}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/chapter06/deap/deap_best_confusion_03.png}
+      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_best_confusion_03.png}
       \caption{Confusion matrix of the best performing subject in the \ac{DEAP} dataset (Subject 3, F1-score of 0.83)}
       \label{fig:deap_best_confusion}
     \end{figure}
     \begin{figure}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/chapter06/deap/deap_worst_confusion_09.png}
+      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_worst_confusion_09.png}
       \caption{Confusion matrix of the worst performing subject in the \ac{DEAP} dataset (Subject 9, F1-score of 0.55)}
       \label{fig:deap_worst_confusion}
     \end{figure}
+    When comparing the confusion matrices of both the best and worst performing subjects, noteworthy differences can be interpreted. When looking at the best performing subject's confusion matrix in \autoref{fig:deap_best_confusion}, it becomes clear that results are very balanced and perform very well with both classes being correctly predicted with accuracies of 83\% (POP) and 81\% (ROCK). \par
+
     Contrary to that, the worst performing subject's confusion matrix, illustrated in \autoref{fig:deap_worst_confusion}, has different attributes. Although the model predicts the ROCK songs within the average performance with 69\%, the classification of the POP songs results in a chance level, indicating a bias towards the ROCK genre. Setting both matrices side to side emphasises the subject-dependent patterns in neural activity being different and unique per person. \par
 
   \section{MuSiCGen}
     After analysing the \ac{MGR} results on a well-known dataset, the classification results on the \ac{MuSiCGen} are investigated following the same structure as in \autoref{sec:results_deap}. In this case, a ten-class classification task is performed, leading to a chance level of 10\%. \par
-    When looking at the mean accuracies of each model in \autoref{fig:headset_mean_accuracies}, similar properties like in the \ac{DEAP} dataset can be observed. Overall, each session is classified above chance level with a mean accuracy of 20.2\% across all sessions, a minimum accuracy of 16\%, and a maximum accuracy of 26\%. It becomes clear that there is also a high variance between subjects, but not as large as the one in the \ac{DEAP} dataset. Nonetheless, performance highly fluctuates between sessions. One reason for that could be that the headset's electrodes had slightly different placement across sessions, influencing the quality of the \ac{EEG} signal. Another reason may be that some songs evoke clearer genre-specific states in the brain than others, leading to easier classification of those music pieces. Apart from that, environmental conditions like humidity or temperature may be influencing factors for this alteration of accuracy. \par 
+    When looking at the mean accuracies of each model in \autoref{fig:headset_mean_accuracies}, similar properties like in the \ac{DEAP} dataset can be observed. Overall, each session is classified above chance level with a mean accuracy of 20.2\% across all sessions, a minimum accuracy of 16\%, and a maximum accuracy of 26\%. It becomes clear that there is also a high variance between sittings, but not as large as the one in the \ac{DEAP} dataset. Nonetheless, performance highly fluctuates between sessions. One reason for that could be that the headset's electrodes had slightly different placement across sessions, influencing the quality of the \ac{EEG} signal. Another reason may be that some songs evoke clearer genre-specific states in the brain than others, leading to easier classification of those music pieces. Apart from that, environmental conditions like humidity or temperature may be influencing factors for this alteration of accuracy. \par 
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/headset/headset_accuracies.png}
