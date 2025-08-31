@@ -1,37 +1,38 @@
 \chapter{Results}\label{chapter:results}
-
-  The following chapter deals with evaluating the performance and results of the classification performed on both the \ac{DEAP} dataset and the \ac{MuSiCGen} set. For each dataset, the same analysis approach is followed. Firstly, the accuracies of each model are analysed alongside the F1-score for each subject/session with a focus on variance between those values. Secondly, since the hyperparameters are optimized according to each subject/session, the distribution of those parameters\footnote{The hyperparameter space can be found in \autoref{tab:svm_hyperparam_space}} is further investigated to see specific trends within these models. Thirdly, normalised confusion matrices are taken as a measure to get insights into the actual predictions of each model. Apart from a global confusion matrix originating from all confusion matrices combined, the best and worst classifiers' matrices are explored as well.
+  \acresetall
+  The following chapter deals with evaluating the performance and results of the classification performed on both the \ac{DEAP} and the \ac{MuSiCGen} dataset. For each dataset, the same analysis approach is followed. Firstly, the accuracies of each model are analysed alongside the F1-score for each subject/session with a focus on variance between those values. Secondly, since the hyperparameters are optimised according to each subject/session, the distribution of those parameters (cf. \autoref{tab:svm_hyperparam_space}) is further investigated to see specific trends within these models. Thirdly, normalised confusion matrices are taken as a measure to get insights into the actual predictions of each model. Apart from a global confusion matrix originating from all confusion matrices combined, the best and worst classifiers' matrices are also explored.
   \section{DEAP} \label{sec:results_deap}
     % Accuracies
-    Before evaluating the classification results, it is worth mentioning that the chance level\footnote{Accuracy expected from random guessing, calculated by the inverse of the number of classes} in this case is 50\% as a binary classification is performed. \par
-    The mean and balanced accuracies of each subject are illustrated in \autoref{fig:deap_acc}. Notably, both mean and balanced accuracy are very close to each other with 68.3\% and 68.7\%, respectively, concluding that each model makes overall balanced predictions. However, it is trained on an imbalanced dataset. Additionally, both the mean and balanced accuracy occupy a large range. While the mean accuracy ranges between 58\% and 83\%, the balanced accuracy varies from 59\% to 82\%. This suggests that there are many differences between subjects in \ac{EEG} patterns and quality of the data. Nonetheless, each model can perform classifications above chance level, suggesting that the model actually learns patterns that are relevant for \ac{MGR} in this case.\par
+    Before evaluating the classification results, it is worth mentioning that the chance level\footnote{Accuracy expected from random guessing, calculated by the inverse of the number of classes} for this specific classification problem lies at 50\% as a binary classification is performed. \par
+    Each subject's mean and balanced accuracies are illustrated in \autoref{fig:deap_acc}. Notably, both mean and balanced accuracy are very close to each other with 68.3\% and 68.7\%, respectively, concluding that each model makes overall balanced predictions, although it is trained on an imbalanced dataset. Additionally, both the mean and balanced accuracy occupy a large range. While the mean accuracy ranges between 58\% and 83\%, the balanced accuracy varies from 59\% to 82\%. This suggests many differences between subjects in \ac{EEG} structures and data quality. Nonetheless, each model can perform predictions above chance level, suggesting that the model actually learns patterns that are relevant for \ac{MGR} in this case.\par
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/deap/deap_accuracies.png}
       \caption{Mean and balanced accuracies for each subject's best performing model in the \ac{DEAP} dataset}
       \label{fig:deap_acc}
     \end{figure}
-    % f1-scores
-    In terms of f1-score, the distribution of results follows a similar pattern to the outcomes of the accuracies, illustrated in \autoref{fig:deap_f1}. With a mean value of 66.2\% and values ranging from 55\% to 82\%, the findings vary across subjects. Nonetheless, since the F1-score expresses the balance between precision and recall, the models have a reasonable performance with fluctuating scores depending on the subject. Reasons for that could be noise or subject-dependent features. \par
-    
+        
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_f1score.png}
       \caption{F1-scores for each subject's best performing model in the \ac{DEAP} dataset}
       \label{fig:deap_f1}
     \end{figure}
-    % Parameter distribution
-    The overall hyperparameter distribution is showcased in \autoref{fig:deap_hyperparams_raw}, illustrating the count of each value appearing in an optimal configuration for the classification pipeline. It becomes obvious that the sigmoid function is the optimal kernel for most of the subjects. For C regularization, the majority of models utilize a value of 10.0, indicating the need to fit the training data more strictly for desirable results on the test validation dataset. Regarding the gamma values used, it is noticeable that the \textit{auto} option is not in use, suggesting that it is not competitive compared to more robust options like \textit{scale}. The absolute distribution of the feature count, however, does not give away any trend in favor of performance when looking at the overall count. Nonetheless, it is still observable that a larger count of features seems to yield better performance since most instances use a feature count greater than ten. \par
+    % f1-scores
+    In terms of F1-score, the distribution of results follows a similar pattern to the outcomes of the accuracies, demonstrated in \autoref{fig:deap_f1}. With a mean value of 66.2\% and values ranging from 55\% to 82\%, the findings vary across subjects, too. Nonetheless, since the F1-score expresses the balance between precision and recall, the models have a reasonable performance with fluctuating scores depending on the subject. Reasons for that could be noise or subject-dependent features. \par
+
     \begin{figure}
       \centering
-      \includegraphics[width=0.9\textwidth]{figures/chapter06/deap/deap_hyperparams_2x2.pdf}
+      \includegraphics[width=1.0\textwidth]{figures/chapter06/deap/deap_hyperparams_2x2.pdf}
       \caption{The distribution of optimal hyperparameters across all subjects in the \ac{DEAP} dataset presented in absolute counts}
       \label{fig:deap_hyperparams_raw}
     \end{figure}
+    % Parameter distribution
+    The overall hyperparameter distribution is showcased in \autoref{fig:deap_hyperparams_raw}, describing the count of each value appearing in an optimal configuration for the classification pipeline. It becomes obvious that the sigmoid function is the optimal kernel for most of the subjects. For C regularisation, most models utilise a value of 10.0, indicating the need to fit the training data more strictly for desirable results on the test validation dataset. Regarding the gamma values used, it is noticeable that the \textit{auto} option is not in use, suggesting that it is not competitive compared to more robust options like \textit{scale}. However, the absolute distribution of the feature count does not give away any trend in favor of performance when looking at the overall count. Nonetheless, it is still observable that a larger count of features seems to yield better performance since most instances use a feature count greater than ten. \par
 
     % Confusion matrices
     % Global matrix
-    \autoref{fig:deap_global_confusion} depicts the normalised global confusion matrix accumulated over all subjects and their respective models to get an understanding of the predictions made over all subjects. Overall, the predictions are well balanced between POP and ROCK as the predictions are right 67.3\% and 69.7\% respectively. Overall, it seems that the ROCK label is more predictable compared to the POP genre, although only 40\% of all songs belong to this genre. \par
+    \autoref{fig:deap_global_confusion} depicts the normalised global confusion matrix accumulated over all subjects and their respective models to get an understanding of the predictions made over all subjects. Overall, the predictions are well balanced between POP and ROCK as the predictions are 67.3\% and 69.7\% respectively. Overall, it seems that the ROCK label is more predictable compared to the POP genre, although only 40\% of all songs belong to this genre. \par
 
     \begin{figure}
       \centering
@@ -39,24 +40,25 @@
       \caption{Global confusion matrix accumulated over all subjects of the \ac{DEAP} dataset}
       \label{fig:deap_global_confusion}
     \end{figure}
-    When comparing the confusion matrices of both the best and worst performing subjects, noteworthy differences can be interpreted. When looking at the best performing subject's confusion matrix in \autoref{fig:deap_best_confusion}, it becomes clear that results are very balanced and perform very well with both classes being correctly predicted with accuracies of 83\% (POP) and 81\% (ROCK).
     \begin{figure}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/chapter06/deap/deap_best_confusion_03.png}
+      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_best_confusion_03.png}
       \caption{Confusion matrix of the best performing subject in the \ac{DEAP} dataset (Subject 3, F1-score of 0.83)}
       \label{fig:deap_best_confusion}
     \end{figure}
     \begin{figure}
       \centering
-      \includegraphics[width=0.75\textwidth]{figures/chapter06/deap/deap_worst_confusion_09.png}
+      \includegraphics[width=0.7\textwidth]{figures/chapter06/deap/deap_worst_confusion_09.png}
       \caption{Confusion matrix of the worst performing subject in the \ac{DEAP} dataset (Subject 9, F1-score of 0.55)}
       \label{fig:deap_worst_confusion}
     \end{figure}
-    Contrary to that, the worst performing subject's confusion matrix, illustrated in \autoref{fig:deap_worst_confusion}, has different attributes. Although the model predicts the ROCK songs within the average performance with 69\%, the classification of the POP songs results in a chance level, indicating a bias towards the ROCK genre. Setting both matrices side to side emphasizes the subject-dependent patterns in neural activity being different and unique per person. \par
+    When comparing the confusion matrices of both the best and worst performing subjects, noteworthy differences can be interpreted. When looking at the best performing subject's confusion matrix in \autoref{fig:deap_best_confusion}, it becomes clear that results are very balanced and perform very well with both classes being correctly predicted with accuracies of 83\% (POP) and 81\% (ROCK). \par
 
-  \section{\ac{MuSiCGen}}
-    After analysing the \ac{MGR} results on a well-known dataset, the classification results on the \ac{MuSiCGen} are investigated following the same structure as in \autoref{sec:results_deap}. In this case, a ten-class classification task is performed on the \ac{MuSiCGen} dataset leading to a chance level of 10\%. \par
-    When looking at the mean accuracies of each model in \autoref{fig:headset_mean_accuracies}, similar properties like in the \ac{DEAP} dataset can be observed. Overall, each session is classified above chance level since the predictions are made over ten genres instead of just two. With a mean accuracy of 20.2\% across all sessions, a minimum accuracy of 16\% and a maximum accuracy of 26\%, there is also a high variance between subjects, but not as large as the one in the \ac{DEAP} dataset. Nonetheless, performance highly fluctuates between sessions. One reason for that could be that the headset's electrodes had slightly different placement across sessions, influencing the quality of the \ac{EEG} signal. Another reason may be that some songs evoke clearer genre-specific states in the brain, so classification becomes easier for those music pieces. Apart from that, environmental conditions or accidental head movements can be influencing factors for this alteration of accuracy. \par 
+    Contrary to that, the worst performing subject's confusion matrix, illustrated in \autoref{fig:deap_worst_confusion}, has different attributes. Although the model predicts the ROCK songs within the average performance with 69\%, the classification of the POP songs results in a chance level, indicating a bias towards the ROCK genre. Setting both matrices side to side emphasises the subject-dependent patterns in neural activity being different and unique per person. \par
+
+  \section{MuSiCGen}
+    After analysing the \ac{MGR} results on a well-known dataset, the classification results on the \ac{MuSiCGen} are investigated following the same structure as in \autoref{sec:results_deap}. In this case, a ten-class classification task is performed, leading to a chance level of 10\%. \par
+    When looking at the mean accuracies of each model in \autoref{fig:headset_mean_accuracies}, similar properties like in the \ac{DEAP} dataset can be observed. Overall, each session is classified above chance level with a mean accuracy of 20.2\% across all sessions, a minimum accuracy of 16\%, and a maximum accuracy of 26\%. It becomes clear that there is also a high variance between sittings, but not as large as the one in the \ac{DEAP} dataset. Nonetheless, performance highly fluctuates between sessions. One reason for that could be that the headset's electrodes had slightly different placement across sessions, influencing the quality of the \ac{EEG} signal. Another reason may be that some songs evoke clearer genre-specific states in the brain than others, leading to easier classification of those music pieces. Apart from that, environmental conditions like humidity or temperature may be influencing factors for this alteration of accuracy. \par 
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/headset/headset_accuracies.png}
@@ -64,22 +66,21 @@
       \label{fig:headset_mean_accuracies}
     \end{figure}
 
-    The F1-scores, on the other hand, are shown in \autoref{fig:headset_mean_f1} and show a mean of 14.7\%, which is only slightly better than chance level. The fluctuation also remains consistent with a minimum of 9\% and a maximum of 24\%. This result implies that the models do not capture structures of each genre equally, indicating the difficulty in multi-class prediction in \ac{EEG} based \ac{MGR}. \par
+    The F1-scores, on the other hand, show an average of 14.7\%, which is only slightly better than chance level. The fluctuation highlighted in \autoref{fig:headset_mean_f1} also remains consistent with a minimum of 9\% and a maximum of 24\%. This result implies that the models do not capture structures of each genre equally, indicating the difficulty in multi-class prediction in \ac{EEG} based \ac{MGR}. \par
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/headset/headset_f1score.png}
       \caption{Mean f1-scores of each session's best performing models in the \ac{MuSiCGen}}
       \label{fig:headset_mean_f1}
     \end{figure}
+    The optimal hyperparameter space is displayed in \autoref{fig:headset_hyperparams}. Similar to the \ac{DEAP} dataset, the sigmoid kernel is utilised the most, pointing out that this kernel seems to be favourable for finding patterns in \ac{EEG} data for \ac{MGR}. Unlike the properties of the kernel, trends in feature count are different compared to the \ac{DEAP}. While the classification on the \ac{DEAP} data seems to favor a larger amount of features (more than ten), the models of the \ac{MuSiCGen} dataset prefer a lower amount of features (less than 15). The distribution of the C value is also different compared to the \ac{DEAP} data. In the case of the \ac{MuSiCGen}, low and high C values come up nearly with the same frequency, with 0.001 and 1.0 being used most frequently. This smoother decision boundary by the low C values could be explained by the overlapping of genres or general noise in the \ac{EEG} data. \par
     \begin{figure}
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter06/headset/headset_hyperparams_2x2.pdf}
       \caption{The distribution of optimal hyperparameters across all sessions in the \ac{MuSiCGen} presented in absolute counts}
       \label{fig:headset_hyperparams}
     \end{figure}
-    The optimal hyperparameter space is displayed in \autoref{fig:headset_hyperparams}. Similar to the \ac{DEAP} dataset, the sigmoid kernel is utilized the most, pointing out that the sigmoid kernel seems to be a favourable kernel for finding patterns in \ac{EEG} data for \ac{MGR}. Unlike the properties of the kernel, trends in feature count are different compared to the \ac{DEAP}. While the classification on the \ac{DEAP} data seems to favor a larger amount of features (more than ten), the models of the \ac{MuSiCGen} prefer a lower amount of features (less than 15). The distribution of the C value is also different compared to the \ac{DEAP} data. In the case of the \ac{MuSiCGen}, low and high C values come up nearly with the same frequency, with 0.001 and 1.0 being used most frequently. This smoother decision boundary by the low C values could be explained by the overlapping of genres or general noise in the \ac{EEG} data. \par
-
-    As already suggested by the low F1-score, not all classes are predicted equally well, which is emphasized by the overall confusion matrix in \autoref{fig:global_confusion}. The classes predicted correctly the most are blues, country, and disco with 27\%, while metal was the worst with only 12\%. It is also interesting to see that some genres get mistaken for other genres. For instance, classical music was predicted correctly only 15\% of the time and was mistaken as country music 17\% of the time. Nonetheless, there are no very large misclassifications in genres, which gives the hint that it either is difficult to distinguish between ten music genres based on \ac{EEG} or that an \ac{SVM} is not able to capture genre-specific patterns well. \par 
+    As already suggested by the low F1-score, not all classes are predicted equally well, which is emphasised by the overall confusion matrix in \autoref{fig:global_confusion}. The classes predicted correctly the most are Blues, Country, and Disco with 27\% each, while Metal was predicted the least with only 12\%. It is also interesting to see that some genres get mistaken for other genres more often. For instance, classical music was predicted correctly only 15\% of the time and was mistaken as country music 17\% of the time. Nonetheless, there are no very large misclassifications in genres, which gives the hint that it either is difficult to distinguish between ten music genres based on \ac{EEG} or that an \ac{SVM} is not able to capture genre-specific patterns well. \par 
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{figures/chapter06/headset/headset_global_confusion.png}
@@ -87,5 +88,4 @@
       \label{fig:global_confusion}
     \end{figure}
 
-    Overall, there lies some information about different genres in the headset's acquired signal. However, since the performance is only a little bit above chance level, it raises concerns about the data quality of this multimodal approach. However, the results of the \ac{DEAP} dataset are not much better than the \ac{MuSiCGen}, even though it is a binary decision, hinting that multi-class \ac{MGR} based on \ac{EEG} signals is still a difficult task for \ac{SVM}s, requiring more research in the future.
-
+    Overall, there lies some information about different genres in the headset's recorded signal. However, since the performance is only slightly above random chance, it raises concerns about the headset's data quality. However, the results of the \ac{DEAP} dataset are not much better than those of the \ac{MuSiCGen}, even though it is a binary decision and recorded with a professional \ac{EEG} device. This hints that \ac{SVM} classifiers have difficulties learning the relevant patterns from the \ac{EEG} data for recognising music genres.
