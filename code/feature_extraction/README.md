@@ -19,7 +19,7 @@ This directory is responsible for extracting features from denoised and segmente
 |                    | `h_complexity`          | Hjorth complexity parameter                               |
 |                    | `energy`                | Total energy (sum of squares) of the signal               |
 |                    | `shannon_entropy`       | Shannon entropy of the signal                             |
-| **Frequency**      | `spectral_entropy`      | Shannon entropy of the normalized power spectral density  |
+| **Frequency**      | `spectral_entropy`      | Shannon entropy of the normalised power spectral density  |
 |                    | `DELTA_relative`        | Relative power in the delta band                          |
 |                    | `THETA_relative`        | Relative power in the theta band                          |
 |                    | `ALPHA_relative`        | Relative power in the alpha band                          |
