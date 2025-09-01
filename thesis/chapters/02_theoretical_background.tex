@@ -142,7 +142,7 @@
       \begin{figure}
         \centering
         \includegraphics[width=0.5\textwidth]{figures/chapter02/dwt.png}
-        \caption{Visualization of a \ac{DWT} \cite{al2014methods}}
+        \caption{Visualisation of a \ac{DWT} \cite{al2014methods}}
         \label{fig:dwt}
       \end{figure}
       One of the biggest problems of \ac{CWT} is the result of a lot of unused information and computational effort due to the continuous changes in $a$ and $b$. To solve this issue, \ac{DWT} can be employed instead, which is showcased in \autoref{fig:dwt}. Each step (or level) consists of two digital filters $g[n]$ and $h[n]$ and two downsamplers by two. $g[n]$ stands for the mother wavelet function and acts as a high-pass filter, while $h[n]$ is its mirror function working as a low-pass filter. Each stage outputs a detail of the signal $D$ and an estimation of the signal $A$, which is then used as an input for the next step. This results in a hierarchical set of coefficients, which become more accurate the higher the level is set \cite{al2014methods}. \par
@@ -150,7 +150,7 @@
   \subsection{Feature Selection}
     Based on the previous sections, it becomes clear that many different kinds of features can be calculated based on an \ac{EEG} signal. The number of features especially scales in \ac{EEG} based classification problems, since all features are computed for each channel. However, depending on the dataset, many features can lead to undesirable results, such as over- or underfitting. Therefore, it is vital to employ standard feature selection methods that choose the optimal subset of all these metrics. This not only leads to a reduction in dimensionality but also to choosing the parameters that hold the most information. One feature selection method in that domain is the \ac{MRMR} feature selection, which will be explained in the following. \par
     As the name suggests, the \ac{MRMR} algorithm tries to find the feature set that has maximal relevance and minimal redundancy between each other. On the one hand, relevance $V$ describes how much information a feature set $F$ provides about the different class labels. On the other hand, redundancy $W$ defines how much information is shared between features in the feature set \cite{jo2019improved}. \par
-    With both $W$ and $V$ at hand, the goal of the \ac{MRMR} algorithm is to maximise $W$ while minimising $V$. The mutual information quotient $MIQ = \frac{V}{W}$ or the mutual information difference $MID = V - W$ can be considered for this. To find the optimal feature subset $S$ with size $M$, features $f \in F$ are iteratively added to $S$ to maximize the criterion. However, this method can be computationally expensive since it has an exponential runtime depending on $|F|$ and $M$ \cite{jo2019improved}.
+    With both $W$ and $V$ at hand, the goal of the \ac{MRMR} algorithm is to maximise $W$ while minimising $V$. The mutual information quotient $MIQ = \frac{V}{W}$ or the mutual information difference $MID = V - W$ can be considered for this. To find the optimal feature subset $S$ with size $M$, features $f \in F$ are iteratively added to $S$ to maximise the criterion. However, this method can be computationally expensive since it has an exponential runtime depending on $|F|$ and $M$ \cite{jo2019improved}.
 
 
 
