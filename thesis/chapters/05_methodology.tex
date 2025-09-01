@@ -1,51 +1,45 @@
 \chapter{Methodology}\label{chapter:methodology}
-
+\acresetall
   \section{Acquisition}
-    \subsection{General setup, environment and stimuli}
-    The experiment has been conducted in a laboratory setting. As mentioned in \autoref{chapter:music_datasets}, the GTZAN Music dataset is chosen as a basis for the music stimuli. However, for the sake of the quality of the data, it would not be beneficial to hear all 1000 songs in one session. To avoid quick attention loss during a session and gather as much different data under different circumstances, the whole set of audio files is partitioned into 20 distinct sessions, each lasting around 30 minutes. This means that per session, 50 songs are played\footnote{Because of a corrupt audio file, session ten only consists of 49 songs}. For each of these songs, not only are \ac{EEG} signals measured, but also other biosignals like \ac{PPG}, \ac{IMU} and temperature. However, this work will solely focus on the recorded \ac{EEG} data. During each session, five songs from each genre are being played to ensure that each of the ten genres from the dataset is represented. This also ensures no genre bias in the data, thus resulting in a balanced signal across genres. During listening, the order of the songs is randomised to evoke a brain reaction that is as natural as possible, as the brain cannot predict the genre that is being listened to. Additionally, a five-second break is implemented in between songs to not overstimulate the brain.\par
-    All 20 sessions have been recorded over the course of two weeks, with an average of two sessions per day. Between each session, there was a short break of between ten and 30 minutes. This verifies a sufficient pause of the brain to fully prepare for the next session. The test person is the author, a 21-year-old, right-handed college student without any common (brain) diseases. To further guarantee a high quality in the acquired signal data, the experiment's environment and setting must be adapted. First and foremost, the test person is instructed to sit comfortably in a chair with his eyes closed to minimise artificats coming from blinking and eye-movement. Furthermore and most importantly, any movements, especially in the head region, must be limited and as minimal as possible since the \ac{EEG} device reacts very sensitive to head movements. Apart from that, the room was quiet and isolated with dimmed natural lighting combined with the brightness from a desktop monitor. The songs were played over the \ac{EEG} headset (cf. \autoref{section: headset}) with average and constant volume.
+    \subsection{General Setup, Environment and Stimuli}
+    The experiment has been conducted in a laboratory setting. As mentioned in \autoref{chapter:music_datasets}, the GTZAN Music dataset is chosen as a basis for the music stimuli. However, for the sake of the quality of the data, it would not be beneficial to hear all 1,000 songs in one session. To avoid quick attention loss during a session and gather as much different data under different circumstances as possible, the whole set of audio files is partitioned into 20 distinct sessions, each lasting around 30 minutes. This means that per session, 50 songs are played\footnote{Because of a corrupt audio file, session ten only consists of 49 songs}. For each of these songs, not only are \ac{EEG} signals measured, but also other biosignals like \ac{PPG}\footnote{Except for the first five sessions}, \ac{IMU} data, and temperature. However, this work will solely focus on the recorded \ac{EEG} data. During each session, five songs from each genre are played to ensure that all genres are represented equally during one recording period. This also ensures no genre bias in the data, thus resulting in a balanced signal across genres. During listening, the order of the songs is randomised to evoke a brain reaction that is as natural as possible, as the brain cannot predict the genre that is being listened to. Additionally, a five-second break is implemented between songs to not overstimulate the brain. \par
+    All 20 sessions have been recorded over the course of two weeks, with an average of two sessions per day. Between each session, there was a short break of between ten and 30 minutes. This verifies a sufficient pause of the brain to fully prepare for the next session. The test person is the author, a 21-year-old, right-handed college student without any common (brain) diseases. To further guarantee a high quality in the acquired signal data, the experiment's environment and setting must be adapted. First and foremost, the test person is instructed to sit comfortably in a chair with his eyes closed to minimise artifacts coming from blinking and eye movement. Furthermore and most importantly, any movements, especially in the head region, must be limited and as minimal as possible since the \ac{EEG} device reacts very sensitively to head movements. Apart from that, the room was quiet and isolated, with dim natural lighting combined with the brightness of a desktop monitor. The songs were played over the \ac{EEG} headset (cf. \autoref{section: headset}) with average and constant volume.
 
-    \subsection{Acquisition device}\label{section: headset}
-    A non-traditional approach is chosen to record the \ac{EEG} signal data coming from the brain. For this study, a prototype for a multimodal biosensing platform is chosen. It is a Bluetooth headset that can play music and measure biosignals at the same time. For connecting with a standard PC, it uses classic bluetooth and low-energy bluetooth for audio and biosignals respectively.\par
-    The headphones have multiple sensors and electrodes to measure biosignals like EEG, PPG, IMU and temperature. For \ac{EEG}, the headphones are supplied with 2 × 4 sensor electrodes and two bias electrodes. The sensors are easily configurable and provide an ultra-low-noise front-end, meaning that the data points are amplified with minimal distortion and interference. Besides that, the electrodes sample with 24-bit and a frequency of 250\,Hz.\par
-    For \ac{PPG}, one optical sensor on the right side provides a high resolution of 19-bit ADC with a configurable sample rate. They also support raw data output or built-in algorithms to conclude heart rate or SpO2.\par
-    The \ac{IMU} data is sensed by a 3-axis digital accelerometer fused with a 3-axis digital gyroscope. On a full scale, the accelerometer can recognize acceleration from $\pm 2\,g $  up to $\pm 16\,g$ (in steps of the power of two). The gyroscope can measure angular velocity from $\pm 125$\,\textdegree$/s$ up to $\pm 4,000$\,\textdegree$/s$. The recognised data is then combined to provide accurate information on orientation, movements and position.\par
-    Last but not least, there are three digital thermometers, one on the skin, another one inside the earcup and one on the outside of the earcup to measure ambient temperature. All of those temperature sensors have an accuracy of $\pm 0.1$\,\textdegree\,C.\par
-    Since this headset is still a prototype, there still is ongoing development and research on the headset. Nonetheless, some small-scale research projects already employed the biosignals from the headphones. These projects range from stress detection using the \ac{PPG} data to device control and the recognition of cognitive fatigue using the \ac{EEG} sensors.\par
+    \subsection{Acquisition Device}\label{section: headset}
+    A non-traditional approach is chosen to record the \ac{EEG} signal data coming from the brain. For this study, a prototype for a multimodal biosensing platform is chosen. It is a Bluetooth headset that can play music and measure biosignals at the same time. For connecting with a standard PC, it uses classic Bluetooth and low-energy Bluetooth for audio and biosignals, respectively \cite{anonym2024presentation}. \par
+    The headphones have multiple sensors and electrodes to measure biosignals like EEG, PPG, IMU, and temperature. For \ac{EEG}, the headset is supplied with four sensors and two bias electrodes on each side. The sensors are easily configurable and provide an ultra-low-noise front-end, meaning that the data points are amplified with minimal distortion and interference. Besides that, the electrodes sample with 24-bit and a frequency of 250\,Hz \cite{anonym2024presentation}. \par
+    For \ac{PPG}, one optical sensor on the right side provides a high resolution of 19-bit \ac{ADC} with a configurable sample rate. They also support raw data output or built-in algorithms to conclude heart rate or SpO2 \cite{anonym2024presentation}.\par
+    The \ac{IMU} data is sensed by a 3-axis digital accelerometer fused with a 3-axis digital gyroscope. On a full scale, the accelerometer can recognise acceleration from $\pm 2\,g $  up to $\pm 16\,g$ (in steps of the power of two). The gyroscope can measure angular velocity from $\pm 125$\,\textdegree$/s$ up to $\pm 4,000$\,\textdegree$/s$. The recorded data is then combined to provide accurate information on orientation, movements, and position \cite{anonym2024presentation}.\par
+    Last but not least, there are three digital thermometers, one on the skin, another one inside the earcup and one on the outside of the earcup to measure ambient temperature. All of those temperature sensors have an accuracy of $\pm 0.1$\,\textdegree\,C \cite{anonym2024presentation}. \par
+    Since this headset is still a prototype, there is ongoing development and research on it. Nonetheless, some small-scale research projects already employed the biosignals from the headphones. These projects range from stress detection using the \ac{PPG} data to device control and the recognition of cognitive fatigue using the \ac{EEG} sensors \cite{anonym2024presentation}. \par
 
-    \subsection{Technical setup}
-      Multiple technical components have to come together to gather the experiment's data. All the components employ the \ac{LSL}. It provides a standardised way to stream time-sensitive data between devices and applications. Devices or apps then push data on this stream, which is captured and stored in a special file form called .xdf. The workflow is illustrated in \autoref{fig:technicalSetup} and will be explained in the following.\par
-      \begin{figure}
-        \centering
-        \includegraphics[width=1.0\textwidth]{figures/chapter05/experimentalWorkflow.png}
-        \caption{Technical setup}
-        \label{fig:technicalSetup}
-      \end{figure}
-      At the core, there are two main programs responsible for the data. On the one hand, there is the headset platform called acting as a Controller. This program is responsible for the sensor setup and starting and stopping the signal acquisition. Communicating with the headset's low-energy Bluetooth channel reliably sets up the biosensors of the multimodal headphones, making the device ready for acquisition. After a successful setup, the data is pushed on the corresponding \ac{LSL} Stream. On the other hand, the study uses a custom Python script having two tasks regarding playing the music. Firstly, it loads all the songs from one of the 20 pre-generated sessions and randomly shuffles them. After that, the program plays each song one by one. Simultaneously, the script also pushes timestamps during recording to assign each segment to each song later.\par
-      By collecting all open streams on which the device/program push their data, the \ac{LSL} recoder combines both components mentioned above. The collected information for each session is then stored in a seperated .xdf file, allowing for easy reading and visualisation.\par 
+    \subsection{Technical Setup}
+    Multiple technical components have to come together to gather the experiment's data. All units make use of the \ac{LSL}. It provides a standardised way to stream time-sensitive data between devices and applications. Devices or apps then push data on this stream, which is captured and stored in a special file format called .xdf. The workflow is illustrated in \autoref{fig:technicalSetup} and will be explained in the following.\par
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\textwidth]{figures/chapter05/experimentalWorkflow5.png}
+      \caption{Technical setup of acquisition}
+      \label{fig:technicalSetup}
+    \end{figure}
+    At the core, there are two main programs responsible for the data. On the one hand, there is the headset platform acting as a Controller. It is responsible for the sensor setup and starting and stopping the signal acquisition. Communicating with the headset's low-energy Bluetooth channel reliably sets up the biosensors of the multimodal headphones, making the device ready for acquisition. After a successful setup, the measured signals are pushed on the corresponding \ac{LSL} Stream. On the other hand, the study uses a custom Python script that has two tasks for playing the music. Firstly, it loads all the songs from one of the 20 pre-generated sessions and randomly shuffles them. After that, the program plays each song one by one. Simultaneously, the script also pushes timestamps during recording to assign each segment to each song later.\par
+    By collecting all open streams on which the device and program push their data, the \ac{LSL} recoder combines both components mentioned above. The collected information for each session is then stored in a separate .xdf file, allowing for easy reading and visualisation.\par
       
   \section{Denoising and Preprocessing}
-    After measuring and recording the \ac{EEG} activity, the next step is to preprocess the acquired signal. Apart from segmenting the data into their respective song listened to, the signal has to be denoised, which is the most essential step. As mentioned in \autoref{section:theoretical_background_denoising}, many different artifacts besides the neural activity appear during recording. Therefore, it is crucial to recognize and omit most of these contaminations to have valuable data for feature extraction and classification. The complete preprocessing pipeline is visualized in \autoref{fig:preprocessingWorkflow}, where each step is further explained in the following. \par
+    After measuring and recording the \ac{EEG} activity, the next step is to preprocess the acquired signal. Apart from segmenting the data into their respective song listened to, the signal has to be denoised, which is the most essential step. As mentioned in \autoref{section:theoretical_background_denoising}, many different artifacts besides the neural activity appear during recording. Therefore, it is crucial to recognise and omit most of these contaminations to have valuable data for feature extraction and classification. The complete preprocessing pipeline is visualised in \autoref{fig:preprocessingWorkflow}, where each step is further explained in the following. \par
     \begin{figure}
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter05/PreprocessingWorkflow.png}
       \caption{Preprocessing of the raw \ac{EEG} signal}
       \label{fig:preprocessingWorkflow}
     \end{figure}
-    Before explaining how the data has been denoised, it is vital to investigate the state of the raw measured data. An example can be found in \autoref{fig:raw_signal}. Most notably, there are significant amplitude shifts over the 30-minute recording sessions. Depending on the channel, there is either an increasing or a decreasing trend in amplitude. This can be reasoned with the fact that the electrodes are DC-coupled in the system. The drift then happens due to temperature changes or skin impedance. \par
-    To overcome this signal drift, the first step of the denoising pipeline is to apply a bandpass filter on the whole session. As boundaries, 1 Hz and 30 Hz are chosen as the lower and upper borders, respectively. This handles the mentioned drift and filters out all high and low frequency noise that does not match a certain brain rhythm. \par
+    Before describing how the data has been denoised, it is vital to investigate the state of the raw measured data. An example can be found in \autoref{fig:raw_signal}. Most notably, there are significant amplitude shifts over the 30-minute recording sessions. Depending on the channel, there is either an increasing or a decreasing trend in amplitude. This can be reasoned with the fact that the electrodes are DC-coupled in the system. The drift then happens due to temperature changes or skin impedance. \par
+    To overcome this signal drift, the first step of the denoising pipeline is to apply a bandpass filter on the whole session. As boundaries, 1\,Hz and 30\,Hz are chosen as the lower and upper borders, respectively. This handles the mentioned drift and filters out all high and low frequency noise that does not match a certain brain rhythm. \par
 
     \begin{figure}
       \centering
       \includegraphics[width=1.0\textwidth]{figures/chapter05/raw_signal_ses1_ch1.pdf}
       \caption{Raw \ac{EEG} signal}
       \label{fig:raw_signal}
-    \end{figure}
-    \begin{figure}
-      \centering
-      \includegraphics[width=1.0\textwidth]{figures/chapter05/denoisedSignal.pdf}
-      \caption{Denoised \ac{EEG} signal}
-      \label{fig:denoised_signal}
     \end{figure}
           \begin{table}[h!]
         \centering
@@ -71,15 +65,22 @@
         \caption{ICA Component Rejection Criteria}
         \label{tab:ica_components}
       \end{table}
-    After removing most of the frequency-related noise, the artifacts in the \ac{EEG} data must be detected and removed. An \ac{ICA} algorithm is applied to the session data. Before doing that, channel three is removed from the dataset as it serves as a reference channel hence not holding valuable information. After prewhitening the data, an \ac{ICA} is applied, splitting the \ac{EEG} matrix into a mixing matrix accompanied by the sources. Since eight \ac{EEG} channels are present, the \ac{ICA} algorithm was performed with eight components. As a next step, it has to be decided whether a component is an artifact or an actual source of cerebral activity. This thesis deals with an unconventional way of measuring the \ac{EEG} data, so custom criteria must be determined for this task. In \autoref{tab:ica_components}, the rejection criteria for each component can be seen. \ac{PTP}, skewness, kurtosis, and autocorrelation are used to detect unusual signal characteristics deviating from brain activity. The spectral power thresholds, including the Delta and Beta Power ratio, find artifacts by finding components dominated by specific frequency bands. Lastly, by investigating the sparsity of the mixing matrix, it is evaluated how widely a component affects the \ac{EEG} channels. A component is classified as an artifact if at least two of the mentioned criteria are met. The components labelled as artifacts are then set to zero before converting the mixing matrix with the now cleaned sources to the artifact-removed version of the original \ac{EEG} data. This results in a signal where most of the high amplitudes are removed with a much more consistent \ac{EEG} signal, thus suggesting that most of the unwanted artifacts have been removed. \par In \autoref{fig:denoised_signal}, the final denoised signal can be seen. It becomes obvious that the main drift is removed alongside with the unusual amplitudes.\par
-    With the cleaned \ac{EEG} signal at hand, one can now segment the signal into its 50 individual songs\footnote{The custom Python script also supports the segmentation of biosignals other than \ac{EEG}. However, these will be ignored in the following as this thesis focuses on \ac{EEG} signals}. Since the start and the end of one song are pushed to the \ac{LSL} stream, the timestamp of those markers is read out to only keep the signal data appearing in this interval. This is done over each channel, thus resulting in a table with each song occupying a row and the channels as columns.\par
+    After removing most frequency-related noise, the artifacts in the \ac{EEG} data must be detected and removed. Therefore, an \ac{ICA} algorithm is applied to the \ac{EEG} signal. After removing the reference channel and prewhitening the data, \ac{ICA} with six components is applied to decompose the \ac{EEG} signals into independent components. This process estimates both a mixing matrix and the underlying source signals. As a next step, it has to be decided whether a component is an artifact or an actual source of cerebral activity. This thesis deals with an unconventional way of measuring the \ac{EEG} data, so custom criteria must be determined for this task. In \autoref{tab:ica_components}, the rejection criteria for each component can be seen. \ac{PTP}, skewness, kurtosis, and autocorrelation are used to detect unusual signal characteristics deviating from brain activity. The spectral power thresholds, including the Delta and Beta Power ratio, detect artifacts by finding components dominated by specific frequency bands. Lastly, by investigating the sparsity of the mixing matrix, it is evaluated how widely a component affects the \ac{EEG} channels. A component is classified as an artifact if at least two of the mentioned criteria are met. The components labelled as artifacts are then set to zero before converting the mixing matrix with the now cleaned sources to the artifact-removed version of the original \ac{EEG} data. This results in a signal where most of the high amplitudes are removed with a much more consistent \ac{EEG} signal, thus suggesting that most of the unwanted artifacts have been removed. \par
+    The final denoised signal can be seen in the \autoref{fig:denoised_signal}. It becomes obvious that the main drift is removed along with the unusual amplitudes.\par
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\textwidth]{figures/chapter05/denoisedSignal.pdf}
+      \caption{Denoised \ac{EEG} signal}
+      \label{fig:denoised_signal}
+    \end{figure}
+    With the cleaned \ac{EEG} signal at hand, one can now segment the signal into its 50 individual songs\footnote{The custom Python script also supports the segmentation of biosignals other than \ac{EEG}. However, these will be ignored as this thesis focuses on \ac{EEG} signals}. Since the start and the end of one song are pushed to the \ac{LSL} stream, the timestamp of those markers is read out to only keep the signal data appearing in this interval. This is done over each channel, thus resulting in a table with each song occupying a row and the channels as columns.\par
     After all these steps, the denoised and segmented data is stored in three different formats, being .mat, .npy, and .pkl, where each session is held in one file across all file formats.\par
 
-  \section{Feature extraction} \label{sec:feature_extract_method}
-    The next step after the signal preprocessing is the extraction of meaningful features used for the classification task of predicting genres. Finding the right features is a difficult task in this particular use case. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardized electrode placement, on which little research exists. \par
+  \section{Feature Extraction} \label{sec:feature_extract_method}
+    The next step after the signal preprocessing is the extraction of meaningful features used for the classification task of predicting genres. Finding the right features is a difficult task in this particular use case. This is mainly because the field of \ac{MGR} based on \ac{EEG} is pretty young, lacking in recent studies. Another problem arises from the fact that an unconventional \ac{EEG} acquisition device is used with non-standardised electrode placement, on which little research exists. \par
     To overcome those obstacles, it is essential to compute as many different features across all the domains as possible to have a versatile range of different characteristics. An optimal feature subset can be chosen using feature selection techniques, allowing for sufficient classification results. \par
     For all features extracted from the channels, the first four seconds are taken into account. This way, the activation of the stimulus is captured. \par
-    As mentioned, features are computed across all three domains (the time domain, the frequency domain, and the time-frequency domain). All features are computed per \ac{EEG} channel, thus leading to a feature space of $n_{channel} \times n_{features}$ different parameters. \par
+    As stated, features are computed across all three domains (the time domain, the frequency domain, and the time-frequency domain). All metrics are computed per \ac{EEG} channel, thus leading to a feature space with a size of $n_{channel} \times n_{features}$. \par
     An overview of all features extracted in the time domain is given in \autoref{tab:time_domain_features}. The features calculated are a mix of classic statistical measures like mean, maximum, and minimum, and tailored signal metrics like entropy, \ac{RMS}, and the Hjorth parameters. \par 
     \begin{table}[h!]
       \centering
@@ -118,17 +119,17 @@
         shannon\_entropy & Shannon entropy of the signal \\
         \hline
       \end{tabular}
-      \caption{Extracted Time-Domain Features}
+      \caption{Extracted time domain features}
       \label{tab:time_domain_features}
     \end{table}
-    To gain knowledge about the signal's time properties, features from the frequency domain have also been extracted. For all features described in \autoref{tab:frequency_domain_features}, Welch's method was applied as a basis to determine the \ac{PSD}. To balance both computational cost and accuracy, a 2\,s window is used. With the \ac{PSD} at hand, the spectral entropy is calculated to measure its complexity and irregularity, which can provide information about different mental states. More importantly, the relative power of each brain rhythm frequency band is calculated to further depict the neurological condition of the brain during each session. The brain rhythm's frequency bands are defined as follows:
+    Features from the frequency domain have also been extracted to gain knowledge about the signal's spectral characteristics. For all features described in \autoref{tab:frequency_domain_features}, Welch's method was applied as a basis to determine the \ac{PSD}. To balance both computational cost and accuracy, a 2\,s window is used. With the \ac{PSD} at hand, the spectral entropy is calculated to measure its complexity and irregularity, which can provide information about different mental states. More importantly, the relative power of each brain rhythm frequency band is calculated to further depict the neurological condition of the brain during each session. The brain rhythm's frequency bands are defined as follows:
     \begin{itemize}
       \item Delta: $0.5 - 4$ Hz
       \item Theta: $4 - 8$ Hz
       \item Alpha: $8 - 13$ Hz
       \item Beta: $13 - 30$ Hz
     \end{itemize}
-    The relative power is taken to normalize the data across all sessions to account for the session-dependent measurements. In addition to the relative band power, ratios between specific rhythms can not only further normalize the results but also give a relative measure of brain state changes. This also highlights proportional changes in frequency bands, being possibly more informative than the absolute power. \par
+    The relative power is taken to normalise the data across all sessions to account for the session-dependent measurements. In addition to the relative band power, ratios between specific rhythms can not only normalise the results even more but also give a relative measure of brain state changes. This also highlights proportional changes in frequency bands, which are possibly more informative than the absolute power. \par
 
     \begin{table}[h!]
       \centering
@@ -136,7 +137,7 @@
         \hline
         \textbf{Feature} & \textbf{Description} \\
         \hline
-        spectral\_entropy & Shannon entropy of the normalized power spectral density \\
+        spectral\_entropy & Shannon entropy of the normalised power spectral density \\
         \hline
         DELTA\_relative & Relative power in the delta band \\
         \hline
@@ -146,8 +147,6 @@
         \hline
         BETA\_relative & Relative power in the beta band \\
         \hline
-        GAMMA\_relative & Relative power in the gamma band \\
-        \hline
         ALPHA\_BETA\_ratio & Ratio of alpha power to beta power \\
         \hline
         THETA\_ALPHA\_ratio & Ratio of theta power to alpha power \\
@@ -155,7 +154,7 @@
         THETA\_BETA\_ratio & Ratio of theta power to beta power \\
         \hline
       \end{tabular}
-      \caption{Extracted Frequency-Domain Features with Welch's method}
+      \caption{Extracted frequency domain features with Welch's method}
       \label{tab:frequency_domain_features}
     \end{table}
     To combine the time and frequency domains, a \ac{DWT} calculates the features mentioned in \autoref{tab:time_frequency_domain_features}. In that case, the Daubechies wavelet is used as the mother wavelet function, and a level of four is chosen, resulting in five subbands. Time domain features are extracted from each subband, including statistical measures and signal-specific parameters. \par
@@ -173,7 +172,7 @@
         \hline
         tfd\_band\_i\_variance & Variance of wavelet coefficients in subband $i$ \\
         \hline
-        tfd\_band\_i\_entropy & Shannon entropy of normalized wavelet energy in subband $i$ \\
+        tfd\_band\_i\_entropy & Shannon entropy of normalised wavelet energy in subband $i$ \\
         \hline
         tfd\_band\_i\_relative\_energy & Relative energy of subband $i$ with respect to total wavelet energy \\
         \hline
@@ -182,19 +181,20 @@
         tfd\_band\_i\_kurtosis & Kurtosis of wavelet coefficients in subband $i$ \\
         \hline
       \end{tabular}
-      \caption{Extracted Time–Frequency Domain Features with a level 4 \ac{DWT}, where $i$ is the $i$-th subband}
+      \caption{Extracted time–frequency domain features with a level 4 \ac{DWT}, where $i$ is the $i$-th subband}
       \label{tab:time_frequency_domain_features}
     \end{table}
-    As already hinted, total features depend on the number of \ac{EEG} channels, thus leading to high dimensionality. An \ac{MRMR} feature selection algorithm using MID is used to choose the optimal feature set out of all calculated parameters. For both Relevance and Redundancy, the mutual information value is utilized to calculate both measures. The number of selected features is variable and can be optimized depending on the classification task or the \ac{ML} model applied. \par
+    As already hinted, total features depend on the number of \ac{EEG} channels, thus leading to high dimensionality (in this case 441 features per session). A \ac{MRMR} feature selection algorithm using MID is used to choose the optimal feature set out of all calculated parameters. For both Relevance and Redundancy, the mutual information value is taken to calculate both measures. The number of selected features is variable and can be optimised depending on the classification task or the \ac{ML} model applied. \par
     In conclusion, a rich set of versatile features provides information about many facets of the \ac{EEG} signal. Furthermore, an \ac{MRMR} feature selector is applied to improve the quality of the feature set during classification.
+
  
   \section{Classification}
-    Many difficulties appear regarding classification, as it is the most challenging step in the \ac{EEG} pipeline, out of two reasons specifically in this thesis. Firstly, research on \ac{EEG} based \ac{MGR} is minimal, where one of the only reference papers achieved mediocre performance on single \ac{EEG} classification on the \ac{DEAP} dataset on subject-level \cite{ghaemmaghami2016brain}. Secondly, the fact that the data was acquired using a multimodal \ac{EEG} headset with unconventional electrode placement around the ear. Since no related work exists makes it hard to verify whether the gathered data is even suitable for such a classification task. \par
-    To overcome those hurdles, \ac{MGR} is performed on the thesis's handcrafted dataset and the well-known \ac{DEAP} dataset. Since this is a common source for \ac{EEG} based classification and already provides genre labels provided by \cite{ghaemmaghami2016brain}, it can be used as a source of truth in this specific classification task. Therefore, the Classification methodology can be split into two parts. The first part involves performing \ac{MGR} on the \ac{DEAP} dataset to research and find out which features, models and classification strategies work best. This knowledge and usable results from the first part are then transferred to the \ac{MuSiCGen}. In this way, whether the same methodology that works for a state-of-the-art dataset also applies to the \ac{MuSiCGen} can be investigated, leading to faster results and a hint at the signal's quality. \par
+    Many difficulties appear regarding classification, as it is the most challenging step in the \ac{EEG} pipeline, for two reasons specifically in this thesis. Firstly, research on \ac{EEG} based \ac{MGR} is minimal, where one of the only reference papers achieved mediocre performance on single \ac{EEG} classification on the \ac{DEAP} on subject-level \cite{ghaemmaghami2016brain}. The second reason is that the data was acquired using a multimodal \ac{EEG} headset with unconventional electrode placement around the ear. The non-existence of related work makes it difficult to validate whether the gathered data is suitable for such a classification problem. \par
+    To overcome those hurdles, \ac{MGR} is performed on the newly introduced \ac{MuSiCGen} dataset and the well-known \ac{DEAP} dataset. Since this is a common source for \ac{EEG} based classification and already provides genre labels provided by \cite{ghaemmaghami2016brain}, it can be used as a source of truth in this specific classification task. Therefore, the classification methodology can be split into two parts. The first part involves performing \ac{MGR} on the \ac{DEAP} dataset to determine which features, models, and classification strategies work best. This knowledge and usable results from the first part are then transferred to the \ac{MuSiCGen} data. In this way, whether the same methodology that works for a state-of-the-art dataset also applies to the newly introduced database can be investigated, leading to faster results and a hint at the signal's quality. \par
 
     \subsection{DEAP} \label{sec:deap_methodology}
-      As already mentioned, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre; the genre tags applied by \cite{ghaemmaghami2016brain} are considered. In this way, comparing the results to current research in \ac{EEG} based genre recognition is easily possible. This results in an imbalanced dataset because of the 40 songs, 60\% belong to the POP genre and 40\% to the ROCK label. \par
-      From the available 32 \ac{EEG} channels, multiple features have been precomputed from each channel to depict the neural activity accordingly. The features are chosen based on past research using this dataset in emotion recognition\footnote{cf. \autoref{sec:emotion_eeg}}:
+      As already mentioned, the publicly available preprocessed \ac{DEAP} dataset is used as a signal source for classification. However, the songs are not labeled according to genre; the genre tags applied by \cite{ghaemmaghami2016brain} are considered. This way, comparing the results to current research in \ac{EEG} based genre recognition is easily possible. This results in an imbalanced dataset of 40 songs, where 60\% belong to the POP genre and 40\% to the ROCK category. \par
+      From the available 32 \ac{EEG} channels, multiple features have been precomputed from each channel to depict the neural activity accordingly. The features are chosen based on past research using this dataset in emotion recognition:
       \begin{itemize}
         \item Alpha, Beta, Theta, Delta, Gamma relative band power
         \item Alpha-Beta ratio
@@ -202,7 +202,7 @@
         \item Theta-Beta ratio
         \item Entropy from each subband from a level 4 \ac{DWT}
       \end{itemize}
-      Important to note is that the features were calculated for the first four seconds of the recorded signal to capture the activation impulse of the stimulus. The methods used for extracting the signal are the same as mentioned in \autoref{sec:feature_extraction_theo} \par
+      Important to note is that the features were calculated for the first four seconds of the recorded signal to capture the activation impulse of the stimulus (similar to the features extracted for \ac{MuSiCGen}). The methods used to extract the signal are the same as in \autoref{sec:feature_extract_method}. \par
       \begin{figure}
         \centering
         \includegraphics[width=1.0\textwidth]{figures/chapter05/classification_pipeline.png}
@@ -210,11 +210,11 @@
         Evaluation}
         \label{fig:ml_pipeline}
       \end{figure}
-      To easily employ hyperparameter tuning techniques like Grid search, a modular \ac{ML} pipeline is set up, illustrated in \autoref{fig:ml_pipeline}. At first, a z-normalization is applied to each feature, so the data have zero mean and unit variance. This step is crucial since it accounts for abnormalities and unifies the data, leading to better classification results. An \ac{MRMR} feature selection method is utilised to choose the optimal subset of features for this task. This also reduces the dimensionality, as the number of samples is over ten times less the amount of features ($40 \times 448$).\par
-      The selected subset is then fed into an \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
-      In this case, a subject-based classification approach is followed. In this thesis, an individual model is optimized for each subject, allowing for a more subject-centric classification approach. \par
-      A Grid search is also embedded to find the optimal configuration to get the best-performing model possible. Apart from the \ac{SVM}'s hyperparameters (C, $\gamma$, kernel), the number of features selected by the \ac{MRMR} is also tuned. An overview of the hyperparameter space is illustrated in \autoref{tab:svm_hyperparam_space}. The distribution of the optimal parameters can then be further analysed to determine which values perform best in this dataset's task of \ac{MGR}.\par
-      To evaluate the model's performance, the primary metric used is the mean accuracy with the balanced accuracy between all subjects. Alongside that, the F1-score is considered to measure both precision and recall in an imbalanced class environment. To get an idea of prediction distribution, the confusion matrices of each optimal model are also computed per subject. Moreover, the mean of those metrics over all subjects is calculated to gain information about overall performance and similarities. In the case of the confusion matrices, a global confusion matrix is generated by unifying all predictions and test labels. Those metrics allow for a detailed analysis of \ac{MGR} in the case of the \ac{DEAP} dataset.
+      To easily employ hyperparameter tuning techniques like Grid search, a modular \ac{ML} pipeline is set up, illustrated in \autoref{fig:ml_pipeline}. At first, a z-normalisation is applied to each feature, so the data have zero mean and unit variance. This step is crucial since it accounts for abnormalities and unifies the data, leading to better classification results. An \ac{MRMR} feature selection method is utilised to choose the optimal subset of features for this task. This also reduces the dimensionality, as the number of samples is over ten times less than the number of features ($40 \times 448$).\par
+      The selected subset is then fed into a \ac{SVM} with balanced class weight and a constant random state to make the model's outputs deterministic over multiple iterations. \par
+      In this case, a subject-based classification approach is followed, meaning that an individual model is optimised for each subject, allowing for a more subject-centric classification approach. \par
+      A Grid search is also embedded to find the optimal configuration to get the best-performing model possible. Apart from the \ac{SVM}'s hyperparameters (C, $\gamma$, kernel), the number of features selected by the \ac{MRMR} is also tuned. An overview of the hyperparameter space is illustrated in \autoref{tab:svm_hyperparam_space}. The distribution of the optimal parameters can then be further analysed to determine which values perform best in this dataset's task of \ac{MGR}. \par
+      To evaluate the model's performance, a 5-fold cross-validation is used. The primary metric used is the mean accuracy with the balanced accuracy between all subjects. Alongside that, the F1-score is considered to measure both precision and recall in an imbalanced class environment. To get an idea of prediction distribution, the confusion matrices of each optimal model are also computed per subject. Moreover, the mean of those metrics over all subjects is calculated to gain information about overall performance and similarities. In the case of the confusion matrices, a global confusion matrix is also generated by unifying all predictions and test labels. Those metrics allow for a detailed analysis of \ac{MGR} in the case of the \ac{DEAP} dataset.
       \begin{table}[h!]
         \centering
         \begin{tabular}{|p{0.45\textwidth}|p{0.45\textwidth}|}
@@ -230,14 +230,11 @@
           gamma & scale, auto, 0.0001, 0.001, 0.01, 0.1, 1, 10 \\
           \hline
         \end{tabular}
-        \caption{Hyperparameter search space for SVM with \ac{MRMR} feature selection. While feature count affects, the feature selector, the other parameters influence the \ac{SVM}}
+        \caption{Hyperparameter search space for SVM with \ac{MRMR} feature selection. While feature count affects the feature selector, the other parameters influence the \ac{SVM}}
         \label{tab:svm_hyperparam_space}
       \end{table}
 
-    \subsection{\ac{MuSiCGen}}
-      To compare the results of the \ac{DEAP} dataset with the data originating from the multimodal \ac{EEG} headset, the same methodology described in \autoref{sec:deap_methodology} is employed, including the Classification pipeline and the hyperparameter space in \autoref{fig:ml_pipeline} and \autoref{tab:svm_hyperparam_space} respectively. Nonetheless, some critical differences will be mentioned below.\par
+    \subsection{MuSiCGen}
+      To compare the results of the \ac{DEAP} dataset with the data originating from the multimodal \ac{EEG} headset, the same methodology described in \autoref{sec:deap_methodology} is employed, including the classification pipeline and the hyperparameter space in \autoref{fig:ml_pipeline} and \autoref{tab:svm_hyperparam_space}, respectively. Nonetheless, some critical differences will be mentioned below.\par
       Firstly, the number of channels is reduced compared to the \ac{DEAP} dataset, which was measured with a professional \ac{EEG} device. For this reason, and because no related work exists for the \ac{EEG} headset, all features mentioned in \autoref{sec:feature_extract_method} are available in the feature space from which the \ac{MRMR} feature selector can choose from.\par
-      Secondly, in contrast to the \ac{DEAP} dataset, the \ac{MuSiCGen} is balanced in terms of genres as each session contains five songs from each possible genre (ten in total). Therefore, the balanced accuracy is not taken into account, as it will yield the same results as the mean accuracy. However, the F1-score and confusion matrices are still analysed to measure how well the model performs on multi-class prediction. \par
-
-
-
+      Secondly, in contrast to the \ac{DEAP} dataset, the \ac{MuSiCGen} data is balanced in terms of genres as each session contains five songs from each possible genre (ten in total). Therefore, the balanced accuracy is not considered, as it will yield the same results as the mean accuracy. However, the F1-score and confusion matrices are still analysed to measure how well the model performs on multi-class prediction. \par
