@@ -137,7 +137,7 @@
         \hline
         \textbf{Feature} & \textbf{Description} \\
         \hline
-        spectral\_entropy & Shannon entropy of the normalized power spectral density \\
+        spectral\_entropy & Shannon entropy of the normalised power spectral density \\
         \hline
         DELTA\_relative & Relative power in the delta band \\
         \hline
@@ -154,7 +154,7 @@
         THETA\_BETA\_ratio & Ratio of theta power to beta power \\
         \hline
       \end{tabular}
-      \caption{Extracted Frequency-Domain Features with Welch's method}
+      \caption{Extracted frequency domain features with Welch's method}
       \label{tab:frequency_domain_features}
     \end{table}
     To combine the time and frequency domains, a \ac{DWT} calculates the features mentioned in \autoref{tab:time_frequency_domain_features}. In that case, the Daubechies wavelet is used as the mother wavelet function, and a level of four is chosen, resulting in five subbands. Time domain features are extracted from each subband, including statistical measures and signal-specific parameters. \par
@@ -172,7 +172,7 @@
         \hline
         tfd\_band\_i\_variance & Variance of wavelet coefficients in subband $i$ \\
         \hline
-        tfd\_band\_i\_entropy & Shannon entropy of normalized wavelet energy in subband $i$ \\
+        tfd\_band\_i\_entropy & Shannon entropy of normalised wavelet energy in subband $i$ \\
         \hline
         tfd\_band\_i\_relative\_energy & Relative energy of subband $i$ with respect to total wavelet energy \\
         \hline
@@ -181,7 +181,7 @@
         tfd\_band\_i\_kurtosis & Kurtosis of wavelet coefficients in subband $i$ \\
         \hline
       \end{tabular}
-      \caption{Extracted Time–Frequency Domain Features with a level 4 \ac{DWT}, where $i$ is the $i$-th subband}
+      \caption{Extracted time–frequency domain features with a level 4 \ac{DWT}, where $i$ is the $i$-th subband}
       \label{tab:time_frequency_domain_features}
     \end{table}
     As already hinted, total features depend on the number of \ac{EEG} channels, thus leading to high dimensionality (in this case 441 features per session). A \ac{MRMR} feature selection algorithm using MID is used to choose the optimal feature set out of all calculated parameters. For both Relevance and Redundancy, the mutual information value is taken to calculate both measures. The number of selected features is variable and can be optimised depending on the classification task or the \ac{ML} model applied. \par
