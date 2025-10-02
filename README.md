@@ -1,11 +1,41 @@
 # Decoding Music Perception: EEG-Based Genre Classification
 
 Welcome to the repository of my Bachelor's thesis, where I explore the classification of music genres on the basis of EEG signals (meaning brain activity). By employing a prototype of EEG headphones, I record my brain activity while listenting to different kinds of music available through the GTZAN dataset (a dataset optimized for genre classification tasks). The acquired data then is processed by special denoising and feature extraction techniques to ultimately classify a music genre according to the signal data.
+
 Big thanks to my supervisor Simon Pistrosch and the [Chair of Health Informatics at TUM](https://www.kiinformatik.mri.tum.de/en/chichair-health-informatics) for supporting me throughout this journey and giving valuable insights. I learned a lot during those four months!
 
 As a quick link, you can find the written thesis [here](thesis/build/thesis.pdf). Enjoy :)
+The end results and analysis of the Genre classification can be found [here](code/classification/README.md)
 
 If you have any questions, feel free to connect :)
+
+## Abstract
+Music plays a key role in everyday life, being entertaining and engaging complex
+cognitive and emotional processes in the human brain. Nonetheless, the neural mech-
+anisms behind music perception remain unknown. Therefore, this thesis explores
+whether Electroencephalography (EEG) signals can be used to reliably decode music
+perception, aiming to bridge the gap between Music Information Retrieval (MIR) and
+neurosciences. A dedicated dataset for EEG based Music Genre classification is created
+to contribute to this area, named the Multimodal Signals & EEG for Classification
+of Genres (MuSiCGen) dataset. By utilising the GTZAN music dataset, EEG signals
+have been recorded by a multimodal biosignal headset while listening to music. The
+recorded signal then underwent a custom denoising process to eliminate most artifacts,
+followed by an exhaustive feature extraction combined with specialised feature selection
+methods. Based on these parameters, machine learning classifiers are trained to predict
+the corresponding genres, which are then analysed regarding accuracy, F1-score, and
+their confusion matrices. To compare with a state-of-the-art EEG dataset, the same
+approach is followed with the Database for Emotion Analysis using Physiological
+Signals (DEAP), which is evaluated in the same way as the newly introduced dataset.
+Results demonstrate that genre-specific neural patterns can be detected above chance
+level. Concreteley, mean accuracies of 68.3% and 20.2% were measured for binary
+classification on the DEAP dataset and ten-class classification on the MuSiCGen dataset,
+respectively. Although signal quality and device limitations posed a challenge, the key
+findings show promising evidence that EEG signals possess meaningful information
+about musical perception. Overall, this thesis lays the groundwork for further re-
+search in the area of EEG-based MIR by providing a novel database alongside detailed
+methodology for Music Genre Recognition (MGR) using EEG signals. Future studies
+can build upon this thesis by employing larger subject pools, advanced deep learning
+architectures, or multimodal data fusion.
 
 ## Project structure
 This project has 3 main directories:
