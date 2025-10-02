@@ -1,6 +1,11 @@
 # Decoding Music Perception: EEG-Based Genre Classification
 
 Welcome to the repository of my Bachelor's thesis, where I explore the classification of music genres on the basis of EEG signals (meaning brain activity). By employing a prototype of EEG headphones, I record my brain activity while listenting to different kinds of music available through the GTZAN dataset (a dataset optimized for genre classification tasks). The acquired data then is processed by special denoising and feature extraction techniques to ultimately classify a music genre according to the signal data.
+Big thanks to my supervisor Simon Pistrosch and the [Chair of Health Informatics at TUM](https://www.kiinformatik.mri.tum.de/en/chichair-health-informatics) for supporting me throughout this journey and giving valuable insights. I learned a lot during those four months!
+
+As a quick link, you can find the written thesis [here](thesis/build/thesis.pdf). Enjoy :)
+
+If you have any questions, feel free to connect :)
 
 ## Project structure
 This project has 3 main directories:
