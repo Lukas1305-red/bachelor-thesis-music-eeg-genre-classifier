@@ -1,8 +1,14 @@
 # pre-commit
 .pre-commit-config.yaml
+# .gitignore for devenv
+devenv.local.nix
+.devenv.flake.nix
 .devenv
+.copier-answers.yml
+_README.md
 ## .gitignore for direnv ##
 .direnv
+.envrc.local
 ## .gitignore for Python projects ##
 # Byte-compiled / optimized / DLL files
 __pycache__/
