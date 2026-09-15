@@ -1,6 +1,30 @@
 # pre-commit
 .pre-commit-config.yaml
 # .gitignore for devenv
+# Ignore everything in the build directory
+thesis/build/*
+thesis/.github
+thesis/.gitlab-ci.yml
+
+# But keep the final PDF
+!thesis/build/thesis.pdf
+
+data/*
+
+__pycache__
+
+.venv
+.venv-biocodec
+.vscode
+.idea
+
+code/acquisition/example-xdf-files
+
+*.asv
+__pycache__
+
+# Devenv
+.devenv*
 devenv.local.nix
 .devenv.flake.nix
 .devenv
@@ -427,3 +451,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local third-party foundation-model checkout and its pretrained checkpoint.
+/external/BioCodec-release/

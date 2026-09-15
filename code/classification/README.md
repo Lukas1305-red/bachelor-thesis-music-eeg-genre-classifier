@@ -22,6 +22,82 @@ In [learning.py](learning.py), a `GridSearch` or `RandomizedSearch` is setup to 
 
 Special cases are [deap_classification.py](deap_classification.py) and [headset_classification.py](headset_classification.py), where the hyperparameters are tuned per subject/session and the models are chosen directly including the paramater grid.
 
+### Frozen foundation-embedding SVM mode
+
+[foundation_embedding_svm.py](foundation_embedding_svm.py) is the headset mode for a pretrained BioCodec EEG encoder followed by an SVM. It reads raw session tables, filters CSV sessions when requested, applies per-song/per-channel z-scoring, divides each song into complete five-second windows, and mean-pools their frozen BioCodec embeddings into one fixed-length song embedding. It does not fine-tune the foundation model.
+
+Clone the official [BioCodec release](https://github.com/klean2050/BioCodec-release), set `BIOCODEC_PATH` to that checkout, and run it with its included `biocodec_ckpt.pt` checkpoint. The matching EEG architecture name is `eeg_optimized`:
+
+```bash
+python -m code.classification.foundation_embedding_svm \
+  --checkpoint "$BIOCODEC_PATH/biocodec_ckpt.pt" \
+  --model-name eeg_optimized \
+  --output foundation_embedding_svm_results.json
+```
+
+It is also available from `headset_classification.py` as `--mode foundation_embeddings` with the same `--checkpoint`, `--model-name`, and `--output` arguments.
+
+### Using the exported raw CSV files
+
+`data/eeg_data/csv` contains one row per song, with each `EEG_Ch*` cell holding
+the complete serialized waveform.  It is raw data, so use the CSV loader with
+the filter step enabled.  This matches the minimal preprocessing used for
+BioCodec EEG pre-training (0.5--100 Hz band-pass, 50 Hz notch, then the
+pipeline's per-song/channel z-score):
+
+```bash
+python -m code.classification.foundation_embedding_svm \
+  --checkpoint "$BIOCODEC_PATH/biocodec_ckpt.pt" \
+  --model-name eeg_optimized \
+  --input-format csv \
+  --raw-data-path data/eeg_data/csv \
+  --denoise-csv \
+  --window-seconds 5 \
+  --output foundation_embedding_svm_csv_results.json
+```
+
+Add `--remove-ica-artifacts` only after comparing the filtered-only and ICA
+variants under the same nested-CV splits. The CSVs have already lost the
+between-song gaps, so ICA is applied to the concatenated session. Each song is
+normalized before it is split into five-second windows, and its window
+embeddings are pooled before the SVM split; windows are never independent CV
+examples. Session 10 has one fewer jazz song, so the evaluator automatically
+uses valid 4-outer/3-inner folds for that session and records this in the JSON.
+
+### BioCodec RVQ-token Transformer experiment
+
+[biocodec_token_loso.py](biocodec_token_loso.py) retains BioCodec's discrete
+RVQ code sequences rather than reducing continuous encoder activations to
+summary statistics. The codec and its codebook embeddings stay frozen; a small
+temporal Transformer, channel Transformer, and MLP head are trained with
+leave-one-session-out evaluation. One session is held out for testing, the next
+for early stopping, and the other 18 sessions supply training songs. Window
+logits are mean-pooled before song-level validation and test metrics.
+
+It writes train/validation loss and validation metrics for every epoch, plus
+held-out test metrics, to a timestamped TensorBoard run under
+`data/tensorboard` by default. Start TensorBoard with
+`./.venv/bin/tensorboard --logdir data/tensorboard` and open
+`http://localhost:6006`. The JSON output also stores each fold's full epoch
+history for retrospective plotting.
+
+For faster development, add `--test-session 17 --validation-session 16` to run
+one fold only. The other 18 sessions remain training data. Treat this as a
+development result, not a final test result.
+
+Before trusting a poor validation result, run the memorization diagnostic with
+`--sanity-check-session 0`. It deliberately removes regularization and trains
+and scores on the same session. A high same-session score confirms that the
+token extraction and training path can learn; it must never be reported as a
+held-out result.
+
+To test unseen songs recorded under the same conditions, use
+`--within-session-cv-session 0`. It performs nested song-level CV: every outer
+test fold holds out 20% of songs, another distinct song split is reserved for
+early stopping, and all windows from a song stay in one partition.
+
+The resulting JSON contains every outer-fold accuracy, macro-F1, selected SVM parameters, per-subject and global classification reports, and an explicit leakage-safeguards audit. The nested split is subject-local: hyperparameters are selected only within the outer training partition, and `StandardScaler` is fit only on each training fold.
+
 Furthermore, [svm.py](svm.py), [ranndom_forest.py](random_forest.py) and [mlp.py](mlp.py) realize the classification by initializing their respective model beforehand and perform the hyperparameter tuning.
 
 ### Evaluation

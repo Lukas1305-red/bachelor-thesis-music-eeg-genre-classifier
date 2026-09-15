@@ -6,8 +6,8 @@ from sklearn.feature_selection import VarianceThreshold
 from collections import Counter
 
 
-DATA_PATH = "data/eeg_data_first_4s_unnormalized_v3/features"
-LABEL_PATH = "data/eeg_data_v7_denoised/pickle"
+DATA_PATH = "data/eeg_data_features/features"
+LABEL_PATH = "data/eeg_data_features/pickle"
 
 
 class FreqDomain(Enum):
