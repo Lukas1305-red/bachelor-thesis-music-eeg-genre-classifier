@@ -21,10 +21,6 @@ class FreqDomain(Enum):
     fft = "psd_fft"
 
 
-# ---------------------------------------------------------------------------
-# Original function (unchanged) — kept for reference / non-subject-based runs
-# ---------------------------------------------------------------------------
-
 def perform_hyperparam_tuning(
     estimator,
     param_grid,
@@ -87,10 +83,6 @@ def perform_hyperparam_tuning(
         print(f"Best estimator: {grid_search.best_estimator_}")
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _load_subject_data(
     subject_idx: int,
     deap: bool,
@@ -150,20 +142,6 @@ def _inner_best_params(
     return best_params
 
 
-# ---------------------------------------------------------------------------
-# Option A — Full-fold nested CV  (supervisor's main suggestion)
-#
-# Structure per subject:
-#   Outer loop : StratifiedKFold(n_outer)   →  determines TEST fold
-#   Inner loop : StratifiedKFold(n_inner)   →  determines VAL fold for
-#                                               hyperparameter selection
-#   Final step : retrain on outer train+val with best params, predict on TEST
-#
-# With n_outer=5, n_inner=4:
-#   each outer fold uses n_inner inner folds to select params,
-#   then tests on the held-out 20% — no overlap between selection and test.
-# ---------------------------------------------------------------------------
-
 def perform_subject_based_nested_cv(
     param_grid: dict,
     num_subjects: int,
@@ -218,13 +196,13 @@ def perform_subject_based_nested_cv(
             X_tv, y_tv = X_subj[outer_tv_idx], y_subj[outer_tv_idx]
             X_test, y_test = X_subj[test_idx], y_subj[test_idx]
 
-            # --- inner loop: pick best hyperparameters on train+val pool ---
+            # Select parameters without using the outer test fold.
             best_params = _inner_best_params(
                 X_tv, y_tv, param_list, inner_cv, random_state
             )
             best_params_per_fold.append(best_params)
 
-            # --- retrain on full outer train+val, evaluate on test ----------
+            # Refit on the outer training partition before testing.
             final_clf = _build_pipeline(best_params, random_state)
             final_clf.fit(X_tv, y_tv)
             y_pred = final_clf.predict(X_test)
@@ -267,17 +245,6 @@ def perform_subject_based_nested_cv(
     return all_results
 
 
-# ---------------------------------------------------------------------------
-# Option B — Small-holdout nested CV  (supervisor's alternative suggestion)
-#
-# Instead of holding back a full inner fold for validation, only 1 or 3
-# trials are withheld. This keeps more data in training while still
-# providing a separate validation signal for hyperparameter selection.
-#
-# Uses ShuffleSplit for the inner validation so the holdout size is exact
-# regardless of class balance.
-# ---------------------------------------------------------------------------
-
 def perform_subject_based_nested_cv_small_val(
     param_grid: dict | list,
     num_subjects: int,
@@ -289,7 +256,6 @@ def perform_subject_based_nested_cv_small_val(
     random_state: int = 1997,
 ) -> list[dict]:
     
-    # Use ParameterGrid for exact grid search, matching our Option A setup
     param_list = list(ParameterGrid(param_grid))
     dataset_label = "DEAP" if deap else f"Headset_{psd.name}"
     all_results = []
@@ -298,7 +264,6 @@ def perform_subject_based_nested_cv_small_val(
         print(f"========= SUBJECT {i:02d} START ({dataset_label}) =========")
         X_subj, y_subj = _load_subject_data(i, deap, psd)
 
-        # Outer loop still uses Stratified CV (16 train, 4 test)
         outer_cv = StratifiedKFold(n_splits=n_outer, shuffle=True, random_state=random_state)
 
         outer_acc, outer_f1, best_params_per_fold = [], [], []
@@ -309,8 +274,7 @@ def perform_subject_based_nested_cv_small_val(
             X_tv, y_tv = X_subj[outer_tv_idx], y_subj[outer_tv_idx]
             X_test, y_test = X_subj[test_idx], y_subj[test_idx]
 
-            # Inner validation: ShuffleSplit holds out exactly n_val_trials each time.
-            # This prevents StratifiedKFold from crashing on tiny datasets!
+            # ShuffleSplit keeps the small validation set at the requested size.
             inner_cv = ShuffleSplit(
                 n_splits=n_inner_splits,
                 test_size=n_val_trials,

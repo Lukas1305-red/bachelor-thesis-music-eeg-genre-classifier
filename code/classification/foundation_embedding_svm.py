@@ -42,14 +42,18 @@ class BioCodecEEGEmbeddingExtractor:
             raise ImportError("Foundation-embedding mode requires PyTorch. Install torch first.") from exc
 
         biocodec_path = os.environ.get("BIOCODEC_PATH")
+        if not biocodec_path:
+            repository_checkout = Path(__file__).resolve().parents[2] / "external" / "BioCodec-release"
+            if repository_checkout.is_dir():
+                biocodec_path = str(repository_checkout)
         if biocodec_path and biocodec_path not in sys.path:
             sys.path.append(biocodec_path)
         try:
             from biocodec.model import BioCodecModel  # type: ignore
         except ImportError as exc:
             raise ImportError(
-                "Could not import BioCodec. Set BIOCODEC_PATH to the BioCodec repository "
-                "or install its package."
+                "Could not import BioCodec. Set BIOCODEC_PATH to the BioCodec repository, "
+                "place it at external/BioCodec-release, or install its package."
             ) from exc
 
         self.torch = torch
@@ -82,7 +86,6 @@ class BioCodecEEGEmbeddingExtractor:
         if encoded.ndim != 3:
             raise ValueError(f"Unexpected encoder output shape: {tuple(encoded.shape)}")
 
-        # Unlike the example's accidental q=0 upper threshold, these are actual top/bottom quartiles.
         q75 = self.torch.quantile(encoded, 0.75, dim=2, keepdim=True)
         q25 = self.torch.quantile(encoded, 0.25, dim=2, keepdim=True)
         top = self.torch.nanmean(self.torch.where(encoded >= q75, encoded, self.torch.nan), dim=2)

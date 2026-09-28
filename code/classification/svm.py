@@ -33,11 +33,6 @@ def train(scaling=True):
         }
 
     print("Training")
-    # perform_subject_based_param_tuning(
-    #    base_pipeline=svm,
-    #    param_grid=params,
-    #    num_subjects=NUM_SUBJECTS
-    # )
     perform_hyperparam_tuning(
         svm,
         params,

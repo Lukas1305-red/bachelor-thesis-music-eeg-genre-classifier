@@ -24,19 +24,19 @@ def train(scaling=True):
     )
 
     params = {
-        "selector__k": [150, 200, 300, 500],  # Focus around the best value
+        "selector__k": [150, 200, 300, 500],
         "mlp__hidden_layer_sizes": [
             (32,),
             (64,),
-            (128,),  # Try larger single layers
+            (128,),
             (64, 32),
             (128, 64),  # Larger two-layer networks
-            (64, 32, 16),  # Three layers with tapering
+            (64, 32, 16),
             (128, 64, 32),
         ],
-        "mlp__alpha": [0.001, 0.01, 0.05, 0.1],  # Fine-tune regularization
+        "mlp__alpha": [0.001, 0.01, 0.05, 0.1],
         "mlp__learning_rate_init": [0.0005, 0.001, 0.005, 0.01],
-        "mlp__solver": ["adam", "lbfgs"],  # Try both optimizers
+        "mlp__solver": ["adam", "lbfgs"],
     }
 
     print("Training")

@@ -44,7 +44,9 @@ This project has 3 main directories:
 
 - The `code` directory contains all relevant code responsible to support the EEG signal pipeline during the thesis project. Mainly python scripts and Jupyter notebooks will await you in this folder. For further information, please also pay attention to the [README](code/README.md). This especially contains content on the further seperation of this folder.
 
-- The `data` folder is still empty, but in this folder, you will not only put all necessary data but the generated data from some code sections will also be put there.
+- Later BioCodec, audio-guided, and retrieval experiments are described in the [classification README](code/classification/README.md).
+
+- The `data` folder holds local recordings, audio, model checkpoints, and generated intermediate files. Its contents are ignored by Git.
 
 ## Code environment setup
 
@@ -52,7 +54,7 @@ If you are intending to use the code in this project, please follow this guide. 
 ### Prerequisites
 
 Ensure you have the following installed:
-- Python 3.8 or higher
+- Python 3.11 or higher
 - `pip` (Python package manager)
 
 ### Setting Up the Virtual Environment

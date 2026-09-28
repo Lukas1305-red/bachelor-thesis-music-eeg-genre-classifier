@@ -35,7 +35,6 @@ def train(mode="handcrafted", **embedding_options):
 
     print("Initialize")
     
-    # Optimized list of dictionaries 
     params = [
         {
             "selector__k": [5, 10, 20, 50], 
@@ -63,7 +62,6 @@ def train(mode="handcrafted", **embedding_options):
         random_state=1997
     )
     
-    # --- SAVE TO A LOCAL FILE ---
     with open("headset_results_nested_cv.json", "w") as f:
         json.dump(results, f, indent=4)
     print("Saved results to headset_results_nested_cv.json!")
