@@ -70,6 +70,7 @@ dependencies = [
     "soundfile (==0.13.1)",
     "stack-data (==0.6.3)",
     "statsmodels>=0.14.4",
+    "tensorboard>=2.21.0",
     "tk (==0.1.0)",
     "tornado (==6.4.2)",
     "tqdm (==4.67.1)",

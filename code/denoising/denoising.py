@@ -49,7 +49,10 @@ def component_rejected(
     # Power in specific bands via PSD
     sample_rate = 250
     f, psd = scipy.signal.welch(component, fs=sample_rate, nperseg=512)
-    total_power = np.trapezoid(f, psd)
+    # ``trapezoid`` takes values first and their frequency locations second.
+    # Reversing these arguments produces a meaningless (and often negative)
+    # total power, which makes the relative-band artifact rules unreliable.
+    total_power = np.trapezoid(psd, f)
     power_delta = bandpower(f, psd, (0.5, 4))
     power_beta = bandpower(f, psd, (12, 30))
     score = 0
