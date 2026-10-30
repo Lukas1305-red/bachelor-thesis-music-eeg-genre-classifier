@@ -37,6 +37,14 @@ methodology for Music Genre Recognition (MGR) using EEG signals. Future studies
 can build upon this thesis by employing larger subject pools, advanced deep learning
 architectures, or multimodal data fusion.
 
+### Evaluation correction
+
+The original evaluation used the same held-out fold for hyperparameter tuning and reporting classification performance. Because this fold informed model selection, it was not an independent test set, and the reported above-chance results were optimistic.
+
+A corrected post-thesis evaluation found **chance-level classification performance**, superseding the above-chance claims in this README and the thesis.
+
+The thesis is retained as originally submitted for transparency. Its original performance claims should be read in light of this correction.
+
 ## Project structure
 This project has 3 main directories:
 
